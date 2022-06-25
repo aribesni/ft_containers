@@ -13,6 +13,8 @@
 #ifndef VECTOR_H
 # define VECTOR_H
 
+# include "iterator.hpp"
+
 # include <vector>
 # include <iostream>
 # include <memory.h>
@@ -23,7 +25,7 @@
 namespace ft {
 
     template< class T, class Alloc = std::allocator<T> >
-    class   vector {
+    class vector {
 
         public :
 
