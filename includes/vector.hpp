@@ -339,6 +339,7 @@ namespace ft {
         private :
 
         // MEMBER TYPES
+
             T*              _array;
             size_t          _capacity;
             size_t          _size;
