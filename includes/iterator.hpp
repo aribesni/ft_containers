@@ -72,17 +72,52 @@ namespace ft {
             //MEMBER FUNCTIONS
 
                 //Constructors
-                reverse_iterator(void) : _base_iterator(NULL) {};
-                explicit    reverse_itetor(iterator_type it) : _base_iterator(it) {};
+                reverse_iterator(void) : _elem(NULL) {};
+                explicit    reverse_itetor(iterator_type it) : _elem(it) {};
                 template <class Iter>
-                    reverse_iterator(const reverse_iterator<Iter>& rev_it) : _base_iterator(rev_it._base_iterator) {};
+                    reverse_iterator(const reverse_iterator<Iter>& rev_it) : _elem(rev_it._elem) {};
+                
 
+                iterator_type   base(void) const { return (this->_elem); }
+
+                //Operators
+                reference           operator*(void) const {
+                    
+                    Iterator    tmp;
+                    
+                    tmp = *this->_elem--;
+                    return (tmp);
+                }
+                reverse_iterator    operator+(difference_type n) const { return (this->_elem - n); }
+                reverse_iterator&   operator++(void) { return (this->*_elem--); }
+                reverse_iterator    operator++(void) {
+
+                    reverse_iterator    tmp;
+
+                    tmp = *this;
+                    *this--;
+                    return (tmp); 
+                }
+                reverse_iterator&   operator+=(difference_type n) { return (*this->_elem - n); }
+                reverse_iterator    operator-(difference_type n) const { return (this->_elem + n); }
+                reverse_iterator&   operator--(void) { return (this->*_elem++); }
+                reverse_iterator    operator--(void) {
+
+                    reverse_iterator    tmp;
+
+                    tmp = *this;
+                    *this++;
+                    return (tmp); 
+                }
+                reverse_iterator&   operator-=(difference_type n) { return (*this->_elem + n); }
+                pointer             operator->(void) const { return &(operator*()); }
+                reference           operator[](difference_type n) const { return (*this->_elem - n - 1); }
             
             private :
 
             //MEMBER TYPES
 
-                Iterator    _base_iterator;
+                Iterator    _elem;
 
         };
 }
