@@ -215,16 +215,18 @@ namespace ft {
                 
                 if (this->_size + 1 > this->_capacity)
                 {
-                    iterator    i = 0;
+                    iterator    i = this->begin();
+                    size_type   j = 0;
                     T*  new_array = new T[this->_size + 5];
                     while (i < position)
                     {
-                        new_array[i] = this->_array[i];
+                        new_array[j] = this->_array[j];
                         i++;
+                        j++;
                     }
                     this->_size++;
-                    new_array[i] = val;
-                    for (iterator i = position + 1; i < this->_size; i++)
+                    new_array[j] = val;
+                    for (iterator i = position + 1; i < this->end(); i++)
                         new_array[i] = this->_array[i - 1];
                     this->_capacity += 6;
                     delete[] this->_array;
@@ -343,8 +345,8 @@ namespace ft {
             T*              _array;
             size_t          _capacity;
             size_t          _size;
-            size_t          _begin;
-            size_t          _end;
+            iterator        _begin;
+            iterator        _end;
             allocator_type  _alloc;
             // value_type&     _value;
 

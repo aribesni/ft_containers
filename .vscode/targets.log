@@ -1,14 +1,12 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
-# GNU Make 3.81
-# Copyright (C) 2006  Free Software Foundation, Inc.
-# This is free software; see the source for copying conditions.
-# There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A
-# PARTICULAR PURPOSE.
+# GNU Make 4.2.1
+# Built for x86_64-pc-linux-gnu
+# Copyright (C) 1988-2016 Free Software Foundation, Inc.
+# License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+# This is free software: you are free to change and redistribute it.
+# There is NO WARRANTY, to the extent permitted by law.
 
-# This program built for i386-apple-darwin11.3.0
- 
-
-# Make data base, printed on Mon Jul 11 10:13:42 2022
+# Make data base, printed on Tue Jul 12 09:20:53 2022
 
 # Variables
 
@@ -16,117 +14,196 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 <D = $(patsubst %/,%,$(dir $<))
 # automatic
 ?F = $(notdir $?)
-# makefile (from `Makefile', line 19)
+# environment
+DESKTOP_SESSION = ubuntu
+# default
+.SHELLFLAGS := -c
+# makefile (from 'Makefile', line 19)
 OBJ = ${SRCS:.cpp=.o}
-# makefile (from `Makefile', line 15)
+# environment
+XDG_SESSION_CLASS = user
+# makefile (from 'Makefile', line 15)
 SRC = main.cpp
+# environment
+XDG_SESSION_TYPE = x11
+# environment
+VSCODE_LOG_NATIVE = false
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # automatic
 @D = $(patsubst %/,%,$(dir $@))
-# automatic
-@F = $(notdir $@)
+# environment
+XAUTHORITY = /mnt/nfs/homes/aribesni/.Xauthority
+# environment
+GDMSESSION = ubuntu
+# environment
+XMODIFIERS = @im=ibus
 # makefile
- 
-CURDIR := /Users/aristidebesnier/Documents/42/ft_containers/project/ft_containers_42/ft_containers.git
+CURDIR := /mnt/nfs/homes/aribesni/Desktop/42/ft_containers/ft_containers.git
 # makefile
 SHELL = /bin/sh
 # environment
-VSCODE_NLS_CONFIG = {"locale":"en-gb","availableLanguages":{},"_languagePackSupport":true}
+VTE_VERSION = 6003
 # environment
-_ = /usr/bin/make
-# makefile (from `Makefile', line 1)
+VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
+# environment
+_ = /usr/bin/code
+# environment
+JOURNAL_STREAM = 9:1549021
+# environment
+XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
+# makefile (from 'Makefile', line 1)
 MAKEFILE_LIST :=  Makefile
+# automatic
+@F = $(notdir $@)
 # environment
-__CFBundleIdentifier = com.microsoft.VSCode
+IM_CONFIG_PHASE = 1
+# 'override' directive
+GNUMAKEFLAGS := 
 # environment
-VSCODE_CWD = /
+MANDATORY_PATH = /usr/share/gconf/ubuntu.mandatory.path
 # environment
-PATH = /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin
+XDG_DATA_DIRS = /usr/share/gnome:/usr/share/ubuntu:/mnt/nfs/homes/aribesni/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share:/var/lib/snapd/desktop
+# environment
+DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/36117/bus
+# environment
+VSCODE_VERBOSE_LOGGING = true
+# environment
+MANAGERPID = 280919
+# environment
+VSCODE_IPC_HOOK_EXTHOST = /run/user/36117/vscode-ipc-a2d8c28a-d252-422b-94bc-eeb965dc8c14.sock
+# environment
+VSCODE_CWD = /mnt/nfs/homes/aribesni/Desktop/42/ft_containers/ft_containers.git
+# environment
+XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session4
+# environment
+KRB5CCNAME = FILE:/tmp/krb5cc_36117_J2zItU
+# default
+MAKE_HOST := x86_64-pc-linux-gnu
+# environment
+PATH = /mnt/nfs/homes/aribesni/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+# environment
+GPG_AGENT_INFO = /run/user/36117/gnupg/S.gpg-agent:0:1
 # environment
 LSCOLORS = Gxfxcxdxbxegedabagacad
 # environment
-ELECTRON_RUN_AS_NODE = 1
-# default
-.FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
+SESSION_MANAGER = local/e1r8p6.42.fr:@/tmp/.ICE-unix/281437,unix/e1r8p6.42.fr:/tmp/.ICE-unix/281437
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.AjbIZveXZW/Listeners
+XDG_RUNTIME_DIR = /run/user/36117
+# environment
+XDG_MENU_PREFIX = gnome-
+# environment
+VSCODE_LOG_STACK = false
+# environment
+ELECTRON_RUN_AS_NODE = 1
+# environment
+INVOCATION_ID = 7efc3269321045f89424ae2386e511f1
+# default
+.FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
+# environment
+ELECTRON_NO_ATTACH_CONSOLE = 1
+# environment
+XDG_GREETER_DATA_DIR = /var/lib/lightdm-data/aribesni
+# environment
+LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:
+# environment
+XDG_SESSION_DESKTOP = ubuntu
+# environment
+SSH_AUTH_SOCK = /run/user/36117/keyring/ssh
 # automatic
 %F = $(notdir $%)
 # environment
-PWD = /Users/aristidebesnier/Documents/42/ft_containers/project/ft_containers_42/ft_containers.git
+DISPLAY = :0
 # environment
-ORIGINAL_XDG_CURRENT_DESKTOP = undefined
+VSCODE_PIPE_LOGGING = true
+# environment
+PWD = /mnt/nfs/homes/aribesni/Desktop/42/ft_containers/ft_containers.git
+# default
+.LOADED := 
+# environment
+SSH_AGENT_PID = 281401
+# environment
+ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
+# environment
+GTK_MODULES = gail:atk-bridge
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
-HOME = /Users/aristidebesnier
-# default
-MAKEFILEPATH := /Applications/Xcode.app/Contents/Developer/Makefiles
+HOME = /mnt/nfs/homes/aribesni
 # environment
-VSCODE_CODE_CACHE_PATH = /Users/aristidebesnier/Library/Application Support/Code/CachedData/92d25e35d9bf1a6b16f7d0758f25d48ace11e5b9
+VSCODE_CLI = 1
 # environment
-LOGNAME = aristidebesnier
+VSCODE_CODE_CACHE_PATH = /mnt/nfs/homes/aribesni/.config/Code/CachedData/30d9c6cd9483b2cc586687151bcbcd635f373630
+# environment
+LOGNAME = aribesni
 # environment
 APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # environment
-ZSH = /Users/aristidebesnier/.oh-my-zsh
+ZSH = /mnt/nfs/homes/aribesni/.oh-my-zsh
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# environment
+GNOME_DESKTOP_SESSION_ID = this-is-deprecated
 # automatic
 ^D = $(patsubst %/,%,$(dir $^))
 # environment
-XPC_FLAGS = 0x0
+MAKELEVEL := 0
+# environment
+COLORTERM = truecolor
 # default
 MAKE = $(MAKE_COMMAND)
 # default
 MAKECMDGOALS := all
-# makefile (from `Makefile', line 17)
+# environment
+QT_IM_MODULE = ibus
+# makefile (from 'Makefile', line 17)
 SRCS = ${addprefix ./srcs/, ${SRC}}
 # environment
-SHLVL = 1
-# makefile (from `Makefile', line 21)
+SHLVL = 2
+# makefile (from 'Makefile', line 21)
 CC = c++
 # default
-MAKE_VERSION := 3.81
+MAKE_VERSION := 4.2.1
 # environment
-USER = aristidebesnier
+USER = aribesni
 # makefile
 .DEFAULT_GOAL := all
-# makefile (from `Makefile', line 13)
-NAME = container
+# environment
+XDG_CURRENT_DESKTOP = Unity
+# environment
+LIBVIRT_DEFAULT_URI = qemu:///system
 # environment
 LESS = -R
 # automatic
 %D = $(patsubst %/,%,$(dir $%))
 # default
-MAKE_COMMAND := /Applications/Xcode.app/Contents/Developer/usr/bin/make
+MAKE_COMMAND := make
+# environment
+OLDPWD = /mnt/nfs/homes/aribesni/Desktop
 # default
 .VARIABLES := 
-# environment
-TMPDIR = /var/folders/rb/2fvpm8gx3832t4rv7h3pgdxc0000gn/T/
 # automatic
 *F = $(notdir $*)
 # environment
-VSCODE_IPC_HOOK = /Users/aristidebesnier/Library/Application Support/Code/1.69.0-main.sock
+XDG_SEAT_PATH = /org/freedesktop/DisplayManager/Seat0
 # environment
-MallocNanoZone = 0
+VSCODE_IPC_HOOK = /run/user/36117/vscode-0a778a4c-1.68.1-main.sock
 # makefile
-MAKEFLAGS = Rrqp
+MAKEFLAGS = pqrR
 # environment
-MFLAGS = -Rrqp
+MFLAGS = -pqrR
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
-# environment
-XPC_SERVICE_NAME = application.com.microsoft.VSCode.30466607.30466613
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
+# environment
+GDK_BACKEND = x11
 # automatic
 +F = $(notdir $+)
 # environment
-__CF_USER_TEXT_ENCODING = 0x1F5:0x0:0x2
+QT_ACCESSIBILITY = 1
 # environment
-COMMAND_MODE = unix2003
+DEFAULTS_PATH = /usr/share/gconf/ubuntu.default.path
 # default
 MAKEFILES := 
 # automatic
@@ -135,24 +212,40 @@ MAKEFILES :=
 PAGER = less
 # environment
 LC_ALL = C
-# makefile (from `Makefile', line 25)
+# makefile (from 'Makefile', line 25)
 HEADER = ./includes/
+# environment
+GJS_DEBUG_TOPICS = JS ERROR;JS LOG
+# environment
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/eb643ac9_800e_4601_9a9a_bb1b8a241799
 # automatic
 ^F = $(notdir $^)
+# environment
+GNOME_TERMINAL_SERVICE = :1.89
 # default
 SUFFIXES := 
-# makefile (from `Makefile', line 23)
+# makefile (from 'Makefile', line 23)
 FLAGS = -Wall -Wextra -Werror -std=c++98
-# default
-.INCLUDE_DIRS = /usr/local/include
 # environment
-MAKELEVEL := 0
+CHROME_DESKTOP = code-url-handler.desktop
+# default
+.INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
+# environment
+GJS_DEBUG_OUTPUT = stderr
+# makefile (from 'Makefile', line 13)
+NAME = container
+# default
+.RECIPEPREFIX := 
 # environment
 LANG = C
 # environment
-VSCODE_PID = 37590
+TERM = xterm-256color
+# environment
+DOCKER_HOST = unix:///run/user/36117/docker.sock
+# environment
+VSCODE_PID = 284138
 # variable set hash-table stats:
-# Load=69/1024=7%, Rehash=0, Collisions=3/98=3%
+# Load=117/1024=11%, Rehash=0, Collisions=18/153=12%
 
 # Pattern-specific Variable Values
 
@@ -160,40 +253,38 @@ VSCODE_PID = 37590
 
 # Directories
 
-# . (device 16777222, inode 29669798): 8 files, no impossibilities.
-# includes (device 16777222, inode 29476730): 4 files, no impossibilities so far.
-# srcs (device 16777222, inode 29476752): 4 files, no impossibilities so far.
+# . (device 60, inode 295344566): 7 files, no impossibilities.
+# includes (device 60, inode 295346178): 4 files, no impossibilities so far.
+# srcs (device 60, inode 295344487): 3 files, no impossibilities so far.
 
-# 16 files, no impossibilities in 3 directories.
+# 14 files, no impossibilities in 3 directories.
 
 # Implicit Rules
 
-%.o: %.cpp ./includes/vector.hpp ./includes/iterator.hpp
-#  commands to execute (from `Makefile', line 28):
-	${CC} ${FLAGS} -I ${HEADER} -c $< -o $@
-	
+%.o: %.cpp includes/vector.hpp includes/iterator.hpp
+#  recipe to execute (from 'Makefile', line 28):
+			${CC} ${FLAGS} -I ${HEADER} -c $< -o $@
 
 # 1 implicit rules, 0 (0.0%) terminal.
 
 # Files
 
 all: container
-#  Command-line target.
+#  Command line target.
 #  Implicit rule search has been done.
 #  File does not exist.
 #  File has been updated.
-#  Successfully updated.
+#  Needs to be updated (-q is set).
 # variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+# Load=0/32=0%, Rehash=0, Collisions=0/6=0%
 
 # Not a target:
 includes/iterator.hpp:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-05 17:44:48
+ 
+#  Last modified 2022-07-12 09:19:57.636049684
 #  File has been updated.
 #  Successfully updated.
-# variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
 .Phony: all clean fclean re
 #  Implicit rule search has not been done.
@@ -203,55 +294,40 @@ includes/iterator.hpp:
 # Not a target:
 includes/vector.hpp:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-07 16:56:15
+#  Last modified 2022-07-12 09:19:57.640049679
 #  File has been updated.
 #  Successfully updated.
-# variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
-
-# Not a target:
-.SUFFIXES:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
 
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-28 14:35:25
+#  Last modified 2022-06-24 18:21:03.551040415
 #  File has been updated.
 #  Successfully updated.
-# variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
 container: srcs/main.o
 #  Implicit rule search has not been done.
-#  Last modified 2022-07-11 10:13:11
+#  File does not exist.
 #  File has been updated.
-#  Successfully updated.
+#  Needs to be updated (-q is set).
 # variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
- 
-#  commands to execute (from `Makefile', line 33):
-	${CC} ${FLAGS} ${OBJ} -o ${NAME}
-	
+# Load=0/32=0%, Rehash=0, Collisions=0/6=0%
+#  recipe to execute (from 'Makefile', line 33):
+			${CC} ${FLAGS} ${OBJ} -o ${NAME}
 
 fclean: clean
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 39):
-	rm -f ${NAME}
-	
+#  recipe to execute (from 'Makefile', line 39):
+			rm -f ${NAME}
 
 # Not a target:
 srcs/main.cpp:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-11 10:13:05
+#  Last modified 2022-07-12 09:19:57.645049673
 #  File has been updated.
 #  Successfully updated.
-# variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
 # Not a target:
 .DEFAULT:
@@ -268,35 +344,50 @@ clean:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 36):
-	rm -f ${OBJ}
-	
+#  recipe to execute (from 'Makefile', line 36):
+			rm -f ${OBJ}
 
 srcs/main.o: srcs/main.cpp includes/vector.hpp includes/iterator.hpp
 #  Implicit rule search has been done.
-#  Implicit/static pattern stem: `srcs/main'
-#  Last modified 2022-07-11 10:13:11
+#  Implicit/static pattern stem: 'srcs/main'
+#  File does not exist.
 #  File has been updated.
-#  Successfully updated.
+#  Needs to be updated (-q is set).
+# automatic
+# @ := srcs/main.o
+# automatic
+# % := 
+# automatic
+# * := srcs/main
+# automatic
+# + := srcs/main.cpp includes/vector.hpp includes/iterator.hpp
+# automatic
+# | := 
+# automatic
+# < := srcs/main.cpp
+# automatic
+# ^ := srcs/main.cpp includes/vector.hpp includes/iterator.hpp
+# automatic
+# ? := srcs/main.cpp includes/vector.hpp includes/iterator.hpp
 # variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
-#  commands to execute (from `Makefile', line 28):
-	${CC} ${FLAGS} -I ${HEADER} -c $< -o $@
-	
+# Load=8/32=25%, Rehash=0, Collisions=2/16=12%
+#  recipe to execute (from 'Makefile', line 28):
+			${CC} ${FLAGS} -I ${HEADER} -c $< -o $@
 
 # files hash-table stats:
-# Load=13/1024=1%, Rehash=0, Collisions=0/42=0%
+# Load=13/1024=1%, Rehash=0, Collisions=0/41=0%
 # VPATH Search Paths
 
-# No `vpath' search paths.
+# No 'vpath' search paths.
 
-# No general (`VPATH' variable) search path.
+# No general ('VPATH' variable) search path.
 
-# # of strings in strcache: 1
-# # of strcache buffers: 1
-# strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
-# strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
+# strcache buffers: 1 (0) / strings = 27 / storage = 250 B / avg = 9 B
+# current buf: size = 8162 B / used = 250 B / count = 27 / avg = 9 B
 
-# Finished Make data base on Mon Jul 11 10:13:42 2022
+# strcache performance: lookups = 57 / hit rate = 52%
+# hash-table stats:
+# Load=27/8192=0%, Rehash=0, Collisions=3/57=5%
+# Finished Make data base on Tue Jul 12 09:20:53 2022
 
  

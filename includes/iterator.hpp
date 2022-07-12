@@ -144,6 +144,17 @@ namespace ft {
                     typedef value_type*                     pointer;
                     typedef value_type&                     reference;
                     typedef std::random_access_iterator_tag iterator_category;
+                    typedef regular_iterator<value_type>    iterator;
+                
+                    reference   operator[](difference_type n) const { return (*this->_elem + n); }
+                
+                    iterator    operator+(difference_type n) const { return (this->_elem + n); }
+                    iterator    &operator++(void) { ++this->_elem; return (*this); }
+                    iterator    operator++(int) { iterator tmp = *this; ++this->_elem; return (tmp); }
+
+                private :
+                    
+                    pointer _elem;
             };
 
 
@@ -168,6 +179,20 @@ namespace ft {
                 reverse_iterator<Iterator>                              operator+(typename reverse_iterator<Iterator>::difference_type n, const reverse_iterator<Iterator>& rev_it) { return (rev_it._elem - n); }
             template <class Iterator>
                 typename reverse_iterator<Iterator>::difference_type    operator-(const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs) { return (lhs._elem - rhs._elem); }
+
+
+            template <class Iterator>
+                bool    operator==(const regular_iterator<Iterator>& lhs, const regular_iterator<Iterator>& rhs) { return (lhs._elem == rhs._elem); }
+            template <class Iterator>
+                bool    operator!=(const regular_iterator<Iterator>& lhs, const regular_iterator<Iterator>& rhs) { return (lhs._elem != rhs._elem); };
+            template <class Iterator>
+                bool    operator<(const regular_iterator<Iterator>& lhs, const regular_iterator<Iterator>& rhs) { return (lhs._elem < rhs._elem); };
+            template <class Iterator>
+                bool    operator<=(const regular_iterator<Iterator>& lhs, const regular_iterator<Iterator>& rhs) { return (lhs._elem <= rhs._elem); };
+            template <class Iterator>
+                bool    operator>(const regular_iterator<Iterator>& lhs, const regular_iterator<Iterator>& rhs) { return (lhs._elem > rhs._elem); };
+            template <class Iterator>
+                bool    operator>=(const regular_iterator<Iterator>& lhs, const regular_iterator<Iterator>& rhs) { return (lhs._elem >= rhs._elem); };
 }
 
 #endif
