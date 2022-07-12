@@ -29,7 +29,7 @@ namespace ft {
 
         public :
 
-        // MEMBER TYPES
+        //MEMBER TYPES
 
             typedef T                                                   value_type;
             typedef Alloc                                               allocator_type;
@@ -37,18 +37,18 @@ namespace ft {
             typedef const value_type&                                   const_reference;
             typedef value_type*                                         pointer;
             typedef const value_type*                                   const_pointer;
-            typedef ft::random_access_iterator<value_type>              iterator;
-            typedef ft::random_access_iterator<const value_type>        const_iterator;
+            typedef ft::regular_iterator<value_type>                    iterator;
+            typedef ft::regular_iterator<const value_type>              const_iterator;
             typedef ft::reverse_iterator<iterator>                      reverse_iterator;
             typedef ft::reverse_iterator<const_iterator>                const_reverse_iterator;
             typedef typename iterator_traits<iterator>::difference_type difference_type;
             typedef size_t                                              size_type;
 
-        // MEMBER FUNCTIONS
+        //MEMBER FUNCTIONS
 
             //Contructors
-            explicit    vector(const allocator_type& alloc = allocator_type()) : _array(NULL), _alloc(alloc) {}
-            explicit    vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _array(new T[n]), _capacity(n), _size(n), _begin(0), _end(n), _alloc(alloc), _value(val) {}
+            explicit    vector(const allocator_type& alloc = allocator_type()) : _array(new T), _capacity(0), _size(0), _alloc(alloc) {}
+            explicit    vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _array(new T[n]), _capacity(n), _size(n), _begin(0), _end(n), _alloc(alloc)/*, _value(val)*/ { (void)val; }
             template <class InputIterator>
                 vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) : _array(new T[last - first]), _capacity(last - first), _size(last - first), _begin(first), _end(last), _alloc(alloc) {
 
@@ -188,13 +188,13 @@ namespace ft {
                 {
                     size_type   i = 0;
                     T*  new_array = new T[this->_size + 5];
-                    this->_size++;
-                    while (i < this->size)
+                    while (i < this->_size)
                     {
                         new_array[i] = this->_array[i];
                         i++;
                     }
-                    this->_capacity += 6;
+                    this->_size++;
+                    this->_capacity += 5;
                     new_array[i] = val;
                     delete[] this->_array;
                     this->_array = new_array;
@@ -217,12 +217,12 @@ namespace ft {
                 {
                     iterator    i = 0;
                     T*  new_array = new T[this->_size + 5];
-                    this->_size++;
                     while (i < position)
                     {
                         new_array[i] = this->_array[i];
                         i++;
                     }
+                    this->_size++;
                     new_array[i] = val;
                     for (iterator i = position + 1; i < this->_size; i++)
                         new_array[i] = this->_array[i - 1];
@@ -338,7 +338,7 @@ namespace ft {
 
         private :
 
-        // MEMBER TYPES
+        //MEMBER TYPES
 
             T*              _array;
             size_t          _capacity;
@@ -346,7 +346,7 @@ namespace ft {
             size_t          _begin;
             size_t          _end;
             allocator_type  _alloc;
-            value_type&     _value;
+            // value_type&     _value;
 
     };
 
