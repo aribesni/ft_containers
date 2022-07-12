@@ -226,19 +226,32 @@ namespace ft {
                     }
                     this->_size++;
                     new_array[j] = val;
+                    j++;
                     for (iterator i = position + 1; i < this->end(); i++)
-                        new_array[i] = this->_array[i - 1];
+                        new_array[j] = this->_array[j - 1];
                     this->_capacity += 6;
                     delete[] this->_array;
                     this->_array = new_array;
                 }
                 else
                 {
-                    for (iterator i = position; i < this->_size; i++)
-                        this->_array[i + 1] = this->_array[i];
-                    this->_array[position] = val;
+                    size_type   j = 0;
+                    iterator    i = this->begin();
+                    while (i < position)
+                    {
+                        i++;
+                        j++;
+                    }
+                    size_type   k = j;
+                    while (i < this->end())
+                    {
+                        this->_array[j + 1] = this->_array[j];
+                        i++;
+                        j++;
+                    }
+                    this->_array[k] = val;
                 }
-                return (this->_array[position]);
+                return (position);
             }
             void        insert(iterator position, size_type n, const value_type& val) {
 
