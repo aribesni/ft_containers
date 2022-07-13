@@ -183,7 +183,7 @@ namespace ft {
                     this->_array[i] = val;
             }
             void        push_back(const value_type& val) {
-                
+               
                 if (this->_size + 1 > this->_capacity)
                 {
                     size_type   i = 0;
@@ -213,8 +213,8 @@ namespace ft {
             }
             iterator    insert(iterator position, const value_type& val) {
                 
-                if (this->_size + 1 > this->_capacity)
-                {
+                // if (this->_size + 1 > this->_capacity)
+                // {
                     iterator    i = this->begin();
                     size_type   j = 0;
                     T*  new_array = new T[this->_size + 5];
@@ -227,30 +227,36 @@ namespace ft {
                     this->_size++;
                     new_array[j] = val;
                     j++;
-                    for (iterator i = position + 1; i < this->end(); i++)
+                    while (j < this->_size)
+                    {
                         new_array[j] = this->_array[j - 1];
+                        j++;
+                    }
                     this->_capacity += 6;
                     delete[] this->_array;
                     this->_array = new_array;
-                }
-                else
-                {
-                    size_type   j = 0;
-                    iterator    i = this->begin();
-                    while (i < position)
-                    {
-                        i++;
-                        j++;
-                    }
-                    size_type   k = j;
-                    while (i < this->end())
-                    {
-                        this->_array[j + 1] = this->_array[j];
-                        i++;
-                        j++;
-                    }
-                    this->_array[k] = val;
-                }
+                // }
+                // else
+                // {
+                    // size_type   j = 0;
+                    // iterator    i = this->begin();
+                    // while (i < position)
+                    // {
+                    //     i++;
+                    //     j++;
+                    // }
+                    // size_type   k = j;
+                    // std::cout << "j : " << j << std::endl;
+                    // while (j < this->_size)
+                    // {
+                    //     this->_array[j + 1] = this->_array[j];
+                    //     i++;
+                    //     j++;
+                    // }
+                    // std::cout << "j : " << j << std::endl;
+                    // // std::cout << "size : " << this->_size << std::endl;
+                    // this->_array[k] = val;
+                // }
                 return (position);
             }
             void        insert(iterator position, size_type n, const value_type& val) {
@@ -290,11 +296,22 @@ namespace ft {
                 }
             iterator    erase(iterator position) {
 
-                if (position < 0 || position >= this->_size)
-                    throw std::length_error("Erase : position out of range");
-                for (int i = position; i < this->_size - 1; i++)
+                // if (position < this->_begin || position >= this->_end)
+                //     throw std::length_error("Erase : position out of range");
+                iterator    tmp = this->begin();
+                size_type   i = 0;
+                while (tmp < position)
+                {
+                    tmp++;
+                    i++;
+                }
+                while (i < this->_size - 1)
+                {
                     this->_array[i] = this->_array[i + 1];
+                    i++;
+                }
                 this->_size--;
+                return (position);
             }
             iterator    erase(iterator first, iterator last) {
 
