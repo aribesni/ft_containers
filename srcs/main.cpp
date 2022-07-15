@@ -146,6 +146,7 @@ int main(void)
     my_iterator = my_vector.begin();
     std::cout << "ITERATOR : " << *my_iterator << std::endl;
     my_iterator += 2;
+    std::cout << "ITERATOR + 2 : " << *my_iterator << std::endl;
 
     my_vector.insert(my_iterator, 7);
 

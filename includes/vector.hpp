@@ -302,7 +302,6 @@ namespace ft {
                 // if (position < this->_begin || position >= this->_end)
                 //     throw std::length_error("Erase : position out of range");
                 iterator    tmp = this->begin();
-
                 size_type   i = 0;
                 T*  new_array = new T[this->_size];
                 while (tmp < position)
@@ -319,14 +318,13 @@ namespace ft {
                 this->_size--;
                 delete[] this->_array;
                 this->_array = new_array;
-                this->_ptr = this->_array;
+                // this->_ptr = this->_array;
                 return (position);
             }
             iterator    erase(iterator first, iterator last) {
 
                 iterator    n = last - first;
                 T           *new_array = new T[this->_size + n];
-
                 this->_size += n;
                 for (int i = 0; i < first; i++)
                     new_array[i] = this->_array[i];
