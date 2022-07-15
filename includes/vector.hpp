@@ -80,9 +80,9 @@ namespace ft {
             }
 
             //Iterators
-            iterator                begin(void) { return (iterator(this->_ptr)); }
+            iterator                begin(void) { return (this->_ptr); }
             const_iterator          begin(void) const { return (this->_begin); }
-            iterator                end(void) { std::cout << "PTR + SIZE : " << this->_ptr + this->_size << std::endl; return (iterator(this->_ptr + this->_size)); }
+            iterator                end(void) { return (iterator(this->_ptr + this->_size)); }
             const_iterator          end(void) const { return (this->_end + this->_size); }
             reverse_iterator        rbegin(void) { return (reverse_iterator(this->_end())); }
             const_reverse_iterator  rbegin(void) const { return (const_revers_iterator(this->_end())); }
@@ -188,6 +188,7 @@ namespace ft {
                 {
                     size_type   i = 0;
                     T*  new_array = new T[this->_size + 5];
+                    
                     while (i < this->_size)
                     {
                         new_array[i] = this->_array[i];
@@ -198,6 +199,7 @@ namespace ft {
                     new_array[i] = val;
                     delete[] this->_array;
                     this->_array = new_array;
+                    // this->_ptr = this->_array;
                 }
                 else
                 {
@@ -217,7 +219,7 @@ namespace ft {
                 // {
                     iterator    i = this->begin();
                     size_type   j = 0;
-                    T*  new_array = new T[this->_size + 5];
+                    T*  new_array = new T[this->_size + 1];
                     while (i < position)
                     {
                         new_array[j] = this->_array[j];
@@ -232,9 +234,10 @@ namespace ft {
                         new_array[j] = this->_array[j - 1];
                         j++;
                     }
-                    this->_capacity += 6;
+                    this->_capacity += 3;
                     delete[] this->_array;
                     this->_array = new_array;
+                    // this->_ptr = this->_array;
                 // }
                 // else
                 // {
@@ -269,7 +272,7 @@ namespace ft {
                     new_array[j] = val;
                 for (iterator i = position + n + 1; i < this->_size; i++)
                     new_array[i] = this->_array[i - 1];
-                this->_capacity += n + 5;
+                this->_capacity += n + 2;
                 delete[] this->_array;
                 this->_array = new_array;
             }
@@ -290,7 +293,7 @@ namespace ft {
                         for (size_type i = last; i < this->_size; i++)
                             new_array[i] = this->_array[position++];
                     }
-                    this->_capacity += n + 5;
+                    this->_capacity += n + 2;
                     delete[] this->_array;
                     this->_array = new_array;
                 }
@@ -299,18 +302,24 @@ namespace ft {
                 // if (position < this->_begin || position >= this->_end)
                 //     throw std::length_error("Erase : position out of range");
                 iterator    tmp = this->begin();
+
                 size_type   i = 0;
+                T*  new_array = new T[this->_size];
                 while (tmp < position)
                 {
-                    tmp++;
+                    new_array[i] = this->_array[i];
                     i++;
+                    tmp++;
                 }
                 while (i < this->_size - 1)
                 {
-                    this->_array[i] = this->_array[i + 1];
+                    new_array[i] = this->_array[i + 1];
                     i++;
                 }
                 this->_size--;
+                delete[] this->_array;
+                this->_array = new_array;
+                this->_ptr = this->_array;
                 return (position);
             }
             iterator    erase(iterator first, iterator last) {
@@ -374,9 +383,9 @@ namespace ft {
 
             T*              _array;
             pointer         _ptr;
+            pointer         _begin;
             size_t          _capacity;
             size_t          _size;
-            // iterator        _begin;
             // iterator        _end;
             allocator_type  _alloc;
             // value_type&     _value;
