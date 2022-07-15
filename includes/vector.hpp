@@ -47,15 +47,15 @@ namespace ft {
         //MEMBER FUNCTIONS
 
             //Contructors
-            explicit    vector(const allocator_type& alloc = allocator_type()) : _array(new T), _capacity(0), _size(0), _alloc(alloc) {}
-            explicit    vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _array(new T[n]), _capacity(n), _size(n), _begin(0), _end(n), _alloc(alloc)/*, _value(val)*/ { (void)val; }
+            explicit    vector(const allocator_type& alloc = allocator_type()) : _array(new T), _ptr(_array), _capacity(0), _size(0), _alloc(alloc) {}
+            explicit    vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _array(new T[n]), _capacity(n), _size(n), /*_begin(0), _end(n),*/ _alloc(alloc)/*, _value(val)*/ { (void)val; _ptr = _alloc.allocate(n); }
             template <class InputIterator>
-                vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) : _array(new T[last - first]), _capacity(last - first), _size(last - first), _begin(first), _end(last), _alloc(alloc) {
+                vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) : _array(new T[last - first]), _ptr(_array), _capacity(last - first), _size(last - first), /*_begin(first), _end(last),*/ _alloc(alloc) {
 
                 for (InputIterator i = first; i < last; i++)
                     this->_array[i] = *i;
             }
-            vector(const vector& x) : _array(new T[x._capacity]), _capacity(x._capacity), _size(x._size), _begin(x._begin), _end(x._end) {
+            vector(const vector& x) : _array(new T[x._capacity]), _capacity(x._capacity), _size(x._size)/*, _begin(x._begin), _end(x._end)*/ {
 
                 *this = x;
                 for (size_t i = 0; i < x._size; i++)
@@ -80,10 +80,10 @@ namespace ft {
             }
 
             //Iterators
-            iterator                begin(void) { return (this->_begin); }
+            iterator                begin(void) { return (iterator(this->_ptr)); }
             const_iterator          begin(void) const { return (this->_begin); }
-            iterator                end(void) { return (this->_end); }
-            const_iterator          end(void) const { return (this->_end); }
+            iterator                end(void) { std::cout << "PTR + SIZE : " << this->_ptr + this->_size << std::endl; return (iterator(this->_ptr + this->_size)); }
+            const_iterator          end(void) const { return (this->_end + this->_size); }
             reverse_iterator        rbegin(void) { return (reverse_iterator(this->_end())); }
             const_reverse_iterator  rbegin(void) const { return (const_revers_iterator(this->_end())); }
             reverse_iterator        rend(void) { return (reverse_iterator(this->_begin())); }
@@ -373,10 +373,11 @@ namespace ft {
         //MEMBER TYPES
 
             T*              _array;
+            pointer         _ptr;
             size_t          _capacity;
             size_t          _size;
-            iterator        _begin;
-            iterator        _end;
+            // iterator        _begin;
+            // iterator        _end;
             allocator_type  _alloc;
             // value_type&     _value;
 

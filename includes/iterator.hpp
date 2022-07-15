@@ -147,15 +147,19 @@ namespace ft {
                     typedef regular_iterator<value_type>    iterator;
 
                     regular_iterator(void) : _elem(pointer()) {}
-                
+                    regular_iterator(const T& src) : _elem(src) {}
+                    regular_iterator(pointer ptr) : _elem(ptr) {}
+                    
+                    reference   operator*(void) const { return (*this->_elem); }
                     reference   operator[](difference_type n) const { return (*this->_elem + n); }
                 
+                    iterator    &operator=(iterator const &rhs) { *this->_elem = *rhs._elem; return (*this); }
                     iterator    &operator+(difference_type n) { this->_elem += n; return (*this); } // keep an eye on this one
                     iterator    &operator++(void) { ++this->_elem; return (*this); }
                     iterator    operator++(int) { iterator tmp = *this; ++this->_elem; return (tmp); }
                     iterator    operator+=(difference_type n) { this->_elem += n; return (*this); }
 
-                    pointer base() const { return (this->_elem); }
+                    // pointer base() const { return (this->_elem); }
 
                     pointer     _elem;
             };
@@ -197,13 +201,13 @@ namespace ft {
             template <class Iterator>
                 bool    operator>=(const regular_iterator<Iterator>& lhs, const regular_iterator<Iterator>& rhs) { return (lhs._elem >= rhs._elem); };
 
-            template<typename Iterator>
-            regular_iterator<Iterator>
-                operator+(typename regular_iterator<Iterator>::difference_type n,
-                    regular_iterator<Iterator>& i)
-                {
-                    return i.base() + n;
-                }
+            // template<typename Iterator>
+            // regular_iterator<Iterator>
+            //     operator+(typename regular_iterator<Iterator>::difference_type n,
+            //         regular_iterator<Iterator>& i)
+            //     {
+            //         return i.base() + n;
+            //     }
 }
 
 #endif

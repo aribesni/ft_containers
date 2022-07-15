@@ -116,9 +116,8 @@ int main(void)
 
     std::cout << std::endl << std::endl << "-----     MY VECTOR     -----" << std::endl << std::endl;
    
-    my_iterator = my_vector.begin();
-    std::cout << "begin : " << *my_iterator << "   ";
-    // std::cout << "end : " << *my_vector.end() << "   ";
+    std::cout << "begin : " << *my_vector.begin() << "   ";
+    std::cout << "end : " << *my_vector.end() << "   ";
     std::cout << "size : " << my_vector.size() << "   ";
     std::cout << "capacity : " << my_vector.capacity() << "   ";
 
