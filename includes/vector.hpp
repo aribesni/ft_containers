@@ -48,42 +48,41 @@ namespace ft {
 
             //Contructors
             explicit    vector(const allocator_type& alloc = allocator_type()) : _array(new T), _ptr(_array), _capacity(0), _size(0), _alloc(alloc) {}
-            explicit    vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _array(new T[n]), _capacity(n), _size(n), /*_begin(0), _end(n),*/ _alloc(alloc)/*, _value(val)*/ { (void)val; _ptr = _alloc.allocate(n); }
+            explicit    vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _array(new T[n]), _capacity(n), _size(n), _alloc(alloc) { (void)val; _ptr = _alloc.allocate(n); }
             template <class InputIterator>
-                vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) : _array(new T[last - first]), _ptr(_array), _capacity(last - first), _size(last - first), /*_begin(first), _end(last),*/ _alloc(alloc) {
+                vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) : _array(new T[last - first]), _ptr(_array), _capacity(last - first), _size(last - first), _alloc(alloc) {
 
                 for (InputIterator i = first; i < last; i++)
                     this->_array[i] = *i;
             }
-            vector(const vector& x) : _array(new T[x._capacity]), _capacity(x._capacity), _size(x._size)/*, _begin(x._begin), _end(x._end)*/ {
+            vector(const vector& x) : _array(new T[x._capacity]), _ptr(x._ptr), _capacity(x._size), _size(x._size) { // not sure about capacity
 
-                *this = x;
+                // *this = x;
                 for (size_t i = 0; i < x._size; i++)
                     this->_array[i] = x._array[i];
             }
 
             //Destructor
-            ~vector(void) {
-
-                delete[] this->_array;
-            }
+            ~vector(void) { delete[] this->_array; }
 
             //Assign
             vector& operator=(const vector &x) {
 
-                *this = x;
-                this->_capacity = x._capacity;
-                this->_size = x._size;
-                for (size_t i = 0; i < x._size; i++)
-                    this->_array[i] = x._array[i];
+                if (*this != x)
+                {
+                    this->_capacity = x._capacity;
+                    this->_size = x._size;
+                    for (size_t i = 0; i < x._size; i++)
+                        this->_array[i] = x._array[i];
+                }
                 return (*this);
             }
 
             //Iterators
             iterator                begin(void) { return (this->_ptr); }
-            const_iterator          begin(void) const { return (this->_begin); }
+            const_iterator          begin(void) const { return (this->_ptr); }
             iterator                end(void) { return (iterator(this->_ptr + this->_size)); }
-            const_iterator          end(void) const { return (this->_end + this->_size); }
+            const_iterator          end(void) const { return (this->_ptr + this->_size); }
             reverse_iterator        rbegin(void) { return (reverse_iterator(this->_end())); }
             const_reverse_iterator  rbegin(void) const { return (const_revers_iterator(this->_end())); }
             reverse_iterator        rend(void) { return (reverse_iterator(this->_begin())); }
@@ -187,7 +186,7 @@ namespace ft {
                 if (this->_size + 1 > this->_capacity)
                 {
                     size_type   i = 0;
-                    T*  new_array = new T[this->_size + 5];
+                    T*  new_array = new T[this->_size + 1];
                     
                     while (i < this->_size)
                     {
@@ -195,11 +194,10 @@ namespace ft {
                         i++;
                     }
                     this->_size++;
-                    this->_capacity += 5;
+                    this->_capacity += 2;
                     new_array[i] = val;
                     delete[] this->_array;
                     this->_array = new_array;
-                    // this->_ptr = this->_array;
                 }
                 else
                 {
@@ -234,7 +232,7 @@ namespace ft {
                         new_array[j] = this->_array[j - 1];
                         j++;
                     }
-                    this->_capacity += 3;
+                    this->_capacity += this->_size > this->_capacity ? 1 : 0;
                     delete[] this->_array;
                     this->_array = new_array;
                     // this->_ptr = this->_array;
@@ -310,15 +308,14 @@ namespace ft {
                     i++;
                     tmp++;
                 }
-                while (i < this->_size - 1)
+                this->_size--;
+                while (i < this->_size)
                 {
                     new_array[i] = this->_array[i + 1];
                     i++;
                 }
-                this->_size--;
                 delete[] this->_array;
                 this->_array = new_array;
-                // this->_ptr = this->_array;
                 return (position);
             }
             iterator    erase(iterator first, iterator last) {
@@ -381,12 +378,9 @@ namespace ft {
 
             T*              _array;
             pointer         _ptr;
-            pointer         _begin;
             size_t          _capacity;
             size_t          _size;
-            // iterator        _end;
             allocator_type  _alloc;
-            // value_type&     _value;
 
     };
 
@@ -394,11 +388,11 @@ namespace ft {
     template <class T, class Alloc>
         bool operator==(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
 
-            if (lhs._size == rhs._size)
+            if (lhs.size() == rhs.size())
             {
-                for (int i = 0; i < lhs._size; i++)
+                for (unsigned long i = 0; i < lhs.size(); i++)
                 {
-                    if (lhs._array[i] != rhs._array[i])
+                    if (lhs[i] != rhs[i])
                         return (false);
                 }
             }
@@ -414,12 +408,12 @@ namespace ft {
     template <class T, class Alloc>
         bool operator<(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
 
-            int i;
+            unsigned long   i;
 
             i = 0;
-            while (i < lhs._size && i < rhs._size)
+            while (i < lhs.size() && i < rhs.size())
             {
-                if (lhs._array[i] >= rhs._array[i])
+                if (lhs[i] >= rhs[i])
                     return (false);
                 i++;
             }
