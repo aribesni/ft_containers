@@ -48,16 +48,26 @@ namespace ft {
 
             //Contructors
             explicit    vector(const allocator_type& alloc = allocator_type()) : _array(new T), _ptr(_array), _capacity(0), _size(0), _alloc(alloc) {}
-            explicit    vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _array(new T[n]), _capacity(n), _size(n), _alloc(alloc) { (void)val; _ptr = _alloc.allocate(n); }
-            template <class InputIterator>
-                vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) : _array(new T[last - first]), _ptr(_array), _capacity(last - first), _size(last - first), _alloc(alloc) {
-
-                for (InputIterator i = first; i < last; i++)
-                    this->_array[i] = *i;
+            explicit    vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _array(new T[n]), _ptr(_array), _capacity(n), _size(n), _alloc(alloc) {
+                
+                for (size_t i = 0; i < this->_size; i++)
+                    this->_array[i] = val;
             }
-            vector(const vector& x) : _array(new T[x._capacity]), _ptr(x._ptr), _capacity(x._size), _size(x._size) { // not sure about capacity
+            // template <class InputIterator>
+            //     vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) : _array(new T[last - first]), _ptr(_array), _capacity(last - first), _size(last - first), _alloc(alloc) {
+            
+            //     InputIterator i = first; 
+            //     size_t  j = 0;
 
-                // *this = x;
+            //     while (i < last)
+            //     {
+            //         this->_array[j] = i;
+            //         i++;
+            //         j++;
+            //     }
+            // }
+            vector(const vector& x) : _array(new T[x._capacity]), _ptr(x._array), _capacity(x._size), _size(x._size) { // not sure about capacity
+
                 for (size_t i = 0; i < x._size; i++)
                     this->_array[i] = x._array[i];
             }
@@ -213,51 +223,26 @@ namespace ft {
             }
             iterator    insert(iterator position, const value_type& val) {
                 
-                // if (this->_size + 1 > this->_capacity)
-                // {
-                    iterator    i = this->begin();
-                    size_type   j = 0;
-                    T*  new_array = new T[this->_size + 1];
-                    while (i < position)
-                    {
-                        new_array[j] = this->_array[j];
-                        i++;
-                        j++;
-                    }
-                    this->_size++;
-                    new_array[j] = val;
+                iterator    i = this->begin();
+                size_type   j = 0;
+                T*  new_array = new T[this->_size + 1];
+                while (i < position)
+                {
+                    new_array[j] = this->_array[j];
+                    i++;
                     j++;
-                    while (j < this->_size)
-                    {
-                        new_array[j] = this->_array[j - 1];
-                        j++;
-                    }
-                    this->_capacity += this->_size > this->_capacity ? 1 : 0;
-                    delete[] this->_array;
-                    this->_array = new_array;
-                    // this->_ptr = this->_array;
-                // }
-                // else
-                // {
-                    // size_type   j = 0;
-                    // iterator    i = this->begin();
-                    // while (i < position)
-                    // {
-                    //     i++;
-                    //     j++;
-                    // }
-                    // size_type   k = j;
-                    // std::cout << "j : " << j << std::endl;
-                    // while (j < this->_size)
-                    // {
-                    //     this->_array[j + 1] = this->_array[j];
-                    //     i++;
-                    //     j++;
-                    // }
-                    // std::cout << "j : " << j << std::endl;
-                    // // std::cout << "size : " << this->_size << std::endl;
-                    // this->_array[k] = val;
-                // }
+                }
+                this->_size++;
+                new_array[j] = val;
+                j++;
+                while (j < this->_size)
+                {
+                    new_array[j] = this->_array[j - 1];
+                    j++;
+                }
+                this->_capacity += this->_size > this->_capacity ? 1 : 0;
+                delete[] this->_array;
+                this->_array = new_array;
                 return (position);
             }
             void        insert(iterator position, size_type n, const value_type& val) {
@@ -297,8 +282,8 @@ namespace ft {
                 }
             iterator    erase(iterator position) {
 
-                // if (position < this->_begin || position >= this->_end)
-                //     throw std::length_error("Erase : position out of range");
+                if (position < this->begin() || position >= this->end())
+                    throw std::length_error("Erase : position out of range");
                 iterator    tmp = this->begin();
                 size_type   i = 0;
                 T*  new_array = new T[this->_size];
@@ -332,29 +317,21 @@ namespace ft {
             }
             void        swap(vector& x) {
 
-                if (*this == x)
-                    return ;
-
                 size_t  tmp_capacity = x._capacity;
                 size_t  tmp_size = x._size;
-                size_t  tmp_begin = x._begin;
-                size_t  tmp_end = x._end;
+                pointer tmp_ptr = x._ptr;
                 T       *tmp_array = x._array;
 
                 x._capacity = this->_capacity;
                 x._size = this->_size;
-                x._begin = this->_begin;
-                x._end = this->_end;
-                delete[] x._array;
+                x._ptr = this->_ptr;
                 x._array = this->_array;
-                for (int i = 0; i < this->_size; i++)
+                for (size_t i = 0; i < this->_size; i++)
                     x._array[i] = this->_array[i];
 
                 this->_capacity = tmp_capacity;
                 this->_size = tmp_size;
-                this->_begin = tmp_begin;
-                this->_end = tmp_end;
-                delete[] this->_array;
+                this->_ptr = tmp_ptr;
                 this->_array = tmp_array;
                 for (size_t i = 0; i < tmp_size; i++)
                     this->_array[i] = tmp_array[i];
