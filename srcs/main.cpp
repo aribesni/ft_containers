@@ -214,7 +214,9 @@ int main(void)
 
     std::cout << "creating new vector" << std::endl << std::endl;
 
-    std::vector<int> og_vector_3(6, 8);
+    std::vector<int>::size_type og_n = 6;
+
+    std::vector<int> og_vector_3(og_n, 8);
 
     std::cout << "vector 1 : ";
 
@@ -246,7 +248,9 @@ int main(void)
 
     std::cout << "creating new vector" << std::endl << std::endl;
 
-    ft::vector<int> my_vector_3(6, 8);
+    std::vector<int>::size_type my_n = 6;
+    
+    ft::vector<int> my_vector_3(my_n, 8);
 
     std::cout << "vector 1 : ";
 
@@ -273,6 +277,50 @@ int main(void)
 
     for (unsigned long i = 0; i < my_vector_3.size(); i++)
         std::cout << my_vector_3[i] << " ";
+
+    std::cout << std::endl << std::endl << "-----     ORIGINAL VECTOR     -----" << std::endl << std::endl;
+
+    std::cout << "assign : ";
+
+    std::vector<int>::size_type og_n2 = 3;
+
+    og_vector.assign(og_n2, 9);
+
+    for (unsigned long i = 0; i < og_vector.size(); i++)
+        std::cout << og_vector[i] << " ";
+
+    std::cout << std::endl << std::endl << "-----     MY VECTOR     -----" << std::endl << std::endl;
+
+    std::cout << "assign : ";
+
+    ft::vector<int>::size_type my_n2 = 3;
+
+    my_vector.assign(my_n2, 9);
+
+    for (unsigned long i = 0; i < my_vector.size(); i++)
+        std::cout << my_vector[i] << " ";
+
+    std::cout << std::endl << std::endl << "-----     ORIGINAL VECTOR     -----" << std::endl << std::endl;
+
+    std::cout << "resize : ";
+
+    std::vector<int>::size_type og_n3 = 6;
+
+    og_vector.resize(og_n3, 1);
+
+    for (unsigned long i = 0; i < og_vector.size(); i++)
+        std::cout << og_vector[i] << " ";
+
+    std::cout << std::endl << std::endl << "-----     MY VECTOR     -----" << std::endl << std::endl;
+
+    std::cout << "resize : ";
+
+    ft::vector<int>::size_type my_n3 = 6;
+
+    my_vector.resize(my_n3, 1);
+
+    for (unsigned long i = 0; i < my_vector.size(); i++)
+        std::cout << my_vector[i] << " ";
 
     std::cout << std::endl;
 

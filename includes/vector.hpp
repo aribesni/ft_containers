@@ -53,19 +53,19 @@ namespace ft {
                 for (size_t i = 0; i < this->_size; i++)
                     this->_array[i] = val;
             }
-            // template <class InputIterator>
-            //     vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) : _array(new T[last - first]), _ptr(_array), _capacity(last - first), _size(last - first), _alloc(alloc) {
+            template <class InputIterator>
+                vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) : _array(new T[last - first]), _ptr(_array), _capacity(last - first), _size(last - first), _alloc(alloc) {
             
-            //     InputIterator i = first; 
-            //     size_t  j = 0;
+                InputIterator i = first; 
+                size_t  j = 0;
 
-            //     while (i < last)
-            //     {
-            //         this->_array[j] = i;
-            //         i++;
-            //         j++;
-            //     }
-            // }
+                while (i < last)
+                {
+                    this->_array[j] = i;
+                    i++;
+                    j++;
+                }
+            }
             vector(const vector& x) : _array(new T[x._capacity]), _ptr(x._array), _capacity(x._size), _size(x._size) { // not sure about capacity
 
                 for (size_t i = 0; i < x._size; i++)
@@ -105,15 +105,23 @@ namespace ft {
 
                 if (n < this->_size)
                 {
-                    for (size_type i = n + 1; i < this->_size; i++)
-                        delete this->_array[i];
+                    size_type   tmp = 0;
+                    for (pointer test = this->_array; tmp < n; test++)
+                    {
+                        this->_alloc.destroy(test);
+                        tmp++;
+                    }
                     this->_size = n;
                 }
-                else if (n > this->_size)
+                else if (n > this->_size && n <= this->_capacity)
                 {
-                    this->push_back(val);
+                    while (n >= this->_size - 1)
+                    {
+                        this->push_back(val);
+                        n--;
+                    }
                 }
-                if (n > this->_capacity)
+                else if (n > this->_capacity)
                 {
                     T*  new_array = new T[n];
                     size_type i = -1;
@@ -188,8 +196,13 @@ namespace ft {
                     this->_array = new_array;
                     this->_capacity = this->_size;
                 }
-                else for (size_type i = 0; i < n; i++)
-                    this->_array[i] = val;
+                else 
+                {
+                    for (size_type i = 0; i < n; i++)
+                        this->_array[i] = val;
+                    while (this->_size > n)
+                        this->_size--;
+                }
             }
             void        push_back(const value_type& val) {
                
