@@ -54,16 +54,26 @@ namespace ft {
                     this->_array[i] = val;
             }
             template <class InputIterator>
-                vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) : _array(new T[last - first]), _ptr(_array), _capacity(last - first), _size(last - first), _alloc(alloc) {
-            
-                InputIterator i = first; 
-                size_t  j = 0;
-
-                while (i < last)
+                vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) {
+                    
+                size_type       i = 0;
+                InputIterator   tmp = first;
+                while (tmp < last)
                 {
-                    this->_array[j] = i;
+                    tmp++;
                     i++;
-                    j++;
+                }
+                this->_array = new T[i];
+                this->_ptr = this->_array;
+                this->_capacity = i;
+                this->_size = i;
+                this->_alloc = alloc;
+                i = 0;
+                pointer ptr_tmp = this->_ptr;
+                while (first < last)
+                {
+                    this->_alloc.construct(ptr_tmp, *first++);
+                    ptr_tmp++;
                 }
             }
             vector(const vector& x) : _array(new T[x._capacity]), _ptr(x._array), _capacity(x._size), _size(x._size) { // not sure about capacity
