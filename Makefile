@@ -24,7 +24,7 @@ FLAGS = 	-Wall -Wextra -Werror -std=c++98
 
 HEADER = 	./includes/
 
-%.o	: 		%.cpp ./includes/vector.hpp ./includes/iterator.hpp
+%.o	: 		%.cpp ./includes/map.hpp ./includes/vector.hpp ./includes/iterator.hpp
 			${CC} ${FLAGS} -I ${HEADER} -c $< -o $@
 
 all : 		${NAME}

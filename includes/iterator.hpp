@@ -161,7 +161,7 @@ namespace ft {
 
                     // pointer base() const { return (this->_elem); }
 
-                    pointer     _elem;
+                    pointer     _elem; // put this in private and create a getElem function
             };
 
 

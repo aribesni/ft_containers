@@ -322,6 +322,16 @@ int main(void)
     for (unsigned long i = 0; i < my_vector.size(); i++)
         std::cout << my_vector[i] << " ";
 
+    // std::cout << std::endl << std::endl << "-----     ORIGINAL VECTOR     -----" << std::endl << std::endl;
+
+    // std::cout << "contructor with iterator : ";
+
+    // std::vector<int>    og_vector_4(3, 8);
+    // std::vector<int>::iterator  it;
+
+    // for (unsigned long i = 0; i < og_vector_4.size(); i++)
+    //     std::cout << og_vector_4[i] << " ";
+
     std::cout << std::endl;
 
     return (0);

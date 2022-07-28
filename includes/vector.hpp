@@ -69,11 +69,10 @@ namespace ft {
                 this->_size = i;
                 this->_alloc = alloc;
                 i = 0;
-                pointer ptr_tmp = this->_ptr;
                 while (first < last)
                 {
-                    this->_alloc.construct(ptr_tmp, *first++);
-                    ptr_tmp++;
+                    this->push_back(*first); // this doesn't seem to work
+                    first++;
                 }
             }
             vector(const vector& x) : _array(new T[x._capacity]), _ptr(x._array), _capacity(x._size), _size(x._size) { // not sure about capacity
