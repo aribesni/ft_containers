@@ -18,6 +18,15 @@
 
 namespace ft {
 
+    //RED BLACK TREE
+    typedef struct          s_node {
+
+        struct *s_node      parent;
+        struct *s_node      left;
+        struct *s_node      right;
+        enum {red, black}   colour;
+    }                       t_node;
+
     template< class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<std::pair<const Key, T> > >
         class map {
             
@@ -58,7 +67,7 @@ namespace ft {
                     //MEMBER FUNCTIONS
 
                         //Operators
-                        bool    operator(const value_type& lhs, const value_type& rhs) const { return (comp(lhs.first, rhs.first)); }
+                        bool    operator()(const value_type& lhs, const value_type& rhs) const { return (comp(lhs.first, rhs.first)); }
 
                     protected :
 
