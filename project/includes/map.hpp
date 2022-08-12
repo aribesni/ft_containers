@@ -21,9 +21,9 @@ namespace ft {
     //RED BLACK TREE
     typedef struct          s_node {
 
-        struct *s_node      parent;
-        struct *s_node      left;
-        struct *s_node      right;
+        struct s_node*      parent;
+        struct s_node*      left;
+        struct s_node*      right;
         enum {red, black}   colour;
     }                       t_node;
 
