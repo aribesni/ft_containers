@@ -1,5 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   red_black_tree.hpp                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aribesni <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/08/16 10:28:42 by aribesni          #+#    #+#             */
+/*   Updated: 2022/08/16 10:28:46 by aribesni         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <iostream>
-// using namespace std;
 
 typedef struct      s_node {
 
@@ -68,7 +79,6 @@ class RedBlackTree {
             return searchTreeHelper(node->right, key);
         }
 */
-        // For balancing the tree after deletion
         void    balance_after_delete(t_node* x) {
 
             t_node* s;
@@ -208,27 +218,27 @@ class RedBlackTree {
             root->color = 0;
         }
 
-        void    print_node(t_node* root, std::string indent, bool last) {
+        // void    print_node(t_node* root, string indent, bool last) {
 
-            if (root != TNULL)
-            {
-                std::cout << indent;
-                if (last)
-                {
-                    std::cout << "R----";
-                    indent += "   ";
-                }
-                else
-                {
-                    std::cout << "L----";
-                    indent += "|  ";
-                }
-                std::string sColor = root->color ? "RED" : "BLACK";
-                std::cout << root->data << "(" << sColor << ")" << std::endl;
-                print_node(root->left, indent, false);
-                print_node(root->right, indent, true);
-            }
-        }
+        //     if (root != TNULL)
+        //     {
+        //         cout << indent;
+        //         if (last)
+        //         {
+        //             cout << "R----";
+        //             indent += "   ";
+        //         }
+        //         else
+        //         {
+        //             cout << "L----";
+        //             indent += "|  ";
+        //         }
+        //         string sColor = root->color ? "RED" : "BLACK";
+        //         cout << root->data << "(" << sColor << ")" << endl;
+        //         print_node(root->left, indent, false);
+        //         print_node(root->right, indent, true);
+        //     }
+        // }
 
     public:
 
@@ -417,35 +427,9 @@ class RedBlackTree {
                 balance_after_delete(x);
         }
 
-        void printTree() {
+        // void printTree() {
 
-            if (root)
-                print_node(this->root, "", true);
-        }
+        //     if (root)
+        //         print_node(this->root, "", true);
+        // }
 };
-
-int main(void) {
-
-    RedBlackTree bst;
-
-    bst.insert(55);
-    bst.insert(40);
-    bst.insert(65);
-    bst.insert(60);
-    bst.insert(75);
-    bst.insert(57);
-
-    std::cout << std::endl;
-
-    bst.printTree();
-
-    std::cout << std::endl << "After deleting" << std::endl << std::endl;
-
-    bst.deleteNode(40);
-
-    bst.printTree();
-  
-    std::cout << std::endl;
-
-    return (0);
-}

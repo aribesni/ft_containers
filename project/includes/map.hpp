@@ -15,6 +15,7 @@
 
 # include <iostream>
 # include "iterator.hpp"
+# include "red_black_tree.hpp"
 
 namespace ft {
 
@@ -85,7 +86,7 @@ namespace ft {
             //MEMBER FUNCTIONS
 
                 //Constructors
-                explicit    map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) {}
+                explicit    map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _ptr(_rb_tree.minimum()), _alloc(alloc) {}
                 template <class InputIterator>
                     map(InputIterator first, InputIterator last, const key_compare& comp = key_compare()) {}
                 map(const map& x) {}
@@ -94,8 +95,8 @@ namespace ft {
                 ~map(void) {}
 
                 //Iterators
-                iterator                begin(void) {}
-                const_iterator          begin(void) const {}
+                iterator                begin(void) { return (this->_ptr); }
+                const_iterator          begin(void) const { return (this->_ptr); }
                 iterator                end(void) {}
                 const_iterator          end(void) const {}
                 reverse_iterator        rbegin(void) {}
@@ -142,8 +143,9 @@ namespace ft {
 
                 private :
 
-                    
-
+                    RedBlackTree    _rb_tree;
+                    pointer         _ptr;
+                    allocator_type  _alloc;
         };
 }
 

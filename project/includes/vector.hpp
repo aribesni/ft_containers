@@ -101,9 +101,9 @@ namespace ft {
             iterator                begin(void) { return (this->_ptr); }
             const_iterator          begin(void) const { return (this->_ptr); }
             iterator                end(void) { return (iterator(this->_ptr + this->_size)); }
-            const_iterator          end(void) const { return (this->_ptr + this->_size); }
+            const_iterator          end(void) const { return const_iterator(this->_ptr + this->_size); }
             reverse_iterator        rbegin(void) { return (reverse_iterator(this->_end())); }
-            const_reverse_iterator  rbegin(void) const { return (const_revers_iterator(this->_end())); }
+            const_reverse_iterator  rbegin(void) const { return (const_reverse_iterator(this->_end())); }
             reverse_iterator        rend(void) { return (reverse_iterator(this->_begin())); }
             const_reverse_iterator  rend(void) const { return (const_reverse_iterator(this->_begin())); }
 
