@@ -23,7 +23,7 @@ typedef struct      s_node {
 
 class RedBlackTree {
 
-    private:
+    public :
 
         t_node  *root;
         t_node  *TNULL;
@@ -240,7 +240,7 @@ class RedBlackTree {
         //     }
         // }
 
-    public:
+    // public:
 
         RedBlackTree() {
 

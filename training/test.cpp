@@ -262,8 +262,8 @@ class RedBlackTree {
                 node = node->right;
             return (node);
         }
-/*
-        t_node* successor(t_node* x) {
+
+        t_node* previous_node(t_node* x) {
 
             if (x->right != TNULL)
                 return (minimum(x->right));
@@ -276,7 +276,7 @@ class RedBlackTree {
             return (y);
         }
 
-        t_node* predecessor(t_node* x) {
+        t_node* next_node(t_node* x) {
 
             if (x->left != TNULL)
                 return (maximum(x->left));
@@ -288,7 +288,7 @@ class RedBlackTree {
             }
             return (y);
         }
-*/
+
         void    leftRotate(t_node* x) {
 
             t_node* y = x->right;
@@ -324,7 +324,7 @@ class RedBlackTree {
         }
 
         // Inserting a node
-        void    insert(int key) {
+        t_node*    insert(int key) {
 
             t_node* node = new t_node;
             t_node* y = nullptr;
@@ -353,11 +353,13 @@ class RedBlackTree {
             if (node->parent == nullptr)
             {
                 node->color = 0;
-                return ;
+                std::cout << "KEY : " << node->data << std::endl;
+                return (NULL);
             }
             if (node->parent->parent == nullptr)
-                return ;
+                return (NULL);
             balance_after_insert(node);
+            return (node);
         }
 
         // t_node* getRoot() { return (this->root); }
@@ -422,16 +424,19 @@ class RedBlackTree {
             if (root)
                 print_node(this->root, "", true);
         }
+
 };
 
 int main(void) {
 
     RedBlackTree bst;
 
+    t_node* node;
+
     bst.insert(55);
     bst.insert(40);
     bst.insert(65);
-    bst.insert(60);
+    node = bst.insert(60);
     bst.insert(75);
     bst.insert(57);
 
@@ -439,11 +444,17 @@ int main(void) {
 
     bst.printTree();
 
+    std::cout << "DATA : " << node->data << std::endl;
+    std::cout << "next_node : " << bst.next_node(node)->data << std::endl;
+    std::cout << "previous_node : " << bst.previous_node(node)->data << std::endl;
+    
     std::cout << std::endl << "After deleting" << std::endl << std::endl;
 
     bst.deleteNode(40);
 
     bst.printTree();
+
+    // std::cout << bst.next_node();
   
     std::cout << std::endl;
 

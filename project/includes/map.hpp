@@ -20,24 +20,84 @@
 namespace ft {
 
     //RED BLACK TREE
-    typedef struct          s_node {
+    // typedef struct          s_node {
 
-        struct s_node*      parent;
-        struct s_node*      left;
-        struct s_node*      right;
-        enum {red, black}   colour;
-    }                       t_node;
+    //     struct s_node*      parent;
+    //     struct s_node*      left;
+    //     struct s_node*      right;
+    //     enum {red, black}   colour;
+    // }                       t_node;
 
-    template< class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<std::pair<const Key, T> > >
+    //PAIR
+    template< class T1, class T2 >
+        struct pair {
+
+        //MEMBER TYPES
+
+            typedef T1  first_type;
+            typedef T2  second_type;
+
+            first_type  first;
+            second_type second;
+
+        //MEMBER FUNCTIONS
+    
+            //Constructors
+            pair(void) : first(), second() {}
+            template<class U, class V>
+                pair(const pair<U, V>& pr) : first(pr.first), second(pr.second) {}
+            pair(const first_type& a, const second_type& b) : first(a), second(b) {}
+
+            pair&   operator=(const pair& pr) { this->first = pr.first; this->second = pr.second; return (*this); }
+
+    };
+
+    //MAKE PAIR
+    template< class T1, class T2 >
+        pair<T1, T2>    make_pair(T1 x, T2 y) { return (pair<T1, T2>(x, y)); }
+
+    //MAP
+    template< class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<ft::pair<const Key, T> > >
         class map {
             
             public :
+
+            //MAP ITERATORS
+                template <typename T>
+                    class MapIterator {
+                        
+                        //MEMBER TYPES
+
+                            typedef T                               value_type;
+                            typedef value_type&                     reference;
+                            typedef value_type*                     pointer;
+                            typedef std::bidirectional_iterator_tag iterator_category;
+                            typedef std::ptrdiff_t                  difference_type;
+                            typedef MapIterator<value_type>         iterator;
+                            typedef t_node*                         node_ptr;
+
+                            //Constructors
+                            MapIterator(void) : _ptr() {}
+                            MapIterator(node_ptr ptr) : _ptr(ptr) {}
+
+                            ~MapIterator(void) {}
+
+                            //Operators
+                            iterator&   operator++(void) { this->_ptr = _rb_tree.next_node(); return (*this); }
+                            iterator&   operator--(void) { this->_ptr = _rb_tree.previous_node(); return (*this); }
+
+                        private :
+
+                        //MEMBER TYPES
+
+                            node_ptr    _ptr;
+                };
 
             //MEMBER TYPES
 
                 typedef Key                                                     key_type;
                 typedef T                                                       mapped_type;
-                typedef std::pair<const Key, T>                                 value_type;
+                typedef ft::pair<const Key, T>                                  value_type;
                 typedef std::size_t                                             size_type;
                 typedef std::ptrdiff_t                                          difference_type;
                 typedef Compare                                                 key_compare;
@@ -86,7 +146,7 @@ namespace ft {
             //MEMBER FUNCTIONS
 
                 //Constructors
-                explicit    map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _ptr(_rb_tree.minimum()), _alloc(alloc) {}
+                explicit    map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _rb_tree(new RedBlackTree()), _ptr(_rb_tree.minimum()), _alloc(alloc) {}
                 template <class InputIterator>
                     map(InputIterator first, InputIterator last, const key_compare& comp = key_compare()) {}
                 map(const map& x) {}

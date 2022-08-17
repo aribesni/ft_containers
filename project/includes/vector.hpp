@@ -148,10 +148,7 @@ namespace ft {
             }
             size_type   capacity(void) const { return (this->_capacity); }
             bool        empty(void) const { return (this->_size == 0 ? true : false); }
-            void        reserve(size_type n) {
-
-                this->_capacity = (n > this->_capacity ? n : this->_capacity);
-            }
+            void        reserve(size_type n) { this->_capacity = (n > this->_capacity ? n : this->_capacity); }
 
             //Element access
             reference       operator[](size_type n) { return (this->_array[n]); }
