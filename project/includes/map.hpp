@@ -83,8 +83,17 @@ namespace ft {
                             ~MapIterator(void) {}
 
                             //Operators
+                            reference   operator*(void) { return (this->_ptr->data); }
+                            pointer     operator->(void) { return ( &this->_ptr->data); }
+                            iterator&   operator=(iterator const &rhs) { this->_ptr = rhs.getPtr(); return (*this); }
+                            bool        operator==(iterator const &rhs) { return (this->_ptr == rhs.getPtr()); }
+                            bool        operator!=(iterator const &rhs) { return (this->_ptr != rhs.getPtr()); }
                             iterator&   operator++(void) { this->_ptr = _rb_tree.next_node(); return (*this); }
+                            iterator    operator++(int) { iterator tmp = *this; this->_ptr = _rb_tree.next_node(); return (tmp); }
                             iterator&   operator--(void) { this->_ptr = _rb_tree.previous_node(); return (*this); }
+                            iterator    operator--(int) { iterator tmp = *this; this->_ptr = _rb_tree.previous_node(); return (tmp); }
+
+                            node_ptr    getPtr(void) const { return (this->_ptr); }
 
                         private :
 
@@ -106,8 +115,8 @@ namespace ft {
                 typedef const value_type&                                       const_reference;
                 typedef value_type*                                             pointer;
                 typedef const value_type*                                       const_pointer;
-                typedef ft::regular_iterator<value_type>                        iterator;
-                typedef ft::regular_iterator<const value_type>                  const_iterator;
+                typedef ft::MapIterator<value_type>                             iterator;
+                typedef ft::MapIterator<const value_type>                       const_iterator;
                 typedef ft::reverse_iterator<iterator>                          reverse_iterator;
                 typedef ft::reverse_iterator<const_iterator>                    const_reverse_iterator;
                 typedef typename ft::iterator_traits<iterator>::difference_type difference_type;
@@ -155,14 +164,14 @@ namespace ft {
                 ~map(void) {}
 
                 //Iterators
-                iterator                begin(void) { return (this->_ptr); }
-                const_iterator          begin(void) const { return (this->_ptr); }
-                iterator                end(void) {}
-                const_iterator          end(void) const {}
-                reverse_iterator        rbegin(void) {}
-                const_reverse_iterator  rbegin(void) const {}
-                reverse_iterator        rend(void) {}
-                const_reverse_iterator  rend(void) const {}
+                iterator                begin(void) { return (iterator(this->_rb_tree.minimum)); }
+                const_iterator          begin(void) const { return (const_iterator(this->_rb_tree.minimum)); }
+                iterator                end(void) { return (iterator(this->_rb_tree.maximum)); }
+                const_iterator          end(void) const { return (const_iterator(this->_rb_tree.maximum)); }
+                reverse_iterator        rbegin(void) { return (reverse_iterator(this->end())); }
+                const_reverse_iterator  rbegin(void) const { return (const_reverse_iterator(this->end())); }
+                reverse_iterator        rend(void) { return (reverse_iterator(this->begin())); }
+                const_reverse_iterator  rend(void) const { return (const_reverse_iterator(this->begin())); }
 
                 //Capacity
                 bool        empty(void) const {}

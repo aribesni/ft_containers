@@ -272,8 +272,8 @@ class RedBlackTree {
                 node = node->right;
             return (node);
         }
-/*
-        t_node* successor(t_node* x) {
+
+        t_node* previous_node(t_node* x) {
 
             if (x->right != TNULL)
                 return (minimum(x->right));
@@ -286,7 +286,7 @@ class RedBlackTree {
             return (y);
         }
 
-        t_node* predecessor(t_node* x) {
+        t_node* next_node(t_node* x) {
 
             if (x->left != TNULL)
                 return (maximum(x->left));
@@ -298,7 +298,7 @@ class RedBlackTree {
             }
             return (y);
         }
-*/
+
         void    leftRotate(t_node* x) {
 
             t_node* y = x->right;
