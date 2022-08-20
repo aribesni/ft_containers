@@ -7,6 +7,7 @@ typedef struct      s_node {
     struct s_node   *left;
     struct s_node   *right;
     int             data;
+    int             key;
     int             color;
 }                   t_node;
 

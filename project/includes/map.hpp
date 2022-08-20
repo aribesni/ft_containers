@@ -186,7 +186,11 @@ namespace ft {
                 iterator                insert(iterator position, const value_type& val) {}
                 template<class InputIterator>
                     void    insert(InputIterator first, InputIterator last) {}
-                void                    erase(iterator position) {}
+                void                    erase(iterator position) {
+
+                    t_node  *node = position.getPtr();
+                    this->_rb_tree.deleteNode(node->key);
+                }
                 size_type               erase(const key_type& k) {}
                 void                    erase(iterator first, iterator last) {}
                 void                    swap(map& x) {}
