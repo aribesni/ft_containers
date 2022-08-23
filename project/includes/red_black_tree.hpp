@@ -69,7 +69,7 @@ class RedBlackTree {
                 cout << node->data << " ";
             }
         }
-
+*/
         t_node* searchTreeHelper(t_node* node, int key) {
 
             if (node == TNULL || key == node->data)
@@ -78,7 +78,7 @@ class RedBlackTree {
                 return searchTreeHelper(node->left, key);
             return searchTreeHelper(node->right, key);
         }
-*/
+
         void    balance_after_delete(t_node* x) {
 
             t_node* s;
@@ -256,9 +256,9 @@ class RedBlackTree {
         void    inorder() { inOrderHelper(this->root); }
 
         void    postorder() { postOrderHelper(this->root); }
-
-        t_node* searchTree(int k) { return (searchTreeHelper(this->root, k)); }
 */
+        t_node* searchTree(int k) { return (searchTreeHelper(this->root, k)); }
+
         t_node* minimum(t_node* node) {
 
             while (node->left != TNULL)
@@ -333,8 +333,7 @@ class RedBlackTree {
             x->parent = y;
         }
 
-        // Inserting a node
-        void    insert(int key) {
+        t_node* insert(int key) {
 
             t_node* node = new t_node;
             t_node* y = nullptr;
@@ -368,6 +367,7 @@ class RedBlackTree {
             if (node->parent->parent == nullptr)
                 return ;
             balance_after_insert(node);
+            return (node);
         }
 
         // t_node* getRoot() { return (this->root); }

@@ -174,51 +174,127 @@ namespace ft {
                 const_reverse_iterator  rend(void) const { return (const_reverse_iterator(this->begin())); }
 
                 //Capacity
-                bool        empty(void) const {}
-                size_type   size(void) const {}
-                size_type   max_size(void) const {}
+                bool        empty(void) const { return (this->size == 0 ? true : false;) }
+                size_type   size(void) const {
+
+                    size_type   n = 0;
+                    for (iterator it = this->begin(); it != this->end(); it++)
+                        n++;
+                    return (n);
+                }
+                size_type   max_size(void) const { return (this->_alloc.max_size()); }
 
                 //Element access
-                mapped_type&    operator[] (const key_type& k) {}
+                mapped_type&    operator[] (const key_type& k) {
+                    
+                    this->insert(ft::make_pair(k, mapped_type()));
+                    return (this->find(k)->second);
+                }
 
                 //Modifiers
-                pair<iterator, bool>    insert(const value_type& val) {}
-                iterator                insert(iterator position, const value_type& val) {}
+                pair<iterator, bool>    insert(const value_type& val) {
+                    
+                    iterator    it;
+                    if (this->count(val.first))
+                    {
+                        it = this->find(val.first);
+                        return (ft::make_pair(it, false));
+                    }
+                    else
+                    {
+                        it = iterator(this->_rb_tree.insert(val));
+                        return (ft::make_pair(it, true));
+                    }
+                }
+                iterator                insert(iterator position, const value_type& val) {
+
+                    (void)position;
+                    return (this->insert(val).first);
+                }
                 template<class InputIterator>
-                    void    insert(InputIterator first, InputIterator last) {}
+                    void    insert(InputIterator first, InputIterator last) {
+
+                        while (first != last)
+                            this->insert(first++);
+                    }
                 void                    erase(iterator position) {
 
                     t_node  *node = position.getPtr();
                     this->_rb_tree.deleteNode(node->key);
                 }
-                size_type               erase(const key_type& k) {}
-                void                    erase(iterator first, iterator last) {}
+                size_type               erase(const key_type& k) {
+
+                    if (this->find(k))
+                    {
+                        this->erase(this->find(k));
+                        return (1);
+                    }
+                    return (0);
+                }
+                void                    erase(iterator first, iterator last) {
+
+                    for (iterator it = first; it != last; it++)
+                        this->erase(it);
+                }
                 void                    swap(map& x) {}
                 void                    clear(void) {}
 
                 //Observers
-                key_compare     key_comp(void) const {}
-                value_compare   value_comp(void) const {}
+                key_compare     key_comp(void) const { return (key_compare()); }
+                value_compare   value_comp(void) const { return (value_compare(_comp)); }
 
                 //Operations
-                iterator                                find(const key_type& k) {}
-                const_iterator                          find(const key_type& k) const {}
-                size_type                               count(const key_type& k) const {}
-                iterator                                lower_bound(const key_type& k) {}
-                const_iterator                          lower_bound(const key_type& k) const {}
-                iterator                                upper_bound(const key_type& k) {}
-                const_iterator                          upper_bound(const key_type& k) const {}
+                iterator                                find(const key_type& k) { return (iterator(_rb_tree.searchTree(k))); }
+                const_iterator                          find(const key_type& k) const { return (const_iterator(_rb_tree.searchTree(k))); }
+                size_type                               count(const key_type& k) const { return (this->find(k) != this->end() ? 1 : 0); }
+                iterator                                lower_bound(const key_type& k) {
+
+                    iterator    it;
+
+                    it = this->begin();
+                    while (key_compare(it.first, k) == true && it != this->end())
+                        i++;
+                    return (it);
+                }
+                const_iterator                          lower_bound(const key_type& k) const {
+            
+                    const_iterator    it;
+
+                    it = this->begin();
+                    while (key_compare(it.first, k) == true && it != this->end())
+                        i++;
+                    return (it);
+                }
+                iterator                                upper_bound(const key_type& k) {
+
+                    iterator    it;
+
+                    it = this->begin();
+                    while (key_compare(it.first, k) == false && it != this->end())
+                        i++;
+                    return (it);
+                }
+                const_iterator                          upper_bound(const key_type& k) const {
+
+                    const_iterator    it;
+
+                    it = this->begin();
+                    while (key_compare(it.first, k) == false && it != this->end())
+                        i++;
+                    return (it);
+                }
                 pair<const_iterator, const_iterator>    equal_range(const key_type& k) const {}
                 pair<iterator, iterator>                equal_range(const key_type& k) {}
 
                 //Allocator
-                allocator_type  get_allocator(void) const {}
+                allocator_type  get_allocator(void) const {return (allocator_type()); }
 
                 private :
 
                     RedBlackTree    _rb_tree;
                     pointer         _ptr;
                     allocator_type  _alloc;
+                    key_compare     _comp;
         };
 }
 
