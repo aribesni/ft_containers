@@ -283,8 +283,8 @@ namespace ft {
                         i++;
                     return (it);
                 }
-                pair<const_iterator, const_iterator>    equal_range(const key_type& k) const {}
-                pair<iterator, iterator>                equal_range(const key_type& k) {}
+                pair<iterator, iterator>                equal_range(const key_type& k) { return (ft::make_pair(this->lower_bound(), this->upper_bound())); }
+                pair<const_iterator, const_iterator>    equal_range(const key_type& k) const { return (ft::make_pair(this->lower_bound(), this->upper_bound())); }
 
                 //Allocator
                 allocator_type  get_allocator(void) const {return (allocator_type()); }
@@ -296,6 +296,15 @@ namespace ft {
                     allocator_type  _alloc;
                     key_compare     _comp;
         };
+
+        template<class T>
+            void    swap(T& a, T& b) {
+
+                T   tmp(a);
+
+                a = b;
+                b = tmp;
+            }
 }
 
 #endif
