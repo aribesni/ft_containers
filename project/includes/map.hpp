@@ -50,7 +50,9 @@ namespace ft {
     //MAP ITERATORS
     template <typename T>
         class MapIterator {
-            
+
+            public :
+
             //MEMBER TYPES
 
                 typedef T                               value_type;
