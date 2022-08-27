@@ -19,15 +19,6 @@
 
 namespace ft {
 
-    //RED BLACK TREE
-    // typedef struct          s_node {
-
-    //     struct s_node*      parent;
-    //     struct s_node*      left;
-    //     struct s_node*      right;
-    //     enum {red, black}   colour;
-    // }                       t_node;
-
     //PAIR
     template< class T1, class T2 >
         struct pair {
@@ -55,52 +46,53 @@ namespace ft {
     //MAKE PAIR
     template< class T1, class T2 >
         pair<T1, T2>    make_pair(T1 x, T2 y) { return (pair<T1, T2>(x, y)); }
+    
+    //MAP ITERATORS
+    template <typename T>
+        class MapIterator {
+            
+            //MEMBER TYPES
+
+                typedef T                               value_type;
+                typedef value_type&                     reference;
+                typedef value_type*                     pointer;
+                typedef std::bidirectional_iterator_tag iterator_category;
+                typedef std::ptrdiff_t                  difference_type;
+                typedef MapIterator<value_type>         iterator;
+                typedef t_node*                         node_ptr;
+
+                //Constructors
+                MapIterator(void) : _ptr() {}
+                MapIterator(node_ptr ptr) : _ptr(ptr) {}
+
+                ~MapIterator(void) {}
+
+                //Operators
+                reference   operator*(void) { return (this->_ptr->data); }
+                pointer     operator->(void) { return ( &this->_ptr->data); }
+                iterator&   operator=(iterator const &rhs) { this->_ptr = rhs.getPtr(); return (*this); }
+                bool        operator==(iterator const &rhs) { return (this->_ptr == rhs.getPtr()); }
+                bool        operator!=(iterator const &rhs) { return (this->_ptr != rhs.getPtr()); }
+                iterator&   operator++(void) { this->_ptr = _rb_tree.next_node(this->_ptr); return (*this); }
+                iterator    operator++(int) { iterator tmp = *this; this->_ptr = _rb_tree.next_node(this->_ptr); return (tmp); }
+                iterator&   operator--(void) { this->_ptr = _rb_tree.previous_node(this->_ptr); return (*this); }
+                iterator    operator--(int) { iterator tmp = *this; this->_ptr = _rb_tree.previous_node(this->_ptr); return (tmp); }
+
+                node_ptr    getPtr(void) const { return (this->_ptr); }
+
+            private :
+
+            //MEMBER TYPES
+
+                node_ptr        _ptr;
+                RedBlackTree    _rb_tree;
+    };
 
     //MAP
     template< class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<ft::pair<const Key, T> > >
         class map {
             
             public :
-
-            //MAP ITERATORS
-                template <typename T>
-                    class MapIterator {
-                        
-                        //MEMBER TYPES
-
-                            typedef T                               value_type;
-                            typedef value_type&                     reference;
-                            typedef value_type*                     pointer;
-                            typedef std::bidirectional_iterator_tag iterator_category;
-                            typedef std::ptrdiff_t                  difference_type;
-                            typedef MapIterator<value_type>         iterator;
-                            typedef t_node*                         node_ptr;
-
-                            //Constructors
-                            MapIterator(void) : _ptr() {}
-                            MapIterator(node_ptr ptr) : _ptr(ptr) {}
-
-                            ~MapIterator(void) {}
-
-                            //Operators
-                            reference   operator*(void) { return (this->_ptr->data); }
-                            pointer     operator->(void) { return ( &this->_ptr->data); }
-                            iterator&   operator=(iterator const &rhs) { this->_ptr = rhs.getPtr(); return (*this); }
-                            bool        operator==(iterator const &rhs) { return (this->_ptr == rhs.getPtr()); }
-                            bool        operator!=(iterator const &rhs) { return (this->_ptr != rhs.getPtr()); }
-                            iterator&   operator++(void) { this->_ptr = _rb_tree.next_node(); return (*this); }
-                            iterator    operator++(int) { iterator tmp = *this; this->_ptr = _rb_tree.next_node(); return (tmp); }
-                            iterator&   operator--(void) { this->_ptr = _rb_tree.previous_node(); return (*this); }
-                            iterator    operator--(int) { iterator tmp = *this; this->_ptr = _rb_tree.previous_node(); return (tmp); }
-
-                            node_ptr    getPtr(void) const { return (this->_ptr); }
-
-                        private :
-
-                        //MEMBER TYPES
-
-                            node_ptr    _ptr;
-                };
 
             //MEMBER TYPES
 
@@ -119,8 +111,6 @@ namespace ft {
                 typedef ft::MapIterator<const value_type>                       const_iterator;
                 typedef ft::reverse_iterator<iterator>                          reverse_iterator;
                 typedef ft::reverse_iterator<const_iterator>                    const_reverse_iterator;
-                typedef typename ft::iterator_traits<iterator>::difference_type difference_type;
-                typedef size_t                                                  size_type;
 
                 class value_compare {
                     
@@ -151,30 +141,30 @@ namespace ft {
                         value_compare(Compare c) : _comp(c) {}
 
                 };
-            
+
             //MEMBER FUNCTIONS
 
                 //Constructors
-                explicit    map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _rb_tree(new RedBlackTree()), _ptr(_rb_tree.minimum()), _alloc(alloc) {}
+                explicit    map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _rb_tree(), /*_ptr(this->begin()),*/ _alloc(alloc), _comp(comp) {}
                 template <class InputIterator>
-                    map(InputIterator first, InputIterator last, const key_compare& comp = key_compare()) {}
-                map(const map& x) {}
+                    map(InputIterator first, InputIterator last, const key_compare& comp = key_compare()) : _rb_tree(), /*_ptr(this->begin()),*/ _comp(comp) { this->insert(first, last); }
+                map(const map& x) : _rb_tree(), /*_ptr(this->begin()),*/ _alloc(x._alloc), _comp(x._comp) { this->insert(x.begin(), x.end()); }
 
                 //Destructor
                 ~map(void) {}
 
                 //Iterators
-                iterator                begin(void) { return (iterator(this->_rb_tree.minimum)); }
-                const_iterator          begin(void) const { return (const_iterator(this->_rb_tree.minimum)); }
-                iterator                end(void) { return (iterator(this->_rb_tree.maximum)); }
-                const_iterator          end(void) const { return (const_iterator(this->_rb_tree.maximum)); }
+                iterator                begin(void) { return (iterator(this->_rb_tree.minimum(_rb_tree.root))); }
+                const_iterator          begin(void) const { return (const_iterator(this->_rb_tree.minimum(_rb_tree.root))); }
+                iterator                end(void) { return (iterator(this->_rb_tree.maximum(_rb_tree.root))); }
+                const_iterator          end(void) const { return (const_iterator(this->_rb_tree.maximum(_rb_tree.root))); }
                 reverse_iterator        rbegin(void) { return (reverse_iterator(this->end())); }
                 const_reverse_iterator  rbegin(void) const { return (const_reverse_iterator(this->end())); }
                 reverse_iterator        rend(void) { return (reverse_iterator(this->begin())); }
                 const_reverse_iterator  rend(void) const { return (const_reverse_iterator(this->begin())); }
 
                 //Capacity
-                bool        empty(void) const { return (this->size == 0 ? true : false;) }
+                bool        empty(void) const { return (this->size == 0 ? true : false); }
                 size_type   size(void) const {
 
                     size_type   n = 0;
@@ -236,8 +226,14 @@ namespace ft {
                     for (iterator it = first; it != last; it++)
                         this->erase(it);
                 }
-                void                    swap(map& x) {}
-                void                    clear(void) {}
+                void                    swap(map& x) {
+
+                    swap(this->_alloc, x._alloc);
+                    // swap(this->_ptr, x._ptr);
+                    swap(this->_comp, x._comp);
+                    swap(this->_rb_tree, x._rb_tree);
+                }
+                void                    clear(void) { this->erase(this->begin(), this->end()); }
 
                 //Observers
                 key_compare     key_comp(void) const { return (key_compare()); }
@@ -253,7 +249,7 @@ namespace ft {
 
                     it = this->begin();
                     while (key_compare(it.first, k) == true && it != this->end())
-                        i++;
+                        it++;
                     return (it);
                 }
                 const_iterator                          lower_bound(const key_type& k) const {
@@ -262,7 +258,7 @@ namespace ft {
 
                     it = this->begin();
                     while (key_compare(it.first, k) == true && it != this->end())
-                        i++;
+                        it++;
                     return (it);
                 }
                 iterator                                upper_bound(const key_type& k) {
@@ -271,7 +267,7 @@ namespace ft {
 
                     it = this->begin();
                     while (key_compare(it.first, k) == false && it != this->end())
-                        i++;
+                        it++;
                     return (it);
                 }
                 const_iterator                          upper_bound(const key_type& k) const {
@@ -280,11 +276,11 @@ namespace ft {
 
                     it = this->begin();
                     while (key_compare(it.first, k) == false && it != this->end())
-                        i++;
+                        it++;
                     return (it);
                 }
-                pair<iterator, iterator>                equal_range(const key_type& k) { return (ft::make_pair(this->lower_bound(), this->upper_bound())); }
-                pair<const_iterator, const_iterator>    equal_range(const key_type& k) const { return (ft::make_pair(this->lower_bound(), this->upper_bound())); }
+                pair<iterator, iterator>                equal_range(const key_type& k) { return (ft::make_pair(this->lower_bound(k), this->upper_bound(k))); }
+                pair<const_iterator, const_iterator>    equal_range(const key_type& k) const { return (ft::make_pair(this->lower_bound(k), this->upper_bound(k))); }
 
                 //Allocator
                 allocator_type  get_allocator(void) const {return (allocator_type()); }
@@ -292,7 +288,7 @@ namespace ft {
                 private :
 
                     RedBlackTree    _rb_tree;
-                    pointer         _ptr;
+                    // pointer         _ptr;
                     allocator_type  _alloc;
                     key_compare     _comp;
         };

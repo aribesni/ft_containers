@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <cstddef>
 #include <iostream>
 
 typedef struct      s_node {
@@ -18,6 +19,7 @@ typedef struct      s_node {
     struct s_node   *left;
     struct s_node   *right;
     int             data;
+    int             key;
     int             color;
 }                   t_node;
 
@@ -32,8 +34,8 @@ class RedBlackTree {
 
             node->data = 0;
             node->parent = parent;
-            node->left = nullptr;
-            node->right = nullptr;
+            node->left = NULL;
+            node->right = NULL;
             node->color = 0;
         }
 
@@ -153,7 +155,7 @@ class RedBlackTree {
 
         void    rbTransplant(t_node* u, t_node* v) {
             
-            if (u->parent == nullptr)
+            if (u->parent == NULL)
                 root = v;
             else if (u == u->parent->left)
                 u->parent->left = v;
@@ -246,8 +248,8 @@ class RedBlackTree {
 
             TNULL = new t_node;
             TNULL->color = 0;
-            TNULL->left = nullptr;
-            TNULL->right = nullptr;
+            TNULL->left = NULL;
+            TNULL->right = NULL;
             root = TNULL;
         }
 /*
@@ -306,7 +308,7 @@ class RedBlackTree {
             if (y->left != TNULL)
                 y->left->parent = x;
             y->parent = x->parent;
-            if (x->parent == nullptr)
+            if (x->parent == NULL)
                 this->root = y;
             else if (x == x->parent->left)
                 x->parent->left = y;
@@ -323,7 +325,7 @@ class RedBlackTree {
             if (y->right != TNULL)
                 y->right->parent = x;
             y->parent = x->parent;
-            if (x->parent == nullptr)
+            if (x->parent == NULL)
                 this->root = y;
             else if (x == x->parent->right)
                 x->parent->right = y;
@@ -336,10 +338,10 @@ class RedBlackTree {
         t_node* insert(int key) {
 
             t_node* node = new t_node;
-            t_node* y = nullptr;
+            t_node* y = NULL;
             t_node* x = this->root;
 
-            node->parent = nullptr;
+            node->parent = NULL;
             node->data = key;
             node->left = TNULL;
             node->right = TNULL;
@@ -353,19 +355,19 @@ class RedBlackTree {
                     x = x->right;
             }
             node->parent = y;
-            if (y == nullptr)
+            if (y == NULL)
                 root = node;
             else if (node->data < y->data)
                 y->left = node;
             else
                 y->right = node;
-            if (node->parent == nullptr)
+            if (node->parent == NULL)
             {
                 node->color = 0;
-                return ;
+                return (NULL);
             }
-            if (node->parent->parent == nullptr)
-                return ;
+            if (node->parent->parent == NULL)
+                return (NULL);
             balance_after_insert(node);
             return (node);
         }

@@ -12,7 +12,7 @@
 
 NAME = 		container
 
-SRC = 		main.cpp
+SRC = 		main_vector.cpp main_map.cpp
 
 SRCS = 		${addprefix ./srcs/, ${SRC}}
 
@@ -28,6 +28,12 @@ HEADER = 	./includes/
 			${CC} ${FLAGS} -I ${HEADER} -c $< -o $@
 
 all : 		${NAME}
+
+vector :	${OBJ}
+			${CC} ${FLAGS} ./srcs/main_vector.o -o ${NAME}
+
+map :		${OBJ}
+			${CC} ${FLAGS} ./srcs/main_map.o -o ${NAME}
 
 ${NAME} :	${OBJ}
 			${CC} ${FLAGS} ${OBJ} -o ${NAME}
