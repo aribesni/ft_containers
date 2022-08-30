@@ -40,7 +40,15 @@ namespace ft {
                 pair(const pair<U, V>& pr) : first(pr.first), second(pr.second) {}
             pair(const first_type& a, const second_type& b) : first(a), second(b) {}
 
-            pair&   operator=(const pair& pr) { this->first = pr.first; this->second = pr.second; return (*this); }
+            pair&   operator=(const pair& pr) {
+                
+                pair&   tmp = const_cast<pair&>(pr);
+                if (*this == tmp)
+                    return (*this);
+                this->first = pr.first;
+                this->second = pr.second;
+                return (*this);
+            }
 
     };
 
@@ -51,7 +59,7 @@ namespace ft {
     //MAP
     template< class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<ft::pair<const Key, T> > >
         class map {
-            
+
             //NODE
             public :
 
@@ -60,9 +68,17 @@ namespace ft {
                     struct s_node   *parent;
                     struct s_node   *left;
                     struct s_node   *right;
-                    int             data;
-                    int             key;
+                    // typename ft::map<Key, T>::key_type             key;
+                    // typename ft::map<Key, T>::mapped_type          data;
+                    // typename ft::map<Key, T>::value_type           val;
+                    ft::pair<const Key, T>  val;
+                    // key_type    key;
+                    // data_type   data;
+                    // val_type    val;
                     int             color;
+
+                    const   Key&    key(void) { return (val.first); }
+                    T&              data(void) { return (val.second); }
                 }
                                     t_node;
                                                                             
@@ -89,8 +105,8 @@ namespace ft {
                         ~MapIterator(void) {}
 
                         //Operators
-                        reference   operator*(void) { return (this->_ptr->data); }
-                        pointer     operator->(void) { return ( &this->_ptr->data); }
+                        reference   operator*(void) { return (this->_ptr->val); }
+                        pointer     operator->(void) { return (&this->_ptr->val); }
                         iterator&   operator=(iterator const &rhs) { this->_ptr = rhs.getPtr(); return (*this); }
                         bool        operator==(iterator const &rhs) { return (this->_ptr == rhs.getPtr()); }
                         bool        operator!=(iterator const &rhs) { return (this->_ptr != rhs.getPtr()); }
@@ -206,11 +222,11 @@ namespace ft {
                             }
                         }
                 */
-                        t_node* searchTreeHelper(t_node* node, int key) const {
+                        t_node* searchTreeHelper(t_node* node, key_type key) const {
 
-                            if (node == TNULL || key == node->data)
+                            if (node == TNULL || key == node->key())
                                 return (node);
-                            if (key < node->data)
+                            if (key < node->key())
                                 return (searchTreeHelper(node->left, key));
                             return (searchTreeHelper(node->right, key));
                         }
@@ -476,15 +492,16 @@ namespace ft {
                             t_node* x = this->root;
 
                             node->parent = NULL;
-                            node->data = val.second;
-                            node->key = val.first;
+                            // node->data = val.second;
+                            // node->key = val.first;
+                            node->val = val;
                             node->left = TNULL;
                             node->right = TNULL;
                             node->color = 1;
                             while (x != TNULL) {
 
                                 y = x;
-                                if (node->key < x->key)
+                                if (node->key() < x->key())
                                     x = x->left;
                                 else
                                     x = x->right;
@@ -492,7 +509,7 @@ namespace ft {
                             node->parent = y;
                             if (y == NULL)
                                 root = node;
-                            else if (node->key < y->key)
+                            else if (node->key() < y->key())
                                 y->left = node;
                             else
                                 y->right = node;
@@ -509,7 +526,7 @@ namespace ft {
 
                         // t_node* getRoot() { return (this->root); }
 
-                        void    deleteNode(int key) {
+                        void    deleteNode(key_type key) {
 
                             t_node* z = TNULL;
                             t_node  *x, *y;
@@ -526,8 +543,8 @@ namespace ft {
                             }
                             if (z == TNULL)
                             {
-                            std::cout << "Key not found in the tree" << std::endl;
-                            return ;
+                                std::cout << "Key not found in the tree" << std::endl;
+                                return ;
                             }
                             y = z;
                             int y_original_color = y->color;
@@ -719,7 +736,7 @@ namespace ft {
                     RedBlackTree    _rb_tree;
                     // pointer         _ptr;
                     allocator_type  _alloc;
-                    key_compare     _comp;
+                    key_compare     _comp; // already a protected value named _comp
 
         };
 
