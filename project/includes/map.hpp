@@ -14,8 +14,9 @@
 # define MAP_H
 
 # include <iostream>
+# include <cstddef>
 # include "iterator.hpp"
-# include "red_black_tree.hpp"
+// # include "red_black_tree.hpp"
 
 namespace ft {
 
@@ -46,55 +47,67 @@ namespace ft {
     //MAKE PAIR
     template< class T1, class T2 >
         pair<T1, T2>    make_pair(T1 x, T2 y) { return (pair<T1, T2>(x, y)); }
-    
-    //MAP ITERATORS
-    template <typename T>
-        class MapIterator {
-
-            public :
-
-            //MEMBER TYPES
-
-                typedef T                               value_type;
-                typedef value_type&                     reference;
-                typedef value_type*                     pointer;
-                typedef std::bidirectional_iterator_tag iterator_category;
-                typedef std::ptrdiff_t                  difference_type;
-                typedef MapIterator<value_type>         iterator;
-                typedef t_node*                         node_ptr;
-
-                //Constructors
-                MapIterator(void) : _ptr() {}
-                MapIterator(node_ptr ptr) : _ptr(ptr) {}
-
-                ~MapIterator(void) {}
-
-                //Operators
-                reference   operator*(void) { return (this->_ptr->data); }
-                pointer     operator->(void) { return ( &this->_ptr->data); }
-                iterator&   operator=(iterator const &rhs) { this->_ptr = rhs.getPtr(); return (*this); }
-                bool        operator==(iterator const &rhs) { return (this->_ptr == rhs.getPtr()); }
-                bool        operator!=(iterator const &rhs) { return (this->_ptr != rhs.getPtr()); }
-                iterator&   operator++(void) { this->_ptr = _rb_tree.next_node(this->_ptr); return (*this); }
-                iterator    operator++(int) { iterator tmp = *this; this->_ptr = _rb_tree.next_node(this->_ptr); return (tmp); }
-                iterator&   operator--(void) { this->_ptr = _rb_tree.previous_node(this->_ptr); return (*this); }
-                iterator    operator--(int) { iterator tmp = *this; this->_ptr = _rb_tree.previous_node(this->_ptr); return (tmp); }
-
-                node_ptr    getPtr(void) const { return (this->_ptr); }
-
-            private :
-
-            //MEMBER TYPES
-
-                node_ptr        _ptr;
-                RedBlackTree    _rb_tree;
-    };
 
     //MAP
     template< class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<ft::pair<const Key, T> > >
         class map {
             
+            //NODE
             public :
+
+                typedef struct      s_node {
+
+                    struct s_node   *parent;
+                    struct s_node   *left;
+                    struct s_node   *right;
+                    int             data;
+                    int             key;
+                    int             color;
+                }
+                                    t_node;
+                                                                            
+            //MAP ITERATORS
+            template <typename IT>
+                class MapIterator {
+                        
+                    public :
+
+                    //MEMBER TYPES
+
+                        typedef IT                              value_type;
+                        typedef value_type&                     reference;
+                        typedef value_type*                     pointer;
+                        typedef std::bidirectional_iterator_tag iterator_category;
+                        typedef std::ptrdiff_t                  difference_type;
+                        typedef MapIterator<value_type>         iterator;
+                        typedef t_node*                         node_ptr;
+
+                        //Constructors
+                        MapIterator(void) : _ptr() {}
+                        MapIterator(node_ptr ptr) : _ptr(ptr) {}
+
+                        ~MapIterator(void) {}
+
+                        //Operators
+                        reference   operator*(void) { return (this->_ptr->data); }
+                        pointer     operator->(void) { return ( &this->_ptr->data); }
+                        iterator&   operator=(iterator const &rhs) { this->_ptr = rhs.getPtr(); return (*this); }
+                        bool        operator==(iterator const &rhs) { return (this->_ptr == rhs.getPtr()); }
+                        bool        operator!=(iterator const &rhs) { return (this->_ptr != rhs.getPtr()); }
+                        iterator&   operator++(void) { this->_ptr = _rb_tree.next_node(this->_ptr); return (*this); }
+                        iterator    operator++(int) { iterator tmp = *this; this->_ptr = _rb_tree.next_node(this->_ptr); return (tmp); }
+                        iterator&   operator--(void) { this->_ptr = _rb_tree.previous_node(this->_ptr); return (*this); }
+                        iterator    operator--(int) { iterator tmp = *this; this->_ptr = _rb_tree.previous_node(this->_ptr); return (tmp); }
+
+                        node_ptr    getPtr(void) const { return (this->_ptr); }
+
+                    private :
+
+                    //MEMBER TYPES
+
+                        node_ptr                                _ptr;
+                        typename ft::map<Key, T>::RedBlackTree  _rb_tree;
+            };
 
             //MEMBER TYPES
 
@@ -109,8 +122,8 @@ namespace ft {
                 typedef const value_type&                                       const_reference;
                 typedef value_type*                                             pointer;
                 typedef const value_type*                                       const_pointer;
-                typedef ft::MapIterator<value_type>                             iterator;
-                typedef ft::MapIterator<const value_type>                       const_iterator;
+                typedef MapIterator<value_type>                                 iterator;
+                typedef MapIterator<const value_type>                           const_iterator;
                 typedef ft::reverse_iterator<iterator>                          reverse_iterator;
                 typedef ft::reverse_iterator<const_iterator>                    const_reverse_iterator;
 
@@ -142,6 +155,420 @@ namespace ft {
                         //Constructors
                         value_compare(Compare c) : _comp(c) {}
 
+                };
+
+                class RedBlackTree {
+
+                    public :
+
+                        t_node  *root;
+                        t_node  *TNULL;
+                /*
+                        void initializeNULLNode(t_node* node, t_node* parent) {
+
+                            node->data = 0;
+                            node->parent = parent;
+                            node->left = NULL;
+                            node->right = NULL;
+                            node->color = 0;
+                        }
+
+                        // Preorder
+                        void    preOrderHelper(t_node* node) {
+
+                            if (node != TNULL)
+                            {
+                                cout << node->data << " ";
+                                preOrderHelper(node->left);
+                                preOrderHelper(node->right);
+                            }
+                        }
+
+                        // Inorder
+                        void    inOrderHelper(t_node* node) {
+
+                            if (node != TNULL) 
+                            {
+                                inOrderHelper(node->left);
+                                cout << node->data << " ";
+                                inOrderHelper(node->right);
+                            }
+                        }
+
+                        // Post order
+                        void    postOrderHelper(t_node* node)
+                        {
+                            if (node != TNULL)
+                            {
+                                postOrderHelper(node->left);
+                                postOrderHelper(node->right);
+                                cout << node->data << " ";
+                            }
+                        }
+                */
+                        t_node* searchTreeHelper(t_node* node, int key) const {
+
+                            if (node == TNULL || key == node->data)
+                                return (node);
+                            if (key < node->data)
+                                return (searchTreeHelper(node->left, key));
+                            return (searchTreeHelper(node->right, key));
+                        }
+
+                        void    balance_after_delete(t_node* x) {
+
+                            t_node* s;
+
+                            while (x != root && x->color == 0)
+                            {
+                                if (x == x->parent->left)
+                                {
+                                    s = x->parent->right;
+                                    if (s->color == 1)
+                                    {
+                                        s->color = 0;
+                                        x->parent->color = 1;
+                                        leftRotate(x->parent);
+                                        s = x->parent->right;
+                                    }
+                                    if (s->left->color == 0 && s->right->color == 0)
+                                    {
+                                        s->color = 1;
+                                        x = x->parent;
+                                    } 
+                                    else
+                                    {
+                                        if (s->right->color == 0)
+                                        {
+                                            s->left->color = 0;
+                                            s->color = 1;
+                                            rightRotate(s);
+                                            s = x->parent->right;
+                                        }
+                                        s->color = x->parent->color;
+                                        x->parent->color = 0;
+                                        s->right->color = 0;
+                                        leftRotate(x->parent);
+                                        x = root;
+                                    }
+                                }
+                                else
+                                {
+                                    s = x->parent->left;
+                                    if (s->color == 1)
+                                    {
+                                        s->color = 0;
+                                        x->parent->color = 1;
+                                        rightRotate(x->parent);
+                                        s = x->parent->left;
+                                    }
+                                    if (s->right->color == 0 && s->right->color == 0)
+                                    {
+                                        s->color = 1;
+                                        x = x->parent;
+                                    } 
+                                    else
+                                    {
+                                        if (s->left->color == 0)
+                                        {
+                                            s->right->color = 0;
+                                            s->color = 1;
+                                            leftRotate(s);
+                                            s = x->parent->left;
+                                        }
+                                        s->color = x->parent->color;
+                                        x->parent->color = 0;
+                                        s->left->color = 0;
+                                        rightRotate(x->parent);
+                                        x = root;
+                                    }
+                                }
+                            }
+                            x->color = 0;
+                        }
+
+                        void    rbTransplant(t_node* u, t_node* v) {
+                            
+                            if (u->parent == NULL)
+                                root = v;
+                            else if (u == u->parent->left)
+                                u->parent->left = v;
+                            else
+                                u->parent->right = v;
+                            v->parent = u->parent;
+                        }
+
+                        void    balance_after_insert(t_node* k) {
+
+                            t_node* u;
+
+                            while (k->parent->color == 1)
+                            {
+                                if (k->parent == k->parent->parent->right)
+                                {
+                                    u = k->parent->parent->left;
+                                    if (u->color == 1)
+                                    {
+                                        u->color = 0;
+                                        k->parent->color = 0;
+                                        k->parent->parent->color = 1;
+                                        k = k->parent->parent;
+                                    }
+                                    else
+                                    {
+                                        if (k == k->parent->left)
+                                        {
+                                            k = k->parent;
+                                            rightRotate(k);
+                                        }
+                                        k->parent->color = 0;
+                                        k->parent->parent->color = 1;
+                                        leftRotate(k->parent->parent);
+                                    }
+                                }
+                                else
+                                {
+                                    u = k->parent->parent->right;
+                                    if (u->color == 1)
+                                    {
+                                        u->color = 0;
+                                        k->parent->color = 0;
+                                        k->parent->parent->color = 1;
+                                        k = k->parent->parent;
+                                    }
+                                    else
+                                    {
+                                        if (k == k->parent->right)
+                                        {
+                                            k = k->parent;
+                                            leftRotate(k);
+                                        }
+                                        k->parent->color = 0;
+                                        k->parent->parent->color = 1;
+                                        rightRotate(k->parent->parent);
+                                    }
+                                }
+                                if (k == root)
+                                    break;
+                            }
+                            root->color = 0;
+                        }
+
+                        // void    print_node(t_node* root, string indent, bool last) {
+
+                        //     if (root != TNULL)
+                        //     {
+                        //         cout << indent;
+                        //         if (last)
+                        //         {
+                        //             cout << "R----";
+                        //             indent += "   ";
+                        //         }
+                        //         else
+                        //         {
+                        //             cout << "L----";
+                        //             indent += "|  ";
+                        //         }
+                        //         string sColor = root->color ? "RED" : "BLACK";
+                        //         cout << root->data << "(" << sColor << ")" << endl;
+                        //         print_node(root->left, indent, false);
+                        //         print_node(root->right, indent, true);
+                        //     }
+                        // }
+
+                    // public:
+
+                        RedBlackTree() {
+
+                            TNULL = new t_node;
+                            TNULL->color = 0;
+                            TNULL->left = NULL;
+                            TNULL->right = NULL;
+                            root = TNULL;
+                        }
+                /*
+                        void    preorder() { preOrderHelper(this->root); }
+
+                        void    inorder() { inOrderHelper(this->root); }
+
+                        void    postorder() { postOrderHelper(this->root); }
+                */
+                        t_node* searchTree(int k) const { return (searchTreeHelper(this->root, k)); }
+
+                        t_node* minimum(t_node* node) const {
+
+                            while (node->left != TNULL)
+                                node = node->left;
+                            return (node);
+                        }
+
+                        t_node* maximum(t_node* node) const {
+
+                            while (node->right != TNULL)
+                                node = node->right;
+                            return (node);
+                        }
+
+                        t_node* previous_node(t_node* x) {
+
+                            if (x->right != TNULL)
+                                return (minimum(x->right));
+                            t_node* y = x->parent;
+                            while (y != TNULL && x == y->right)
+                            {
+                                x = y;
+                                y = y->parent;
+                            }
+                            return (y);
+                        }
+
+                        t_node* next_node(t_node* x) {
+
+                            if (x->left != TNULL)
+                                return (maximum(x->left));
+                            t_node* y = x->parent;
+                            while (y != TNULL && x == y->left)
+                            {
+                                x = y;
+                                y = y->parent;
+                            }
+                            return (y);
+                        }
+
+                        void    leftRotate(t_node* x) {
+
+                            t_node* y = x->right;
+                            x->right = y->left;
+                            if (y->left != TNULL)
+                                y->left->parent = x;
+                            y->parent = x->parent;
+                            if (x->parent == NULL)
+                                this->root = y;
+                            else if (x == x->parent->left)
+                                x->parent->left = y;
+                            else
+                                x->parent->right = y;
+                            y->left = x;
+                            x->parent = y;
+                        }
+
+                        void    rightRotate(t_node* x) {
+
+                            t_node* y = x->left;
+                            x->left = y->right;
+                            if (y->right != TNULL)
+                                y->right->parent = x;
+                            y->parent = x->parent;
+                            if (x->parent == NULL)
+                                this->root = y;
+                            else if (x == x->parent->right)
+                                x->parent->right = y;
+                            else
+                                x->parent->left = y;
+                            y->right = x;
+                            x->parent = y;
+                        }
+
+                        t_node* insert(value_type val) {
+
+                            t_node* node = new t_node;
+                            t_node* y = NULL;
+                            t_node* x = this->root;
+
+                            node->parent = NULL;
+                            node->data = val.second;
+                            node->key = val.first;
+                            node->left = TNULL;
+                            node->right = TNULL;
+                            node->color = 1;
+                            while (x != TNULL) {
+
+                                y = x;
+                                if (node->key < x->key)
+                                    x = x->left;
+                                else
+                                    x = x->right;
+                            }
+                            node->parent = y;
+                            if (y == NULL)
+                                root = node;
+                            else if (node->key < y->key)
+                                y->left = node;
+                            else
+                                y->right = node;
+                            if (node->parent == NULL)
+                            {
+                                node->color = 0;
+                                return (NULL);
+                            }
+                            if (node->parent->parent == NULL)
+                                return (NULL);
+                            balance_after_insert(node);
+                            return (node);
+                        }
+
+                        // t_node* getRoot() { return (this->root); }
+
+                        void    deleteNode(int key) {
+
+                            t_node* z = TNULL;
+                            t_node  *x, *y;
+                            t_node* node = this->root;
+
+                            while (node != TNULL)
+                            {
+                                if (node->data == key)
+                                    z = node;
+                                if (node->data <= key)
+                                    node = node->right;
+                                else
+                                node = node->left;
+                            }
+                            if (z == TNULL)
+                            {
+                            std::cout << "Key not found in the tree" << std::endl;
+                            return ;
+                            }
+                            y = z;
+                            int y_original_color = y->color;
+                            if (z->left == TNULL)
+                            {
+                                x = z->right;
+                                rbTransplant(z, z->right);
+                            } 
+                            else if (z->right == TNULL)
+                            {
+                                x = z->left;
+                                rbTransplant(z, z->left);
+                            }
+                            else
+                            {
+                                y = minimum(z->right);
+                                y_original_color = y->color;
+                                x = y->right;
+                                if (y->parent == z)
+                                    x->parent = y;
+                                else
+                                {
+                                    rbTransplant(y, y->right);
+                                    y->right = z->right;
+                                    y->right->parent = y;
+                                }
+                                rbTransplant(z, y);
+                                y->left = z->left;
+                                y->left->parent = y;
+                                y->color = z->color;
+                            }
+                            delete z;
+                            if (y_original_color == 0)
+                                balance_after_delete(x);
+                        }
+
+                        // void printTree() {
+
+                        //     if (root)
+                        //         print_node(this->root, "", true);
+                        // }
                 };
 
             //MEMBER FUNCTIONS
@@ -293,6 +720,7 @@ namespace ft {
                     // pointer         _ptr;
                     allocator_type  _alloc;
                     key_compare     _comp;
+
         };
 
         template<class T>
