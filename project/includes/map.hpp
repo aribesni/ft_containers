@@ -38,22 +38,32 @@ namespace ft {
             pair(void) : first(), second() {}
             template<class U, class V>
                 pair(const pair<U, V>& pr) : first(pr.first), second(pr.second) {}
-            pair(const first_type& a, const second_type& b) : first(a), second(b) {}
+            pair(first_type& a, second_type& b) : first(a), second(b) {}
 
             pair&   operator=(const pair& pr) {
                 
-                pair&   tmp = const_cast<pair&>(pr);
-                if (*this == tmp)
-                    return (*this);
                 this->first = pr.first;
                 this->second = pr.second;
                 return (*this);
             }
-
     };
 
+    //PAIR OPERATORS
+    template<class T1, class T2>
+        bool operator==(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) { return (lhs.first == rhs.first && lhs.second == rhs.second); }
+    template<class T1, class T2>
+        bool operator!=(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) { return (!(lhs == rhs)); }
+    template<class T1, class T2>
+        bool operator<(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) { return (lhs.first < rhs.first || (lhs.first == rhs.first && lhs.second < rhs.second)); }
+    template<class T1, class T2>
+        bool operator<=(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) { return (!(rhs < lhs)); }
+    template<class T1, class T2>
+        bool operator>(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) { return (rhs < lhs); }
+    template<class T1, class T2>
+        bool operator>=(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) { return (!(lhs < rhs)); }
+
     //MAKE PAIR
-    template< class T1, class T2 >
+    template<class T1, class T2>
         pair<T1, T2>    make_pair(T1 x, T2 y) { return (pair<T1, T2>(x, y)); }
 
     //MAP
@@ -76,6 +86,9 @@ namespace ft {
                     // data_type   data;
                     // val_type    val;
                     int             color;
+
+                    s_node(void) {}
+                    s_node(ft::pair<const Key, T> value) : val(value) {}
 
                     const   Key&    key(void) { return (val.first); }
                     T&              data(void) { return (val.second); }
@@ -487,14 +500,14 @@ namespace ft {
 
                         t_node* insert(value_type val) {
 
-                            t_node* node = new t_node;
+                            t_node* node = new t_node(val);
                             t_node* y = NULL;
                             t_node* x = this->root;
 
                             node->parent = NULL;
                             // node->data = val.second;
                             // node->key = val.first;
-                            node->val = val;
+                            // node->val = ft::make_pair(val.first, val.second);
                             node->left = TNULL;
                             node->right = TNULL;
                             node->color = 1;
