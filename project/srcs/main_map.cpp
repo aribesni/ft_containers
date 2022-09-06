@@ -18,6 +18,7 @@ int main(void) {
 
     std::map<int, int>  og_map;
     ft::map<int, int>   my_map;
+
     int     i = 0;
 
     std::map<int, int>::iterator    og_iterator;
@@ -38,7 +39,7 @@ int main(void) {
     std::cout << std::endl << "-----     MY MAP     -----" << std::endl << std::endl;
 
     i = 0;
-    
+
     my_iterator = my_map.begin();
 
     while (i < 5)

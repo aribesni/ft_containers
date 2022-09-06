@@ -183,7 +183,7 @@ namespace ft {
                 typedef std::size_t                                             size_type;
                 typedef std::ptrdiff_t                                          difference_type;
                 typedef Compare                                                 key_compare;
-                typedef Allocator                                               allocator_type;
+                typedef typename Allocator::template rebind<t_node>::other      allocator_type;
                 typedef value_type&                                             reference;
                 typedef const value_type&                                       const_reference;
                 typedef value_type*                                             pointer;
@@ -226,16 +226,22 @@ namespace ft {
             //MEMBER FUNCTIONS
 
                 //Constructors
-                explicit    map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : /*_rb_tree(), _ptr(this->begin()),*/ _alloc(alloc), _comp(comp) { this->_node_ptr = (new_nil_node()); }
+                explicit    map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _alloc(alloc), _comp(comp) {
+                    
+                    this->new_nil_node();
+                    this->init_root();
+                }
                 template <class InputIterator>
-                    map(InputIterator first, InputIterator last, const key_compare& comp = key_compare()) : /*_rb_tree(), _ptr(this->begin()),*/ _comp(comp) {
+                    map(InputIterator first, InputIterator last, const key_compare& comp = key_compare()) : _comp(comp) {
                         
-                        this->_node_ptr = new_nil_node();
+                        this->new_nil_node();
+                        this->init_root();
                         this->insert(first, last);
                     }
-                map(const map& x) : /*_rb_tree(), _ptr(this->begin()),*/ _alloc(x._alloc), _comp(x._comp) {
+                map(const map& x) : _alloc(x._alloc), _comp(x._comp) {
                     
-                    this->_node_ptr = new_nil_node();
+                    this->new_nil_node();
+                    this->init_root();
                     this->insert(x.begin(), x.end());
                 }
 
@@ -245,8 +251,8 @@ namespace ft {
                 //Iterators
                 iterator                begin(void) { return (iterator(this->left_most(this->_node_ptr))); }
                 const_iterator          begin(void) const { return (const_iterator(this->left_most(this->_node_ptr))); }
-                iterator                end(void) { return (iterator(this->maximum(this->_node_ptr))); }
-                const_iterator          end(void) const { return (const_iterator(this->maximum(this->_node_ptr))); }
+                iterator                end(void) { return (iterator(this->right_most(this->_node_ptr))); }
+                const_iterator          end(void) const { return (const_iterator(this->right_most(this->_node_ptr))); }
                 reverse_iterator        rbegin(void) { return (reverse_iterator(this->end())); }
                 const_reverse_iterator  rbegin(void) const { return (const_reverse_iterator(this->end())); }
                 reverse_iterator        rend(void) { return (reverse_iterator(this->begin())); }
@@ -274,16 +280,16 @@ namespace ft {
                 pair<iterator, bool>    insert(const value_type& val) {
                     
                     iterator    it;
-                    if (this->count(val.first))
-                    {
-                        it = this->find(val.first);
-                        return (ft::make_pair(it, false));
-                    }
-                    else
-                    {
+                    // if (this->count(val.first))
+                    // {
+                    //     it = this->find(val.first);
+                    //     return (ft::make_pair(it, false));
+                    // }
+                    // else
+                    // {
                         it = iterator(this->insert_node(val));
                         return (ft::make_pair(it, true));
-                    }
+                    // }
                 }
                 iterator                insert(iterator position, const value_type& val) {
 
@@ -320,7 +326,7 @@ namespace ft {
                     swap(this->_alloc, x._alloc);
                     // swap(this->_ptr, x._ptr);
                     swap(this->_comp, x._comp);
-                    swap(this->_rb_tree, x._rb_tree);
+                    // swap(this->_rb_tree, x._rb_tree);
                 }
                 void                    clear(void) { this->erase(this->begin(), this->end()); }
 
@@ -386,8 +392,8 @@ namespace ft {
 
                 // public :
 
-                    t_node  *root;
-                    t_node  *TNULL;
+                    t_node* root;
+                    t_node* TNULL;
             /*
                     void initializeNULLNode(t_node* node, t_node* parent) {
 
@@ -397,33 +403,27 @@ namespace ft {
                         node->right = NULL;
                         node->color = 0;
                     }
-
-                    // Preorder
                     void    preOrderHelper(t_node* node) {
 
-                        if (node != TNULL)
+                        if (node != this->TNULL)
                         {
                             cout << node->data << " ";
                             preOrderHelper(node->left);
                             preOrderHelper(node->right);
                         }
                     }
-
-                    // Inorder
                     void    inOrderHelper(t_node* node) {
 
-                        if (node != TNULL) 
+                        if (node != this->TNULL) 
                         {
                             inOrderHelper(node->left);
                             cout << node->data << " ";
                             inOrderHelper(node->right);
                         }
                     }
-
-                    // Post order
                     void    postOrderHelper(t_node* node)
                     {
-                        if (node != TNULL)
+                        if (node != this->TNULL)
                         {
                             postOrderHelper(node->left);
                             postOrderHelper(node->right);
@@ -431,17 +431,12 @@ namespace ft {
                         }
                     }
             */
-
-                    t_node* new_nil_node(void) {
+                    void    new_nil_node(void) {
                         
-                        t_node* node;
-
-                        node = this->_alloc.allocate(1);
-                        this->construct(node);
-                        node->color = 0;
-                        return (node);
+                        this->_node_ptr = this->_alloc.allocate(1);
+                        this->construct(this->_node_ptr);
+                        this->_node_ptr->color = 0;
                     }
-
                     void    construct(t_node* ptr, const value_type& val = value_type()) {
 
                         t_node  tmp(val);
@@ -451,16 +446,14 @@ namespace ft {
                         tmp.color = 1;
                         this->_alloc.construct(ptr, tmp);
                     }
-
                     t_node* searchTreeHelper(t_node* node, key_type key) const {
 
-                        if (node == TNULL || key == node->key())
+                        if (node == this->TNULL || key == node->key())
                             return (node);
                         if (key < node->key())
                             return (searchTreeHelper(node->left, key));
                         return (searchTreeHelper(node->right, key));
                     }
-
                     void    balance_after_delete(t_node* x) {
 
                         t_node* s;
@@ -532,7 +525,6 @@ namespace ft {
                         }
                         x->color = 0;
                     }
-
                     void    rbTransplant(t_node* u, t_node* v) {
                         
                         if (u->parent == NULL)
@@ -543,7 +535,6 @@ namespace ft {
                             u->parent->right = v;
                         v->parent = u->parent;
                     }
-
                     void    balance_after_insert(t_node* k) {
 
                         t_node* u;
@@ -599,10 +590,9 @@ namespace ft {
                         }
                         root->color = 0;
                     }
-
                     // void    print_node(t_node* root, string indent, bool last) {
 
-                    //     if (root != TNULL)
+                    //     if (root != this->TNULL)
                     //     {
                     //         cout << indent;
                     //         if (last)
@@ -626,73 +616,98 @@ namespace ft {
 
                     // RedBlackTree() {
 
-                    //     TNULL = new t_node;
-                    //     TNULL->color = 0;
-                    //     TNULL->left = NULL;
-                    //     TNULL->right = NULL;
-                    //     root = TNULL;
+                    //     this->TNULL = new t_node;
+                    //     this->TNULL->color = 0;
+                    //     this->TNULL->left = NULL;
+                    //     this->TNULL->right = NULL;
+                    //     root = this->TNULL;
                     // }
             /*
                     void    preorder() { preOrderHelper(this->root); }
-
                     void    inorder() { inOrderHelper(this->root); }
-
                     void    postorder() { postOrderHelper(this->root); }
             */
-                    t_node* searchTree(int k) const { return (searchTreeHelper(this->root, k)); }
+                    void    init_root(const value_type& val = value_type()) {
 
+                        t_node tmp(val);
+                        // this->TNULL = &tmp;
+                        this->TNULL = this->_alloc.allocate(1);
+                        this->root = this->_alloc.allocate(1);
+                        // this->TNULL->left = NULL;
+                        // this->TNULL->right = NULL;
+                        tmp.left = this->_node_ptr;
+                        tmp.right = this->_node_ptr;
+                        tmp.parent = this->_node_ptr;
+                        // tmp.color = 1;
+                        this->_alloc.construct(this->TNULL, tmp);
+                        // this->_alloc.construct(this->root, tmp);
+                        this->TNULL->color = 0;
+                        this->root = this->TNULL;
+                        // this->root->color = 0;
+                    }
+                    // void    construct(t_node* ptr, const value_type& val = value_type()) {
+
+                    //     t_node  tmp(val);
+                    //     tmp.left = this->_node_ptr;
+                    //     tmp.right = this->_node_ptr;
+                    //     tmp.parent = this->_node_ptr;
+                    //     tmp.color = 1;
+                    //     this->_alloc.construct(ptr, tmp);
+                    // }
+                    t_node* searchTree(int k) const { return (searchTreeHelper(this->root, k)); }
                     t_node* minimum(t_node* node) const {
 
-                        while (node->left != TNULL)
+                        while (node->left != this->TNULL)
                             node = node->left;
                         return (node);
                     }
-
                     t_node* left_most(t_node* node) const {
 
                         while (node->left != node->left->left)
                             node = node->left;
                         return (node);
                     }
-
                     t_node* maximum(t_node* node) const {
 
-                        while (node->right != TNULL)
+                        while (node->right != this->TNULL)
                             node = node->right;
                         return (node);
                     }
+                    t_node* right_most(t_node* node) const {
 
+                        while (node->right != node->right->right)
+                            node = node->right;
+                        return (node);
+                    }
                     t_node* previous_node(t_node* x) {
 
-                        if (x->right != TNULL)
+                        if (x->right != this->TNULL)
                             return (minimum(x->right));
                         t_node* y = x->parent;
-                        while (y != TNULL && x == y->right)
+                        while (y != this->TNULL && x == y->right)
                         {
                             x = y;
                             y = y->parent;
                         }
                         return (y);
                     }
-
                     t_node* next_node(t_node* x) {
 
-                        if (x->left != TNULL)
+                        if (x->left != this->TNULL)
                             return (maximum(x->left));
                         t_node* y = x->parent;
-                        while (y != TNULL && x == y->left)
+                        while (y != this->TNULL && x == y->left)
                         {
                             x = y;
                             y = y->parent;
                         }
                         return (y);
                     }
-
                     void    leftRotate(t_node* x) {
 
                         t_node* y = x->right;
                         x->right = y->left;
-                        if (y->left != TNULL)
+                        if (y->left != this->TNULL)
                             y->left->parent = x;
                         y->parent = x->parent;
                         if (x->parent == NULL)
@@ -704,12 +719,11 @@ namespace ft {
                         y->left = x;
                         x->parent = y;
                     }
-
                     void    rightRotate(t_node* x) {
 
                         t_node* y = x->left;
                         x->left = y->right;
-                        if (y->right != TNULL)
+                        if (y->right != this->TNULL)
                             y->right->parent = x;
                         y->parent = x->parent;
                         if (x->parent == NULL)
@@ -721,7 +735,6 @@ namespace ft {
                         y->right = x;
                         x->parent = y;
                     }
-
                     t_node* insert_node(value_type val) {
 
                         t_node* node = new t_node(val);
@@ -732,10 +745,10 @@ namespace ft {
                         // node->data = val.second;
                         // node->key = val.first;
                         // node->val = ft::make_pair(val.first, val.second);
-                        node->left = TNULL;
-                        node->right = TNULL;
+                        node->left = this->TNULL;
+                        node->right = this->TNULL;
                         node->color = 1;
-                        while (x != TNULL) {
+                        while (x != this->TNULL) {
 
                             y = x;
                             if (node->key() < x->key())
@@ -760,16 +773,14 @@ namespace ft {
                         balance_after_insert(node);
                         return (node);
                     }
-
                     // t_node* getRoot() { return (this->root); }
-
                     void    deleteNode(key_type key) {
 
-                        t_node* z = TNULL;
+                        t_node* z = this->TNULL;
                         t_node  *x, *y;
                         t_node* node = this->root;
 
-                        while (node != TNULL)
+                        while (node != this->TNULL)
                         {
                             if (node->data == key)
                                 z = node;
@@ -778,19 +789,19 @@ namespace ft {
                             else
                             node = node->left;
                         }
-                        if (z == TNULL)
+                        if (z == this->TNULL)
                         {
                             std::cout << "Key not found in the tree" << std::endl;
                             return ;
                         }
                         y = z;
                         int y_original_color = y->color;
-                        if (z->left == TNULL)
+                        if (z->left == this->TNULL)
                         {
                             x = z->right;
                             rbTransplant(z, z->right);
                         } 
-                        else if (z->right == TNULL)
+                        else if (z->right == this->TNULL)
                         {
                             x = z->left;
                             rbTransplant(z, z->left);
@@ -817,14 +828,12 @@ namespace ft {
                         if (y_original_color == 0)
                             balance_after_delete(x);
                     }
-
                     // void printTree() {
 
                     //     if (root)
                     //         print_node(this->root, "", true);
                     // }
             // };
-
         };
 
         template<class T>
