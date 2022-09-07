@@ -26,19 +26,25 @@ int main(void) {
 
     std::cout << std::endl << "-----     ORIGINAL MAP     -----" << std::endl << std::endl;
 
+    std::cout << "insert : ";
+
     og_iterator = og_map.begin();
 
     while (i < 5)
     {
         const std::map<int, int>::value_type    pair(i, i);
         og_map.insert(og_iterator, pair);
-        std::cout << og_map[i] << std::endl;
+        std::cout << og_map[i] << " ";
         i++;
     }
+
+    std::cout << std::endl;
 
     std::cout << std::endl << "-----     MY MAP     -----" << std::endl << std::endl;
 
     i = 0;
+
+    std::cout << "insert : ";
 
     my_iterator = my_map.begin();
 
@@ -46,9 +52,11 @@ int main(void) {
     {
         const ft::map<int, int>::value_type    pair(i, i);
         my_map.insert(my_iterator, pair);
-        std::cout << my_map[i] << std::endl;
+        // std::cout << my_map[i] << " ";
         i++;
     }
+
+    std::cout << std::endl;
 
     return (0);
 }

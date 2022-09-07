@@ -280,16 +280,16 @@ namespace ft {
                 pair<iterator, bool>    insert(const value_type& val) {
                     
                     iterator    it;
-                    // if (this->count(val.first))
-                    // {
-                    //     it = this->find(val.first);
-                    //     return (ft::make_pair(it, false));
-                    // }
-                    // else
-                    // {
+                    if (this->count(val.first))
+                    {
+                        it = this->find(val.first);
+                        return (ft::make_pair(it, false));
+                    }
+                    else
+                    {
                         it = iterator(this->insert_node(val));
                         return (ft::make_pair(it, true));
-                    // }
+                    }
                 }
                 iterator                insert(iterator position, const value_type& val) {
 
@@ -386,7 +386,7 @@ namespace ft {
                     // pointer         _ptr;
                     t_node*         _node_ptr;
                     allocator_type  _alloc;
-                    key_compare     _comp; // already a protected value named _comp
+                    key_compare     _comp;
 
                                     // class RedBlackTree {
 
@@ -447,7 +447,7 @@ namespace ft {
                         this->_alloc.construct(ptr, tmp);
                     }
                     t_node* searchTreeHelper(t_node* node, key_type key) const {
-
+                        
                         if (node == this->TNULL || key == node->key())
                             return (node);
                         if (key < node->key())
