@@ -16,9 +16,12 @@
 # include <iostream>
 # include <cstddef>
 # include "iterator.hpp"
-// # include "red_black_tree.hpp"
 
 namespace ft {
+
+    //IS INTEGRAL
+    template <class T>
+        struct is_integral
 
     //PAIR
     template< class T1, class T2 >
@@ -33,7 +36,7 @@ namespace ft {
             second_type second;
 
         //MEMBER FUNCTIONS
-    
+
             //Constructors
             pair(void) : first(), second() {}
             template<class U, class V>
@@ -73,27 +76,20 @@ namespace ft {
             //NODE
             public :
 
-                typedef struct      s_node {
+                typedef struct                              s_node {
 
-                    struct s_node   *parent;
-                    struct s_node   *left;
-                    struct s_node   *right;
-                    // typename ft::map<Key, T>::key_type             key;
-                    // typename ft::map<Key, T>::mapped_type          data;
-                    // typename ft::map<Key, T>::value_type           val;
-                    ft::pair<const Key, T>  val;
-                    // key_type    key;
-                    // data_type   data;
-                    // val_type    val;
-                    int             color;
+                    struct s_node                           *parent;
+                    struct s_node                           *left;
+                    struct s_node                           *right;
+                    ft::pair<const Key, T>                  val;
+                    typename ft::map<Key, T>::key_type      key;
+                    typename ft::map<Key, T>::mapped_type   data;
+                    int                                     color;
 
                     s_node(void) {}
-                    s_node(ft::pair<const Key, T> value) : val(value) {}
-
-                    const   Key&    key(void) { return (val.first); }
-                    T&              data(void) { return (val.second); }
+                    s_node(ft::pair<const Key, T> value) : val(value), key(value.first), data(value.second) {}
                 }
-                                    t_node;
+                                                            t_node;
                                                                             
             //MAP ITERATORS
             template <typename IT>
@@ -135,43 +131,44 @@ namespace ft {
                     //MEMBER TYPES
 
                         node_ptr    _ptr;
-                        // typename ft::map<Key, T>::RedBlackTree  _rb_tree;
 
-                        void next_node (void)
+                        node_ptr    next_node (node_ptr node)
                         {
-                            if (_ptr->right != _ptr->right->left)
+                            if (node->right != node->right->left)
                             {
-                                _ptr = _ptr->right;
-                                while (_ptr->left != _ptr->left->left)
-                                    _ptr = _ptr->left;
+                                node = node->right;
+                                while (node->left != node->left->left)
+                                    node = node->left;
                             }
                             else
                             {
-                                while (_ptr == _ptr->parent->right && _ptr != _ptr->parent)
-                                    _ptr = _ptr->parent;
-                                _ptr = _ptr->parent;
+                                while (node == node->parent->right && node != node->parent)
+                                    node = node->parent;
+                                node = node->parent;
                             }
+                            return (node);
                         }
 
-                        void previous_node (void)
+                        node_ptr    previous_node (node_ptr node)
                         {
-                            if (_ptr == _ptr->parent)
+                            if (node == node->parent)
                             {
-                                while (_ptr->right != _ptr->right->left)
-                                    _ptr = _ptr->right;
+                                while (node->right != node->right->left)
+                                    node = node->right;
                             }
-                            else if (_ptr->left != _ptr->left->left)
+                            else if (node->left != node->left->left)
                             {
-                                _ptr = _ptr->left;
-                                while (_ptr->right != _ptr->right->left)
-                                    _ptr = _ptr->right;
+                                node = node->left;
+                                while (node->right != node->right->left)
+                                    node = node->right;
                             }
                             else
                             {
-                                while (_ptr == _ptr->parent->left && _ptr != _ptr->parent)
-                                    _ptr = _ptr->parent;
-                                _ptr = _ptr->parent;
+                                while (node == node->parent->left && node != node->parent)
+                                    node = node->parent;
+                                node = _ptr->parent;
                             }
+                            return (node);
                         }
             };
 
@@ -263,7 +260,7 @@ namespace ft {
                 size_type   size(void) const {
 
                     size_type   n = 0;
-                    for (iterator it = this->begin(); it != this->end(); it++)
+                    for (const_iterator it = this->begin(); it != this->end(); it++)
                         n++;
                     return (n);
                 }
@@ -309,7 +306,7 @@ namespace ft {
                 }
                 size_type               erase(const key_type& k) {
 
-                    if (this->find(k))
+                    if (this->count(k))
                     {
                         this->erase(this->find(k));
                         return (1);
@@ -324,9 +321,7 @@ namespace ft {
                 void                    swap(map& x) {
 
                     swap(this->_alloc, x._alloc);
-                    // swap(this->_ptr, x._ptr);
                     swap(this->_comp, x._comp);
-                    // swap(this->_rb_tree, x._rb_tree);
                 }
                 void                    clear(void) { this->erase(this->begin(), this->end()); }
 
@@ -382,55 +377,14 @@ namespace ft {
 
                 private :
 
-                    // RedBlackTree    _rb_tree;
-                    // pointer         _ptr;
                     t_node*         _node_ptr;
                     allocator_type  _alloc;
                     key_compare     _comp;
 
-                                    // class RedBlackTree {
-
-                // public :
 
                     t_node* root;
                     t_node* TNULL;
-            /*
-                    void initializeNULLNode(t_node* node, t_node* parent) {
 
-                        node->data = 0;
-                        node->parent = parent;
-                        node->left = NULL;
-                        node->right = NULL;
-                        node->color = 0;
-                    }
-                    void    preOrderHelper(t_node* node) {
-
-                        if (node != this->TNULL)
-                        {
-                            cout << node->data << " ";
-                            preOrderHelper(node->left);
-                            preOrderHelper(node->right);
-                        }
-                    }
-                    void    inOrderHelper(t_node* node) {
-
-                        if (node != this->TNULL) 
-                        {
-                            inOrderHelper(node->left);
-                            cout << node->data << " ";
-                            inOrderHelper(node->right);
-                        }
-                    }
-                    void    postOrderHelper(t_node* node)
-                    {
-                        if (node != this->TNULL)
-                        {
-                            postOrderHelper(node->left);
-                            postOrderHelper(node->right);
-                            cout << node->data << " ";
-                        }
-                    }
-            */
                     void    new_nil_node(void) {
                         
                         this->_node_ptr = this->_alloc.allocate(1);
@@ -448,9 +402,9 @@ namespace ft {
                     }
                     t_node* searchTreeHelper(t_node* node, key_type key) const {
                         
-                        if (node == this->TNULL || key == node->key())
+                        if (node == this->_node_ptr || key == node->key)
                             return (node);
-                        if (key < node->key())
+                        if (key < node->key)
                             return (searchTreeHelper(node->left, key));
                         return (searchTreeHelper(node->right, key));
                     }
@@ -590,70 +544,18 @@ namespace ft {
                         }
                         root->color = 0;
                     }
-                    // void    print_node(t_node* root, string indent, bool last) {
-
-                    //     if (root != this->TNULL)
-                    //     {
-                    //         cout << indent;
-                    //         if (last)
-                    //         {
-                    //             cout << "R----";
-                    //             indent += "   ";
-                    //         }
-                    //         else
-                    //         {
-                    //             cout << "L----";
-                    //             indent += "|  ";
-                    //         }
-                    //         string sColor = root->color ? "RED" : "BLACK";
-                    //         cout << root->data << "(" << sColor << ")" << endl;
-                    //         print_node(root->left, indent, false);
-                    //         print_node(root->right, indent, true);
-                    //     }
-                    // }
-
-                // public:
-
-                    // RedBlackTree() {
-
-                    //     this->TNULL = new t_node;
-                    //     this->TNULL->color = 0;
-                    //     this->TNULL->left = NULL;
-                    //     this->TNULL->right = NULL;
-                    //     root = this->TNULL;
-                    // }
-            /*
-                    void    preorder() { preOrderHelper(this->root); }
-                    void    inorder() { inOrderHelper(this->root); }
-                    void    postorder() { postOrderHelper(this->root); }
-            */
                     void    init_root(const value_type& val = value_type()) {
 
                         t_node tmp(val);
-                        // this->TNULL = &tmp;
                         this->TNULL = this->_alloc.allocate(1);
                         this->root = this->_alloc.allocate(1);
-                        // this->TNULL->left = NULL;
-                        // this->TNULL->right = NULL;
                         tmp.left = this->_node_ptr;
                         tmp.right = this->_node_ptr;
                         tmp.parent = this->_node_ptr;
-                        // tmp.color = 1;
                         this->_alloc.construct(this->TNULL, tmp);
-                        // this->_alloc.construct(this->root, tmp);
                         this->TNULL->color = 0;
                         this->root = this->TNULL;
-                        // this->root->color = 0;
                     }
-                    // void    construct(t_node* ptr, const value_type& val = value_type()) {
-
-                    //     t_node  tmp(val);
-                    //     tmp.left = this->_node_ptr;
-                    //     tmp.right = this->_node_ptr;
-                    //     tmp.parent = this->_node_ptr;
-                    //     tmp.color = 1;
-                    //     this->_alloc.construct(ptr, tmp);
-                    // }
                     t_node* searchTree(int k) const { return (searchTreeHelper(this->root, k)); }
                     t_node* minimum(t_node* node) const {
 
@@ -742,16 +644,13 @@ namespace ft {
                         t_node* x = this->root;
 
                         node->parent = NULL;
-                        // node->data = val.second;
-                        // node->key = val.first;
-                        // node->val = ft::make_pair(val.first, val.second);
                         node->left = this->TNULL;
                         node->right = this->TNULL;
                         node->color = 1;
                         while (x != this->TNULL) {
 
                             y = x;
-                            if (node->key() < x->key())
+                            if (node->key < x->key)
                                 x = x->left;
                             else
                                 x = x->right;
@@ -759,7 +658,7 @@ namespace ft {
                         node->parent = y;
                         if (y == NULL)
                             root = node;
-                        else if (node->key() < y->key())
+                        else if (node->key < y->key)
                             y->left = node;
                         else
                             y->right = node;
@@ -828,12 +727,6 @@ namespace ft {
                         if (y_original_color == 0)
                             balance_after_delete(x);
                     }
-                    // void printTree() {
-
-                    //     if (root)
-                    //         print_node(this->root, "", true);
-                    // }
-            // };
         };
 
         template<class T>

@@ -30,7 +30,7 @@ int main(void) {
 
     og_iterator = og_map.begin();
 
-    while (i < 5)
+    while (i < 10)
     {
         const std::map<int, int>::value_type    pair(i, i);
         og_map.insert(og_iterator, pair);
@@ -42,19 +42,45 @@ int main(void) {
 
     std::cout << std::endl << "-----     MY MAP     -----" << std::endl << std::endl;
 
-    i = 0;
-
     std::cout << "insert : ";
 
+    i = 0;
+    
     my_iterator = my_map.begin();
 
-    while (i < 5)
+    while (i < 10)
     {
         const ft::map<int, int>::value_type    pair(i, i);
         my_map.insert(my_iterator, pair);
-        // std::cout << my_map[i] << " ";
+        std::cout << my_map[i] << " ";
         i++;
     }
+
+    std::cout << std::endl;
+
+    std::cout << std::endl << "-----     ORIGINAL MAP     -----" << std::endl << std::endl;
+
+    std::cout << "erase : ";
+
+    std::map<int, int>::key_type    og_key = 4;
+
+    og_map.erase(og_key);
+
+    for (int i = 0; i < 10; i++)
+        std::cout << og_map[i] << " ";
+
+    std::cout << std::endl;
+
+    std::cout << std::endl << "-----     MY MAP     -----" << std::endl << std::endl;
+
+    std::cout << "erase : ";
+
+    ft::map<int, int>::key_type    my_key = 4;
+
+    my_map.erase(my_key);
+
+    for (int i = 0; i < 10; i++)
+        std::cout << my_map[i] << " ";
 
     std::cout << std::endl;
 
