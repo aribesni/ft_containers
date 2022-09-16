@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Wed Sep 14 09:46:27 2022
+# Make data base, printed on Fri Sep 16 07:22:07 2022
 
 # Variables
 
@@ -43,7 +43,7 @@ VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupp
 # environment
 _ = /usr/share/code/code
 # environment
-JOURNAL_STREAM = 9:38933004
+JOURNAL_STREAM = 9:3394685
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # makefile
@@ -61,13 +61,13 @@ XDG_DATA_DIRS = /usr/share/gnome:/usr/share/ubuntu:/mnt/nfs/homes/aribesni/.loca
 # environment
 DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/36117/bus
 # environment
-MANAGERPID = 746663
+MANAGERPID = 226840
 # environment
 VSCODE_CWD = /mnt/nfs/homes/aribesni
 # environment
-XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session10
+XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session3
 # environment
-KRB5CCNAME = FILE:/tmp/krb5cc_36117_ui5UzF
+KRB5CCNAME = FILE:/tmp/krb5cc_36117_zZyfY2
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
@@ -77,7 +77,7 @@ GPG_AGENT_INFO = /run/user/36117/gnupg/S.gpg-agent:0:1
 # environment
 LSCOLORS = Gxfxcxdxbxegedabagacad
 # environment
-SESSION_MANAGER = local/e1r8p9.clusters.42paris.fr:@/tmp/.ICE-unix/747184,unix/e1r8p9.clusters.42paris.fr:/tmp/.ICE-unix/747184
+SESSION_MANAGER = local/e1r9p10.clusters.42paris.fr:@/tmp/.ICE-unix/227253,unix/e1r9p10.clusters.42paris.fr:/tmp/.ICE-unix/227253
 # environment
 XDG_RUNTIME_DIR = /run/user/36117
 # environment
@@ -85,7 +85,7 @@ XDG_MENU_PREFIX = gnome-
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 1f230bc607b14aac93a7de8ec9db382f
+INVOCATION_ID = a4d05bf1c8f84dc09ec32af4543a3fa3
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -97,7 +97,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/36117/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 748630
+GIO_LAUNCHED_DESKTOP_FILE_PID = 228442
 # automatic
 %F = $(notdir $%)
 # environment
@@ -107,7 +107,7 @@ PWD = /mnt/nfs/homes/aribesni/Desktop/42/ft_containers/ft_containers.git
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 747153
+SSH_AGENT_PID = 227216
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -211,7 +211,7 @@ LANG = C
 # environment
 DOCKER_HOST = unix:///run/user/36117/docker.sock
 # environment
-VSCODE_PID = 748630
+VSCODE_PID = 228442
 # variable set hash-table stats:
 # Load=100/1024=10%, Rehash=0, Collisions=7/122=6%
 
@@ -279,6 +279,6 @@ GNUmakefile:
 # strcache performance: lookups = 18 / hit rate = 16%
 # hash-table stats:
 # Load=15/8192=0%, Rehash=0, Collisions=1/18=6%
-# Finished Make data base on Wed Sep 14 09:46:27 2022
+# Finished Make data base on Fri Sep 16 07:22:07 2022
 
  

@@ -20,6 +20,7 @@ int main(void) {
     ft::map<int, int>   my_map;
 
     int     i = 0;
+    int     j = 1;
 
     std::map<int, int>::iterator    og_iterator;
     ft::map<int, int>::iterator     my_iterator;
@@ -32,10 +33,11 @@ int main(void) {
 
     while (i < 10)
     {
-        const std::map<int, int>::value_type    pair(i, i);
+        const std::map<int, int>::value_type    pair(j, j);
         og_map.insert(og_iterator, pair);
         std::cout << og_map[i] << " ";
         i++;
+        j++;
     }
 
     std::cout << std::endl;
@@ -45,18 +47,28 @@ int main(void) {
     std::cout << "insert : ";
 
     i = 0;
+    j = 1;
     
     my_iterator = my_map.begin();
 
     while (i < 10)
     {
-        const ft::map<int, int>::value_type    pair(i, i);
+        const ft::map<int, int>::value_type    pair(j, j);
         my_map.insert(my_iterator, pair);
         std::cout << my_map[i] << " ";
         i++;
+        j++;
     }
-
+    
     std::cout << std::endl;
+    
+    std::cout << std::endl << "-----     ORIGINAL MAP     -----" << std::endl << std::endl;
+    
+    std::cout << "size : " << og_map.size() << std::endl;
+    
+    std::cout << std::endl << "-----     MY MAP     -----" << std::endl << std::endl;
+    
+    std::cout << "size : " << my_map.size() << std::endl;
 
     std::cout << std::endl << "-----     ORIGINAL MAP     -----" << std::endl << std::endl;
 
@@ -66,7 +78,7 @@ int main(void) {
 
     og_map.erase(og_key);
 
-    for (int i = 0; i < 10; i++)
+    for (size_t i = 0; i < og_map.size(); i++)
         std::cout << og_map[i] << " ";
 
     std::cout << std::endl;
@@ -79,8 +91,30 @@ int main(void) {
 
     my_map.erase(my_key);
 
-    for (int i = 0; i < 10; i++)
+    for (size_t i = 0; i < my_map.size(); i++)
         std::cout << my_map[i] << " ";
+
+    std::cout << std::endl;
+
+    std::cout << std::endl << "-----     ORIGINAL MAP     -----" << std::endl << std::endl;
+
+    std::cout << "copy constructor : ";
+
+    std::map<int, int>  og_copy(og_map);
+
+    for (int i = 0; i < 10; i++)
+        std::cout << og_copy[i] << " ";
+
+    std::cout << std::endl;
+
+    std::cout << std::endl << "-----     MY MAP     -----" << std::endl << std::endl;
+
+    std::cout << "copy constructor : ";
+
+    ft::map<int, int>   my_copy(my_map);
+
+    for (int i = 0; i < 10; i++)
+        std::cout << my_copy[i] << " ";
 
     std::cout << std::endl;
 

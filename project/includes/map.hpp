@@ -333,6 +333,13 @@ namespace ft {
                     size_type   n = 0;
                     for (const_iterator it = this->begin(); it != this->end(); it++)
                         n++;
+                    std::cout << "N : " << n << std::endl;
+                    const_iterator tmp = this->begin();
+                    t_node*   node_tmp = tmp.getPtr();
+                    std::cout << "BEGIN : " << node_tmp->data << std::endl;
+                    tmp = this->end();
+                    node_tmp = tmp.getPtr();
+                    std::cout << "END : " << node_tmp->data << std::endl;
                     return (n);
                 }
                 size_type   max_size(void) const { return (this->_alloc.max_size()); }

@@ -149,7 +149,7 @@ namespace ft {
                     regular_iterator(void) : _elem(pointer()) {}
                     regular_iterator(const T& src) : _elem(src) {}
                     regular_iterator(pointer ptr) : _elem(ptr) {}
-                    
+
                     reference   operator*(void) const { return (*this->_elem); }
                     reference   operator[](difference_type n) const { return (*this->_elem + n); }
                 
