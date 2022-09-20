@@ -262,12 +262,12 @@ namespace ft {
                 typedef ft::reverse_iterator<const_iterator>                    const_reverse_iterator;
 
                 class value_compare {
-                    
+
                         // friend class map;
 
                     public :
 
-                    //MEMBER TYPES 
+                    //MEMBER TYPES
 
                         typedef bool        result_type;
                         value_type          first_argument_type;
@@ -296,19 +296,19 @@ namespace ft {
                 //Constructors
                 explicit    map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _alloc(alloc), _comp(comp) {
                     
-                    this->new_nil_node();
+                    // this->new_nil_node();
                     this->init_root();
                 }
                 template <class InputIterator>
                     map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL) : _alloc(alloc), _comp(comp) {
                         
-                        this->new_nil_node();
+                        // this->new_nil_node();
                         this->init_root();
                         this->insert(first, last);
                 }
                 map(const map& x) : _alloc(x._alloc), _comp(x._comp) {
                     
-                    this->new_nil_node();
+                    // this->new_nil_node();
                     this->init_root();
                     this->insert(x.begin(), x.end());
                 }
@@ -317,10 +317,10 @@ namespace ft {
                 ~map(void) {}
 
                 //Iterators
-                iterator                begin(void) { return (iterator(this->left_most(this->_node_ptr))); }
-                const_iterator          begin(void) const { return (const_iterator(this->left_most(this->_node_ptr))); }
-                iterator                end(void) { return (iterator(this->right_most(this->_node_ptr))); }
-                const_iterator          end(void) const { return (const_iterator(this->right_most(this->_node_ptr))); }
+                iterator                begin(void) { return (iterator(this->left_most(this->TNULL))); }
+                const_iterator          begin(void) const { return (const_iterator(this->left_most(this->TNULL))); }
+                iterator                end(void) { return (iterator(this->TNULL)); }
+                const_iterator          end(void) const { return (const_iterator(this->TNULL)); }
                 reverse_iterator        rbegin(void) { return (reverse_iterator(this->end())); }
                 const_reverse_iterator  rbegin(void) const { return (const_reverse_iterator(this->end())); }
                 reverse_iterator        rend(void) { return (reverse_iterator(this->begin())); }
@@ -333,20 +333,21 @@ namespace ft {
                     size_type   n = 0;
                     for (const_iterator it = this->begin(); it != this->end(); it++)
                         n++;
-                    std::cout << "N : " << n << std::endl;
                     const_iterator tmp = this->begin();
                     t_node*   node_tmp = tmp.getPtr();
-                    std::cout << "BEGIN : " << node_tmp->data << std::endl;
+                    std::cout << "BEGIN KEY : " << node_tmp->key << std::endl;
+                    std::cout << "BEGIN DATA : " << node_tmp->data << std::endl;
                     tmp = this->end();
                     node_tmp = tmp.getPtr();
-                    std::cout << "END : " << node_tmp->data << std::endl;
+                    std::cout << "END KEY : " << node_tmp->key << std::endl;
+                    std::cout << "END DATA : " << node_tmp->data << std::endl;
                     return (n);
                 }
                 size_type   max_size(void) const { return (this->_alloc.max_size()); }
 
                 //Element access
-                mapped_type&    operator[] (const key_type& k) {
-                    
+                mapped_type&    operator[](const key_type& k) {
+
                     this->insert(ft::make_pair(k, mapped_type()));
                     return (this->find(k)->second);
                 }
@@ -367,7 +368,7 @@ namespace ft {
                     }
                 }
                 iterator                insert(iterator position, const value_type& val) {
-
+                        
                     (void)position;
                     return (this->insert(val).first);
                 }
@@ -455,32 +456,32 @@ namespace ft {
 
                 private :
 
-                    t_node*         _node_ptr;
+                    // t_node*         _node_ptr;
                     allocator_type  _alloc;
                     key_compare     _comp;
 
 
                     t_node* root;
                     t_node* TNULL;
-
+/*
                     void    new_nil_node(void) {
                         
                         this->_node_ptr = this->_alloc.allocate(1);
                         this->construct(this->_node_ptr);
                         this->_node_ptr->color = 0;
                     }
-                    void    construct(t_node* ptr, const value_type& val = value_type()) {
+*/                    void    construct(t_node* ptr, const value_type& val = value_type()) {
 
                         t_node  tmp(val);
-                        tmp.left = this->_node_ptr;
-                        tmp.right = this->_node_ptr;
-                        tmp.parent = this->_node_ptr;
+                        tmp.left = this->TNULL;
+                        tmp.right = this->TNULL;
+                        tmp.parent = this->TNULL;
                         tmp.color = 1;
                         this->_alloc.construct(ptr, tmp);
                     }
                     t_node* searchTreeHelper(t_node* node, key_type key) const {
-                        
-                        if (node == this->_node_ptr || key == node->key)
+
+                        if (node == this->TNULL || key == node->key)
                             return (node);
                         if (key < node->key)
                             return (searchTreeHelper(node->left, key));
@@ -537,7 +538,7 @@ namespace ft {
                                 {
                                     s->color = 1;
                                     x = x->parent;
-                                } 
+                                }
                                 else
                                 {
                                     if (s->left->color == 0)
@@ -627,9 +628,9 @@ namespace ft {
                         t_node tmp(val);
                         this->TNULL = this->_alloc.allocate(1);
                         this->root = this->_alloc.allocate(1);
-                        tmp.left = this->_node_ptr;
-                        tmp.right = this->_node_ptr;
-                        tmp.parent = this->_node_ptr;
+                        tmp.left = this->TNULL;
+                        tmp.right = this->TNULL;
+                        tmp.parent = this->TNULL;
                         this->_alloc.construct(this->TNULL, tmp);
                         this->TNULL->color = 0;
                         this->root = this->TNULL;
@@ -717,7 +718,8 @@ namespace ft {
                     }
                     t_node* insert_node(value_type val) {
 
-                        t_node* node = new t_node(val);
+                        t_node* node = this->_alloc.allocate(1);
+                        this->construct(node, val);
                         t_node* y = NULL;
                         t_node* x = this->root;
 
@@ -735,7 +737,7 @@ namespace ft {
                         }
                         node->parent = y;
                         if (y == NULL)
-                            root = node;
+                            this->root = node;
                         else if (node->key < y->key)
                             y->left = node;
                         else

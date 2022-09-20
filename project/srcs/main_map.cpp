@@ -33,7 +33,7 @@ int main(void) {
 
     while (i < 10)
     {
-        const std::map<int, int>::value_type    pair(j, j);
+        std::map<int, int>::value_type    pair(i, j);
         og_map.insert(og_iterator, pair);
         std::cout << og_map[i] << " ";
         i++;
@@ -53,7 +53,7 @@ int main(void) {
 
     while (i < 10)
     {
-        const ft::map<int, int>::value_type    pair(j, j);
+        ft::map<int, int>::value_type    pair(i, j);
         my_map.insert(my_iterator, pair);
         std::cout << my_map[i] << " ";
         i++;
@@ -61,7 +61,7 @@ int main(void) {
     }
     
     std::cout << std::endl;
-    
+   
     std::cout << std::endl << "-----     ORIGINAL MAP     -----" << std::endl << std::endl;
     
     std::cout << "size : " << og_map.size() << std::endl;
