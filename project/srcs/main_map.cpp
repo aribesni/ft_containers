@@ -48,7 +48,7 @@ int main(void) {
 
     i = 0;
     j = 1;
-    
+
     my_iterator = my_map.begin();
 
     while (i < 10)
@@ -59,7 +59,7 @@ int main(void) {
         i++;
         j++;
     }
-    
+
     std::cout << std::endl;
    
     std::cout << std::endl << "-----     ORIGINAL MAP     -----" << std::endl << std::endl;
@@ -102,7 +102,7 @@ int main(void) {
 
     std::map<int, int>  og_copy(og_map);
 
-    for (int i = 0; i < 10; i++)
+    for (size_t i = 0; i < og_map.size(); i++)
         std::cout << og_copy[i] << " ";
 
     std::cout << std::endl;
@@ -113,10 +113,14 @@ int main(void) {
 
     ft::map<int, int>   my_copy(my_map);
 
-    for (int i = 0; i < 10; i++)
+    for (size_t i = 0; i < my_map.size(); i++)
         std::cout << my_copy[i] << " ";
 
     std::cout << std::endl;
+
+    std::cout << std::endl;
+
+    my_map.ft_tmp();                ///////////////////////////////                              delete when done
 
     return (0);
 }

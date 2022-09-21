@@ -165,7 +165,7 @@ namespace ft {
             //MAP ITERATORS
             template <typename IT>
                 class MapIterator {
-                        
+
                     public :
 
                     //MEMBER TYPES
@@ -317,14 +317,14 @@ namespace ft {
                 ~map(void) {}
 
                 //Iterators
-                iterator                begin(void) { return (iterator(this->left_most(this->TNULL))); }
-                const_iterator          begin(void) const { return (const_iterator(this->left_most(this->TNULL))); }
-                iterator                end(void) { return (iterator(this->TNULL)); }
-                const_iterator          end(void) const { return (const_iterator(this->TNULL)); }
-                reverse_iterator        rbegin(void) { return (reverse_iterator(this->end())); }
-                const_reverse_iterator  rbegin(void) const { return (const_reverse_iterator(this->end())); }
-                reverse_iterator        rend(void) { return (reverse_iterator(this->begin())); }
-                const_reverse_iterator  rend(void) const { return (const_reverse_iterator(this->begin())); }
+                iterator                begin(void) { return (iterator(this->left_most(this->root))); }
+                const_iterator          begin(void) const { return (const_iterator(this->left_most(this->root))); }
+                iterator                end(void) { return (iterator(this->right_most(this->TNULL))); }
+                const_iterator          end(void) const { return (const_iterator(this->right_most(this->TNULL))); }
+                reverse_iterator        rbegin(void) { return (reverse_iterator(this->TNULL)); }
+                const_reverse_iterator  rbegin(void) const { return (const_reverse_iterator(this->TNULL)); }
+                reverse_iterator        rend(void) { return (reverse_iterator(this->left_most(this->root))); }
+                const_reverse_iterator  rend(void) const { return (const_reverse_iterator(this->left_most(this->root))); }
 
                 //Capacity
                 bool        empty(void) const { return (this->size() == 0 ? true : false); }
@@ -333,14 +333,6 @@ namespace ft {
                     size_type   n = 0;
                     for (const_iterator it = this->begin(); it != this->end(); it++)
                         n++;
-                    const_iterator tmp = this->begin();
-                    t_node*   node_tmp = tmp.getPtr();
-                    std::cout << "BEGIN KEY : " << node_tmp->key << std::endl;
-                    std::cout << "BEGIN DATA : " << node_tmp->data << std::endl;
-                    tmp = this->end();
-                    node_tmp = tmp.getPtr();
-                    std::cout << "END KEY : " << node_tmp->key << std::endl;
-                    std::cout << "END DATA : " << node_tmp->data << std::endl;
                     return (n);
                 }
                 size_type   max_size(void) const { return (this->_alloc.max_size()); }
@@ -368,7 +360,7 @@ namespace ft {
                     }
                 }
                 iterator                insert(iterator position, const value_type& val) {
-                        
+
                     (void)position;
                     return (this->insert(val).first);
                 }
@@ -409,8 +401,8 @@ namespace ft {
                 value_compare   value_comp(void) const { return (value_compare(_comp)); }
 
                 //Operations
-                iterator                                find(const key_type& k) { return (iterator(this->searchTree(k))); }
-                const_iterator                          find(const key_type& k) const { return (const_iterator(this->searchTree(k))); }
+                iterator                                find(const key_type& k) { return (iterator(this->searchTree(this->root, k))); }
+                const_iterator                          find(const key_type& k) const { return (const_iterator(this->searchTree(this->root, k))); }
                 size_type                               count(const key_type& k) const { return (this->find(k) != this->end() ? 1 : 0); }
                 iterator                                lower_bound(const key_type& k) {
 
@@ -454,23 +446,52 @@ namespace ft {
                 //Allocator
                 allocator_type  get_allocator(void) const {return (allocator_type()); }
 
+                /*******************************************/
+                //tmp functions
+
+                void    ft_tmp(void) {
+
+                    iterator tmp = this->begin();
+                    t_node*   node_tmp = tmp.getPtr();
+                    std::cout << "BEGIN KEY : " << node_tmp->key << "   ";
+                    std::cout << "BEGIN DATA : " << node_tmp->data << "   ";
+                    tmp = this->end();
+                    tmp--;
+                    node_tmp = tmp.getPtr();
+                    std::cout << "END KEY : " << node_tmp->key << "   ";
+                    std::cout << "END DATA : " << node_tmp->data << std::endl;
+                }
+
+                /******************************************/
+
                 private :
 
                     // t_node*         _node_ptr;
                     allocator_type  _alloc;
                     key_compare     _comp;
-
-
-                    t_node* root;
-                    t_node* TNULL;
+                    t_node*         root;
+                    t_node*         TNULL;
 /*
                     void    new_nil_node(void) {
-                        
+
                         this->_node_ptr = this->_alloc.allocate(1);
                         this->construct(this->_node_ptr);
                         this->_node_ptr->color = 0;
                     }
-*/                    void    construct(t_node* ptr, const value_type& val = value_type()) {
+*/
+                    void    init_root(const value_type& val = value_type()) {
+
+                        t_node tmp(val);
+                        this->TNULL = this->_alloc.allocate(1);
+                        this->root = this->_alloc.allocate(1);
+                        tmp.left = this->TNULL;
+                        tmp.right = this->TNULL;
+                        tmp.parent = this->TNULL;
+                        this->_alloc.construct(this->TNULL, tmp);
+                        this->TNULL->color = 0;
+                        this->root = this->TNULL;
+                    }
+                    void    construct(t_node* ptr, const value_type& val = value_type()) {
 
                         t_node  tmp(val);
                         tmp.left = this->TNULL;
@@ -479,13 +500,93 @@ namespace ft {
                         tmp.color = 1;
                         this->_alloc.construct(ptr, tmp);
                     }
-                    t_node* searchTreeHelper(t_node* node, key_type key) const {
+                    t_node* searchTree(t_node* node, key_type key) const {
 
                         if (node == this->TNULL || key == node->key)
                             return (node);
                         if (key < node->key)
-                            return (searchTreeHelper(node->left, key));
-                        return (searchTreeHelper(node->right, key));
+                            return (this->searchTree(node->left, key));
+                        return (this->searchTree(node->right, key));
+                    }
+                    t_node* minimum(t_node* node) const {
+
+                        while (node->left != this->TNULL)
+                            node = node->left;
+                        return (node);
+                    }
+                    t_node* left_most(t_node* node) const {
+
+                        while (node->left != node->left->left)
+                            node = node->left;
+                        return (node);
+                    }
+                    t_node* maximum(t_node* node) const {
+
+                        while (node->right != this->TNULL)
+                            node = node->right;
+                        return (node);
+                    }
+                    t_node* right_most(t_node* node) const {
+
+                        while (node->right != node->right->right)
+                            node = node->right;
+                        return (node);
+                    }
+                    t_node* previous_node(t_node* x) {
+
+                        if (x->right != this->TNULL)
+                            return (this->minimum(x->right));
+                        t_node* y = x->parent;
+                        while (y != this->TNULL && x == y->right)
+                        {
+                            x = y;
+                            y = y->parent;
+                        }
+                        return (y);
+                    }
+                    t_node* next_node(t_node* x) {
+
+                        if (x->left != this->TNULL)
+                            return (this->maximum(x->left));
+                        t_node* y = x->parent;
+                        while (y != this->TNULL && x == y->left)
+                        {
+                            x = y;
+                            y = y->parent;
+                        }
+                        return (y);
+                    }
+                    void    leftRotate(t_node* x) {
+
+                        t_node* y = x->right;
+                        x->right = y->left;
+                        if (y->left != this->TNULL)
+                            y->left->parent = x;
+                        y->parent = x->parent;
+                        if (x->parent == this->TNULL)
+                            this->root = y;
+                        else if (x == x->parent->left)
+                            x->parent->left = y;
+                        else
+                            x->parent->right = y;
+                        y->left = x;
+                        x->parent = y;
+                    }
+                    void    rightRotate(t_node* x) {
+
+                        t_node* y = x->left;
+                        x->left = y->right;
+                        if (y->right != this->TNULL)
+                            y->right->parent = x;
+                        y->parent = x->parent;
+                        if (x->parent == this->TNULL)
+                            this->root = y;
+                        else if (x == x->parent->right)
+                            x->parent->right = y;
+                        else
+                            x->parent->left = y;
+                        y->right = x;
+                        x->parent = y;
                     }
                     void    balance_after_delete(t_node* x) {
 
@@ -500,27 +601,27 @@ namespace ft {
                                 {
                                     s->color = 0;
                                     x->parent->color = 1;
-                                    leftRotate(x->parent);
+                                    this->leftRotate(x->parent);
                                     s = x->parent->right;
                                 }
                                 if (s->left->color == 0 && s->right->color == 0)
                                 {
                                     s->color = 1;
                                     x = x->parent;
-                                } 
+                                }
                                 else
                                 {
                                     if (s->right->color == 0)
                                     {
                                         s->left->color = 0;
                                         s->color = 1;
-                                        rightRotate(s);
+                                        this->rightRotate(s);
                                         s = x->parent->right;
                                     }
                                     s->color = x->parent->color;
                                     x->parent->color = 0;
                                     s->right->color = 0;
-                                    leftRotate(x->parent);
+                                    this->leftRotate(x->parent);
                                     x = root;
                                 }
                             }
@@ -531,7 +632,7 @@ namespace ft {
                                 {
                                     s->color = 0;
                                     x->parent->color = 1;
-                                    rightRotate(x->parent);
+                                    this->rightRotate(x->parent);
                                     s = x->parent->left;
                                 }
                                 if (s->right->color == 0 && s->right->color == 0)
@@ -545,13 +646,13 @@ namespace ft {
                                     {
                                         s->right->color = 0;
                                         s->color = 1;
-                                        leftRotate(s);
+                                        this->leftRotate(s);
                                         s = x->parent->left;
                                     }
                                     s->color = x->parent->color;
                                     x->parent->color = 0;
                                     s->left->color = 0;
-                                    rightRotate(x->parent);
+                                    this->rightRotate(x->parent);
                                     x = root;
                                 }
                             }
@@ -560,7 +661,7 @@ namespace ft {
                     }
                     void    rbTransplant(t_node* u, t_node* v) {
                         
-                        if (u->parent == NULL)
+                        if (u->parent == this->TNULL)
                             root = v;
                         else if (u == u->parent->left)
                             u->parent->left = v;
@@ -589,11 +690,11 @@ namespace ft {
                                     if (k == k->parent->left)
                                     {
                                         k = k->parent;
-                                        rightRotate(k);
+                                        this->rightRotate(k);
                                     }
                                     k->parent->color = 0;
                                     k->parent->parent->color = 1;
-                                    leftRotate(k->parent->parent);
+                                    this->leftRotate(k->parent->parent);
                                 }
                             }
                             else
@@ -611,122 +712,25 @@ namespace ft {
                                     if (k == k->parent->right)
                                     {
                                         k = k->parent;
-                                        leftRotate(k);
+                                        this->leftRotate(k);
                                     }
                                     k->parent->color = 0;
                                     k->parent->parent->color = 1;
-                                    rightRotate(k->parent->parent);
+                                    this->rightRotate(k->parent->parent);
                                 }
                             }
                             if (k == root)
-                                break;
+                                break ;
                         }
                         root->color = 0;
-                    }
-                    void    init_root(const value_type& val = value_type()) {
-
-                        t_node tmp(val);
-                        this->TNULL = this->_alloc.allocate(1);
-                        this->root = this->_alloc.allocate(1);
-                        tmp.left = this->TNULL;
-                        tmp.right = this->TNULL;
-                        tmp.parent = this->TNULL;
-                        this->_alloc.construct(this->TNULL, tmp);
-                        this->TNULL->color = 0;
-                        this->root = this->TNULL;
-                    }
-                    t_node* searchTree(key_type k) const { return (searchTreeHelper(this->root, k)); }
-                    t_node* minimum(t_node* node) const {
-
-                        while (node->left != this->TNULL)
-                            node = node->left;
-                        return (node);
-                    }
-                    t_node* left_most(t_node* node) const {
-
-                        while (node->left != node->left->left)
-                            node = node->left;
-                        return (node);
-                    }
-                    t_node* maximum(t_node* node) const {
-
-                        while (node->right != this->TNULL)
-                            node = node->right;
-                        return (node);
-                    }
-                    t_node* right_most(t_node* node) const {
-
-                        while (node->right != node->right->right)
-                            node = node->right;
-                        return (node);
-                    }
-                    t_node* previous_node(t_node* x) {
-
-                        if (x->right != this->TNULL)
-                            return (minimum(x->right));
-                        t_node* y = x->parent;
-                        while (y != this->TNULL && x == y->right)
-                        {
-                            x = y;
-                            y = y->parent;
-                        }
-                        return (y);
-                    }
-                    t_node* next_node(t_node* x) {
-
-                        if (x->left != this->TNULL)
-                            return (maximum(x->left));
-                        t_node* y = x->parent;
-                        while (y != this->TNULL && x == y->left)
-                        {
-                            x = y;
-                            y = y->parent;
-                        }
-                        return (y);
-                    }
-                    void    leftRotate(t_node* x) {
-
-                        t_node* y = x->right;
-                        x->right = y->left;
-                        if (y->left != this->TNULL)
-                            y->left->parent = x;
-                        y->parent = x->parent;
-                        if (x->parent == NULL)
-                            this->root = y;
-                        else if (x == x->parent->left)
-                            x->parent->left = y;
-                        else
-                            x->parent->right = y;
-                        y->left = x;
-                        x->parent = y;
-                    }
-                    void    rightRotate(t_node* x) {
-
-                        t_node* y = x->left;
-                        x->left = y->right;
-                        if (y->right != this->TNULL)
-                            y->right->parent = x;
-                        y->parent = x->parent;
-                        if (x->parent == NULL)
-                            this->root = y;
-                        else if (x == x->parent->right)
-                            x->parent->right = y;
-                        else
-                            x->parent->left = y;
-                        y->right = x;
-                        x->parent = y;
                     }
                     t_node* insert_node(value_type val) {
 
                         t_node* node = this->_alloc.allocate(1);
                         this->construct(node, val);
-                        t_node* y = NULL;
+                        t_node* y = this->TNULL;
                         t_node* x = this->root;
 
-                        node->parent = NULL;
-                        node->left = this->TNULL;
-                        node->right = this->TNULL;
-                        node->color = 1;
                         while (x != this->TNULL) {
 
                             y = x;
@@ -736,20 +740,20 @@ namespace ft {
                                 x = x->right;
                         }
                         node->parent = y;
-                        if (y == NULL)
+                        if (y == this->TNULL)
                             this->root = node;
                         else if (node->key < y->key)
                             y->left = node;
                         else
                             y->right = node;
-                        if (node->parent == NULL)
+                        if (node->parent == this->TNULL)
                         {
                             node->color = 0;
                             return (NULL);
                         }
-                        if (node->parent->parent == NULL)
+                        if (node->parent->parent == this->TNULL)
                             return (NULL);
-                        balance_after_insert(node);
+                        this->balance_after_insert(node);
                         return (node);
                     }
                     // t_node* getRoot() { return (this->root); }
@@ -761,12 +765,12 @@ namespace ft {
 
                         while (node != this->TNULL)
                         {
-                            if (node->data == key)
+                            if (node->key == key)
                                 z = node;
-                            if (node->data <= key)
+                            if (node->key <= key)
                                 node = node->right;
                             else
-                            node = node->left;
+                                node = node->left;
                         }
                         if (z == this->TNULL)
                         {
@@ -778,34 +782,34 @@ namespace ft {
                         if (z->left == this->TNULL)
                         {
                             x = z->right;
-                            rbTransplant(z, z->right);
+                            this->rbTransplant(z, z->right);
                         } 
                         else if (z->right == this->TNULL)
                         {
                             x = z->left;
-                            rbTransplant(z, z->left);
+                            this->rbTransplant(z, z->left);
                         }
                         else
                         {
-                            y = minimum(z->right);
+                            y = this->minimum(z->right);
                             y_original_color = y->color;
                             x = y->right;
                             if (y->parent == z)
                                 x->parent = y;
                             else
                             {
-                                rbTransplant(y, y->right);
+                                this->rbTransplant(y, y->right);
                                 y->right = z->right;
                                 y->right->parent = y;
                             }
-                            rbTransplant(z, y);
+                            this->rbTransplant(z, y);
                             y->left = z->left;
                             y->left->parent = y;
                             y->color = z->color;
                         }
                         delete z;
                         if (y_original_color == 0)
-                            balance_after_delete(x);
+                            this->balance_after_delete(x);
                     }
         };
 
