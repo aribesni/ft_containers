@@ -61,7 +61,11 @@ int main(void) {
     }
 
     std::cout << std::endl;
-   
+
+    std::cout << std::endl;
+
+    my_map.ft_tmp();                ///////////////////////////////                              delete when done
+
     std::cout << std::endl << "-----     ORIGINAL MAP     -----" << std::endl << std::endl;
     
     std::cout << "size : " << og_map.size() << std::endl;

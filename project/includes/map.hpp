@@ -16,7 +16,24 @@
 # include <iostream>
 # include <cstddef>
 # include "iterator.hpp"
+/*
+const
+class nullptr_t
+{
+public:
+   template<class T>
+   operator T*() const
+      { return 0; }
 
+   template<class C, class T>
+      operator T C::*() const
+      { return 0; }   
+
+private:
+   void operator&() const;
+
+} nullptr = {};
+*/
 namespace ft {
 
     //IS INTEGRAL
@@ -166,6 +183,8 @@ namespace ft {
             template <typename IT>
                 class MapIterator {
 
+                    friend class map;
+                    
                     public :
 
                     //MEMBER TYPES
@@ -288,7 +307,6 @@ namespace ft {
 
                         //Constructors
                         value_compare(Compare c) : _comp(c) {}
-
                 };
 
             //MEMBER FUNCTIONS
@@ -296,19 +314,16 @@ namespace ft {
                 //Constructors
                 explicit    map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _alloc(alloc), _comp(comp) {
                     
-                    // this->new_nil_node();
                     this->init_root();
                 }
                 template <class InputIterator>
                     map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL) : _alloc(alloc), _comp(comp) {
-                        
-                        // this->new_nil_node();
+
                         this->init_root();
                         this->insert(first, last);
                 }
                 map(const map& x) : _alloc(x._alloc), _comp(x._comp) {
-                    
-                    // this->new_nil_node();
+
                     this->init_root();
                     this->insert(x.begin(), x.end());
                 }
@@ -316,10 +331,22 @@ namespace ft {
                 //Destructor
                 ~map(void) {}
 
+                //Operator
+                map&    operator=(const map& x) {
+
+                    if (this == &x)
+                        return (*this);
+                    this->clear();
+                    this->_alloc = x._alloc;
+                    this->_comp = x._comp;
+                    this->insert(x.begin(), x.end());
+                    return (*this);
+                }
+
                 //Iterators
                 iterator                begin(void) { return (iterator(this->left_most(this->root))); }
                 const_iterator          begin(void) const { return (const_iterator(this->left_most(this->root))); }
-                iterator                end(void) { return (iterator(this->right_most(this->TNULL))); }
+                iterator                end(void) { return (iterator(this->right_most(this->root))); }
                 const_iterator          end(void) const { return (const_iterator(this->right_most(this->TNULL))); }
                 reverse_iterator        rbegin(void) { return (reverse_iterator(this->TNULL)); }
                 const_reverse_iterator  rbegin(void) const { return (const_reverse_iterator(this->TNULL)); }
@@ -343,10 +370,20 @@ namespace ft {
                     this->insert(ft::make_pair(k, mapped_type()));
                     return (this->find(k)->second);
                 }
+                mapped_type&    at(const key_type& k) {
+
+                    return (this->find(k)->second);
+                    throw (std::out_of_range("Out of range"));
+                }
+                const mapped_type&  at(const key_type& k) const {
+
+                    return (this->find(k)->second);
+                    throw (std::out_of_range("Out of range"));
+                }
 
                 //Modifiers
                 pair<iterator, bool>    insert(const value_type& val) {
-                    
+
                     iterator    it;
                     if (this->count(val.first))
                     {
@@ -456,7 +493,7 @@ namespace ft {
                     std::cout << "BEGIN KEY : " << node_tmp->key << "   ";
                     std::cout << "BEGIN DATA : " << node_tmp->data << "   ";
                     tmp = this->end();
-                    tmp--;
+                    // tmp--;
                     node_tmp = tmp.getPtr();
                     std::cout << "END KEY : " << node_tmp->key << "   ";
                     std::cout << "END DATA : " << node_tmp->data << std::endl;
@@ -466,19 +503,11 @@ namespace ft {
 
                 private :
 
-                    // t_node*         _node_ptr;
                     allocator_type  _alloc;
                     key_compare     _comp;
                     t_node*         root;
                     t_node*         TNULL;
-/*
-                    void    new_nil_node(void) {
 
-                        this->_node_ptr = this->_alloc.allocate(1);
-                        this->construct(this->_node_ptr);
-                        this->_node_ptr->color = 0;
-                    }
-*/
                     void    init_root(const value_type& val = value_type()) {
 
                         t_node tmp(val);
@@ -508,22 +537,10 @@ namespace ft {
                             return (this->searchTree(node->left, key));
                         return (this->searchTree(node->right, key));
                     }
-                    t_node* minimum(t_node* node) const {
-
-                        while (node->left != this->TNULL)
-                            node = node->left;
-                        return (node);
-                    }
                     t_node* left_most(t_node* node) const {
 
                         while (node->left != node->left->left)
                             node = node->left;
-                        return (node);
-                    }
-                    t_node* maximum(t_node* node) const {
-
-                        while (node->right != this->TNULL)
-                            node = node->right;
                         return (node);
                     }
                     t_node* right_most(t_node* node) const {
@@ -531,30 +548,6 @@ namespace ft {
                         while (node->right != node->right->right)
                             node = node->right;
                         return (node);
-                    }
-                    t_node* previous_node(t_node* x) {
-
-                        if (x->right != this->TNULL)
-                            return (this->minimum(x->right));
-                        t_node* y = x->parent;
-                        while (y != this->TNULL && x == y->right)
-                        {
-                            x = y;
-                            y = y->parent;
-                        }
-                        return (y);
-                    }
-                    t_node* next_node(t_node* x) {
-
-                        if (x->left != this->TNULL)
-                            return (this->maximum(x->left));
-                        t_node* y = x->parent;
-                        while (y != this->TNULL && x == y->left)
-                        {
-                            x = y;
-                            y = y->parent;
-                        }
-                        return (y);
                     }
                     void    leftRotate(t_node* x) {
 
@@ -660,7 +653,7 @@ namespace ft {
                         x->color = 0;
                     }
                     void    rbTransplant(t_node* u, t_node* v) {
-                        
+
                         if (u->parent == this->TNULL)
                             root = v;
                         else if (u == u->parent->left)
@@ -719,7 +712,7 @@ namespace ft {
                                     this->rightRotate(k->parent->parent);
                                 }
                             }
-                            if (k == root)
+                            if (k == this->root)
                                 break ;
                         }
                         root->color = 0;
@@ -732,7 +725,7 @@ namespace ft {
                         t_node* x = this->root;
 
                         while (x != this->TNULL) {
-
+                            
                             y = x;
                             if (node->key < x->key)
                                 x = x->left;
@@ -756,7 +749,6 @@ namespace ft {
                         this->balance_after_insert(node);
                         return (node);
                     }
-                    // t_node* getRoot() { return (this->root); }
                     void    deleteNode(key_type key) {
 
                         t_node* z = this->TNULL;
@@ -791,7 +783,7 @@ namespace ft {
                         }
                         else
                         {
-                            y = this->minimum(z->right);
+                            y = this->left_most(z->right);
                             y_original_color = y->color;
                             x = y->right;
                             if (y->parent == z)
