@@ -805,14 +805,16 @@ namespace ft {
                     }
         };
 
-        template<class T>
-            void    swap(T& a, T& b) {
+        //NON-MEMBER FUNCTION OVERLOADS
 
-                T   tmp(a);
+            template<class T>
+                void    swap(T& a, T& b) {
 
-                a = b;
-                b = tmp;
-            }
+                    T   tmp(a);
+
+                    a = b;
+                    b = tmp;
+                }
 }
 
 #endif

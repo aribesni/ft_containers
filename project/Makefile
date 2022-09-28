@@ -24,7 +24,7 @@ FLAGS = 	-Wall -Wextra -Werror -std=c++98
 
 HEADER = 	./includes/
 
-%.o	: 		%.cpp ./includes/map.hpp ./includes/vector.hpp ./includes/iterator.hpp
+%.o	: 		%.cpp ./includes/map.hpp ./includes/stack.hpp ./includes/vector.hpp ./includes/iterator.hpp
 			${CC} ${FLAGS} -I ${HEADER} -c $< -o $@
 
 all : 		${NAME}
@@ -34,6 +34,9 @@ vector :	${OBJ}
 
 map :		${OBJ}
 			${CC} ${FLAGS} ./srcs/main_map.o -o ${NAME}
+
+# stack :		${OBJ}
+#			${CC} ${FLAGS} ./srcs/main_stack.o -o ${NAME}
 
 ${NAME} :	${OBJ}
 			${CC} ${FLAGS} ${OBJ} -o ${NAME}
