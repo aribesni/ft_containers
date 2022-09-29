@@ -17,7 +17,7 @@
 
 # include <vector>
 # include <iostream>
-# include <memory.h>
+# include <memory>
 # include <algorithm>
 # include <cstddef>
 # include <tgmath.h>
