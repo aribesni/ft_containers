@@ -262,6 +262,90 @@ namespace ft {
                         }
             };
 
+            template <typename IT>
+                class MapConstIterator {
+
+                    friend class map;
+                    
+                    public :
+
+                    //MEMBER TYPES
+
+                        typedef IT                              value_type;
+                        typedef value_type&                     reference;
+                        typedef const value_type&               const_reference;
+                        typedef value_type*                     pointer;
+                        typedef const value_type*               const_pointer;
+                        typedef std::bidirectional_iterator_tag iterator_category;
+                        typedef std::ptrdiff_t                  difference_type;
+                        typedef MapConstIterator<value_type>    const_iterator;
+                        typedef t_node*                         node_ptr;
+
+                        //Constructors
+                        MapConstIterator(void) : _ptr() {}
+                        MapConstIterator(node_ptr ptr) : _ptr(ptr) {}
+
+                        ~MapConstIterator(void) {}
+
+                        //Operators
+                        const_reference operator*(void) { return (this->_ptr->val); }
+                        pointer         operator->(void) { return (&this->_ptr->val); }
+                        const_iterator& operator=(const_iterator const &rhs) { this->_ptr = rhs.getPtr(); return (*this); }
+                        bool            operator==(const_iterator const &rhs) { return (this->_ptr == rhs.getPtr()); }
+                        bool            operator!=(const_iterator const &rhs) { return (this->_ptr != rhs.getPtr()); }
+                        const_iterator& operator++(void) { this->_ptr = this->next_node(this->_ptr); return (*this); }
+                        const_iterator  operator++(int) { const_iterator tmp = *this; this->_ptr = this->next_node(this->_ptr); return (tmp); }
+                        const_iterator& operator--(void) { this->_ptr = this->previous_node(this->_ptr); return (*this); }
+                        const_iterator  operator--(int) { const_iterator tmp = *this; this->_ptr = this->previous_node(this->_ptr); return (tmp); }
+
+                        node_ptr        getPtr(void) const { return (this->_ptr); }
+
+                    private :
+
+                    //MEMBER TYPES
+
+                        node_ptr    _ptr;
+
+                        node_ptr    next_node (node_ptr node)
+                        {
+                            if (node->right != node->right->left)
+                            {
+                                node = node->right;
+                                while (node->left != node->left->left)
+                                    node = node->left;
+                            }
+                            else
+                            {
+                                while (node == node->parent->right && node != node->parent)
+                                    node = node->parent;
+                                node = node->parent;
+                            }
+                            return (node);
+                        }
+
+                        node_ptr    previous_node (node_ptr node)
+                        {
+                            if (node == node->parent)
+                            {
+                                while (node->right != node->right->left)
+                                    node = node->right;
+                            }
+                            else if (node->left != node->left->left)
+                            {
+                                node = node->left;
+                                while (node->right != node->right->left)
+                                    node = node->right;
+                            }
+                            else
+                            {
+                                while (node == node->parent->left && node != node->parent)
+                                    node = node->parent;
+                                node = _ptr->parent;
+                            }
+                            return (node);
+                        }
+            };
+
             //MEMBER TYPES
 
                 typedef Key                                                     key_type;
@@ -276,7 +360,7 @@ namespace ft {
                 typedef value_type*                                             pointer;
                 typedef const value_type*                                       const_pointer;
                 typedef MapIterator<value_type>                                 iterator;
-                typedef MapIterator<const value_type>                           const_iterator;
+                typedef MapConstIterator<const value_type>                      const_iterator;
                 typedef ft::reverse_iterator<iterator>                          reverse_iterator;
                 typedef ft::reverse_iterator<const_iterator>                    const_reverse_iterator;
 
@@ -291,7 +375,7 @@ namespace ft {
                         typedef bool        result_type;
                         value_type          first_argument_type;
                         value_type          second_argument_type;
-                    
+
                     //MEMBER FUNCTIONS
 
                         //Operators
@@ -312,10 +396,7 @@ namespace ft {
             //MEMBER FUNCTIONS
 
                 //Constructors
-                explicit    map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _alloc(alloc), _comp(comp) {
-                    
-                    this->init_root();
-                }
+                explicit    map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _alloc(alloc), _comp(comp) { this->init_root(); }
                 template <class InputIterator>
                     map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL) : _alloc(alloc), _comp(comp) {
 
