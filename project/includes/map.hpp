@@ -181,38 +181,37 @@ namespace ft {
                                                                             
             //MAP ITERATORS
             template <typename IT>
-                class MapIterator {
+                class MapIterator : public ft::iterator<std::bidirectional_iterator_tag, IT> {
 
-                    friend class map;
-                    
                     public :
 
                     //MEMBER TYPES
 
-                        typedef IT                              value_type;
-                        typedef value_type&                     reference;
-                        typedef value_type*                     pointer;
-                        typedef std::bidirectional_iterator_tag iterator_category;
-                        typedef std::ptrdiff_t                  difference_type;
-                        typedef MapIterator<value_type>         iterator;
-                        typedef t_node*                         node_ptr;
+                        typedef IT                                                                                      value_type;
+                        typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::iterator_category   iterator_category;
+                        typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::difference_type     difference_type;
+                        typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::pointer             pointer;
+                        typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::reference           reference;
+                        // typedef MapIterator<value_type>                                                                 iterator;
+                        typedef t_node*                                                                                 node_ptr;
 
                         //Constructors
                         MapIterator(void) : _ptr() {}
+                        MapIterator(const MapIterator& src) : _ptr(src._ptr) {}
                         MapIterator(node_ptr ptr) : _ptr(ptr) {}
 
                         ~MapIterator(void) {}
 
                         //Operators
-                        reference   operator*(void) { return (this->_ptr->val); }
-                        pointer     operator->(void) { return (&this->_ptr->val); }
-                        iterator&   operator=(iterator const &rhs) { this->_ptr = rhs.getPtr(); return (*this); }
-                        bool        operator==(iterator const &rhs) { return (this->_ptr == rhs.getPtr()); }
-                        bool        operator!=(iterator const &rhs) { return (this->_ptr != rhs.getPtr()); }
-                        iterator&   operator++(void) { this->_ptr = this->next_node(this->_ptr); return (*this); }
-                        iterator    operator++(int) { iterator tmp = *this; this->_ptr = this->next_node(this->_ptr); return (tmp); }
-                        iterator&   operator--(void) { this->_ptr = this->previous_node(this->_ptr); return (*this); }
-                        iterator    operator--(int) { iterator tmp = *this; this->_ptr = this->previous_node(this->_ptr); return (tmp); }
+                        reference       operator*(void) { return (this->_ptr->val); }
+                        pointer         operator->(void) { return (&this->_ptr->val); }
+                        MapIterator&    operator=(MapIterator const &rhs) { this->_ptr = rhs.getPtr(); return (*this); }
+                        bool            operator==(MapIterator const &rhs) { return (this->_ptr == rhs.getPtr()); }
+                        bool            operator!=(MapIterator const &rhs) { return (this->_ptr != rhs.getPtr()); }
+                        MapIterator&    operator++(void) { this->_ptr = this->next_node(this->_ptr); return (*this); }
+                        MapIterator     operator++(int) { MapIterator tmp = *this; this->_ptr = this->next_node(this->_ptr); return (tmp); }
+                        MapIterator&    operator--(void) { this->_ptr = this->previous_node(this->_ptr); return (*this); }
+                        MapIterator     operator--(int) { MapIterator tmp = *this; this->_ptr = this->previous_node(this->_ptr); return (tmp); }
 
                         node_ptr    getPtr(void) const { return (this->_ptr); }
 
@@ -265,13 +264,11 @@ namespace ft {
             template <typename IT>
                 class MapConstIterator {
 
-                    friend class map;
-                    
                     public :
 
                     //MEMBER TYPES
 
-                        typedef IT                              value_type;
+                        typedef const IT                        value_type;
                         typedef value_type&                     reference;
                         typedef const value_type&               const_reference;
                         typedef value_type*                     pointer;
@@ -284,6 +281,8 @@ namespace ft {
                         //Constructors
                         MapConstIterator(void) : _ptr() {}
                         MapConstIterator(node_ptr ptr) : _ptr(ptr) {}
+                        MapConstIterator(const MapConstIterator& src) : _ptr(src._ptr) {}
+                        MapConstIterator(const MapIterator<IT>& src) : _ptr(src._ptr) {}
 
                         ~MapConstIterator(void) {}
 
@@ -346,23 +345,106 @@ namespace ft {
                         }
             };
 
+            template <typename IT>
+                class MapReverseIterator {
+
+                    public :
+
+                    //MEMBER TYPES
+
+                        typedef IT                              value_type;
+                        typedef value_type&                     reference;
+                        typedef const value_type&               const_reference;
+                        typedef value_type*                     pointer;
+                        typedef const value_type*               const_pointer;
+                        typedef std::bidirectional_iterator_tag iterator_category;
+                        typedef std::ptrdiff_t                  difference_type;
+                        typedef MapReverseIterator<value_type>  reverse_iterator;
+                        typedef t_node*                         node_ptr;
+
+                        //Constructors
+                        MapReverseIterator(void) : _ptr() {}
+                        MapReverseIterator(node_ptr ptr) : _ptr(ptr) {}
+                        MapReverseIterator(const MapReverseIterator& src) : _ptr(src._ptr) {}
+
+                        ~MapReverseIterator(void) {}
+
+                        //Operators
+                        const_reference     operator*(void) { return (this->_ptr->val); }
+                        pointer             operator->(void) { return (&this->_ptr->val); }
+                        reverse_iterator&   operator=(reverse_iterator const &rhs) { this->_ptr = rhs.getPtr(); return (*this); }
+                        bool                operator==(reverse_iterator const &rhs) { return (this->_ptr == rhs.getPtr()); }
+                        bool                operator!=(reverse_iterator const &rhs) { return (this->_ptr != rhs.getPtr()); }
+                        reverse_iterator&   operator++(void) { this->_ptr = this->previous_node(this->_ptr); return (*this); }
+                        reverse_iterator    operator++(int) { reverse_iterator tmp = *this; this->_ptr = this->previous_node(this->_ptr); return (tmp); }
+                        reverse_iterator&   operator--(void) { this->_ptr = this->next_node(this->_ptr); return (*this); }
+                        reverse_iterator    operator--(int) { reverse_iterator tmp = *this; this->_ptr = this->next_node(this->_ptr); return (tmp); }
+
+                        node_ptr            getPtr(void) const { return (this->_ptr); }
+
+                    private :
+
+                    //MEMBER TYPES
+
+                        node_ptr    _ptr;
+
+                        node_ptr    next_node (node_ptr node)
+                        {
+                            if (node->right != node->right->left)
+                            {
+                                node = node->right;
+                                while (node->left != node->left->left)
+                                    node = node->left;
+                            }
+                            else
+                            {
+                                while (node == node->parent->right && node != node->parent)
+                                    node = node->parent;
+                                node = node->parent;
+                            }
+                            return (node);
+                        }
+
+                        node_ptr    previous_node (node_ptr node)
+                        {
+                            if (node == node->parent)
+                            {
+                                while (node->right != node->right->left)
+                                    node = node->right;
+                            }
+                            else if (node->left != node->left->left)
+                            {
+                                node = node->left;
+                                while (node->right != node->right->left)
+                                    node = node->right;
+                            }
+                            else
+                            {
+                                while (node == node->parent->left && node != node->parent)
+                                    node = node->parent;
+                                node = _ptr->parent;
+                            }
+                            return (node);
+                        }
+            };
+
             //MEMBER TYPES
 
-                typedef Key                                                     key_type;
-                typedef T                                                       mapped_type;
-                typedef ft::pair<const Key, T>                                  value_type;
-                typedef std::size_t                                             size_type;
-                typedef std::ptrdiff_t                                          difference_type;
-                typedef Compare                                                 key_compare;
-                typedef typename Allocator::template rebind<t_node>::other      allocator_type;
-                typedef value_type&                                             reference;
-                typedef const value_type&                                       const_reference;
-                typedef value_type*                                             pointer;
-                typedef const value_type*                                       const_pointer;
-                typedef MapIterator<value_type>                                 iterator;
-                typedef MapConstIterator<const value_type>                      const_iterator;
-                typedef ft::reverse_iterator<iterator>                          reverse_iterator;
-                typedef ft::reverse_iterator<const_iterator>                    const_reverse_iterator;
+                typedef Key                                                 key_type;
+                typedef T                                                   mapped_type;
+                typedef ft::pair<const Key, T>                              value_type;
+                typedef std::size_t                                         size_type;
+                typedef std::ptrdiff_t                                      difference_type;
+                typedef Compare                                             key_compare;
+                typedef typename Allocator::template rebind<t_node>::other  allocator_type;
+                typedef value_type&                                         reference;
+                typedef const value_type&                                   const_reference;
+                typedef value_type*                                         pointer;
+                typedef const value_type*                                   const_pointer;
+                typedef MapIterator<value_type>                             iterator;
+                typedef MapConstIterator<const value_type>                  const_iterator;
+                typedef MapReverseIterator<iterator>                        reverse_iterator;
+                typedef MapReverseIterator<const_iterator>                  const_reverse_iterator;
 
                 class value_compare {
 
