@@ -157,294 +157,289 @@ namespace ft {
     template<class T1, class T2>
         pair<T1, T2>    make_pair(T1 x, T2 y) { return (pair<T1, T2>(x, y)); }
 
+    //NODE
+    template<typename PAIR>
+        struct                                      t_node {
+
+            typedef PAIR                            value_type;
+            
+            value_type                              val;
+            t_node                                  *parent;
+            t_node                                  *left;
+            t_node                                  *right;
+            int                                     color;
+
+            t_node(void) {}
+            t_node(value_type value) : val(value) {};
+        };
+
+    //MAP ITERATORS
+    template<typename T>
+        class MapIterator : public ft::iterator<std::bidirectional_iterator_tag, T> {
+
+            public :
+
+            //MEMBER TYPES
+
+                typedef typename T::value_type                                                                  value_type;
+                typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::iterator_category   iterator_category;
+                typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::difference_type     difference_type;
+                typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::pointer             pointer;
+                typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::reference           reference;
+                // typedef MapIterator<value_type>                                                                 iterator;
+                typedef T*                                                                                      node_ptr;
+
+                //Constructors
+                MapIterator(void) : _ptr() {}
+                MapIterator(const MapIterator& src) : _ptr(src._ptr) {}
+                MapIterator(const node_ptr ptr) : _ptr(ptr) {}
+
+                ~MapIterator(void) {}
+
+                //Operators
+                reference       operator*(void) { return (this->_ptr->val); }
+                pointer         operator->(void) { return (&this->_ptr->val); }
+                MapIterator&    operator=(MapIterator const &rhs) { this->_ptr = rhs.getPtr(); return (*this); }
+                bool            operator==(MapIterator const &rhs) { return (this->_ptr == rhs.getPtr()); }
+                bool            operator!=(MapIterator const &rhs) { return (this->_ptr != rhs.getPtr()); }
+                MapIterator&    operator++(void) { this->_ptr = this->next_node(this->_ptr); return (*this); }
+                MapIterator     operator++(int) { MapIterator tmp = *this; this->_ptr = this->next_node(this->_ptr); return (tmp); }
+                MapIterator&    operator--(void) { this->_ptr = this->previous_node(this->_ptr); return (*this); }
+                MapIterator     operator--(int) { MapIterator tmp = *this; this->_ptr = this->previous_node(this->_ptr); return (tmp); }
+
+                node_ptr    getPtr(void) const { return (this->_ptr); }
+
+            private :
+
+            //MEMBER TYPES
+
+                node_ptr    _ptr;
+
+                node_ptr    next_node (node_ptr node)
+                {
+                    if (node->right != node->right->left)
+                    {
+                        node = node->right;
+                        while (node->left != node->left->left)
+                            node = node->left;
+                    }
+                    else
+                    {
+                        while (node == node->parent->right && node != node->parent)
+                            node = node->parent;
+                        node = node->parent;
+                    }
+                    return (node);
+                }
+
+                node_ptr    previous_node (node_ptr node)
+                {
+                    if (node == node->parent)
+                    {
+                        while (node->right != node->right->left)
+                            node = node->right;
+                    }
+                    else if (node->left != node->left->left)
+                    {
+                        node = node->left;
+                        while (node->right != node->right->left)
+                            node = node->right;
+                    }
+                    else
+                    {
+                        while (node == node->parent->left && node != node->parent)
+                            node = node->parent;
+                        node = _ptr->parent;
+                    }
+                    return (node);
+                }
+    };
+    template<typename T>
+        class MapConstIterator : public ft::iterator<std::bidirectional_iterator_tag, T> {
+
+            public :
+
+            //MEMBER TYPES
+
+                typedef typename T::value_type                                                                      value_type;
+                typedef typename ft::iterator<std::bidirectional_iterator_tag, const value_type>::iterator_category iterator_category;
+                typedef typename ft::iterator<std::bidirectional_iterator_tag, const value_type>::difference_type   difference_type;
+                typedef typename ft::iterator<std::bidirectional_iterator_tag, const value_type>::pointer           pointer;
+                typedef typename ft::iterator<std::bidirectional_iterator_tag, const value_type>::reference         reference;
+                // typedef MapConstIterator<value_type>    const_iterator;
+                typedef T*                                                                                          node_ptr;
+
+                //Constructors
+                MapConstIterator(void) : _ptr() {}
+                MapConstIterator(const node_ptr ptr) : _ptr(ptr) {}
+                MapConstIterator(const MapConstIterator& src) : _ptr(src._ptr) {}
+                MapConstIterator(const MapIterator<T>& src) : _ptr(src._ptr) {}
+
+                ~MapConstIterator(void) {}
+
+                //Operators
+                reference           operator*(void) { return (this->_ptr->val); }
+                pointer             operator->(void) { return (&this->_ptr->val); }
+                MapConstIterator&   operator=(MapConstIterator const &rhs) { this->_ptr = rhs.getPtr(); return (*this); }
+                bool                operator==(MapConstIterator const &rhs) { return (this->_ptr == rhs.getPtr()); }
+                bool                operator!=(MapConstIterator const &rhs) { return (this->_ptr != rhs.getPtr()); }
+                MapConstIterator&   operator++(void) { this->_ptr = this->next_node(this->_ptr); return (*this); }
+                MapConstIterator    operator++(int) { MapConstIterator tmp = *this; this->_ptr = this->next_node(this->_ptr); return (tmp); }
+                MapConstIterator&   operator--(void) { this->_ptr = this->previous_node(this->_ptr); return (*this); }
+                MapConstIterator    operator--(int) { MapConstIterator tmp = *this; this->_ptr = this->previous_node(this->_ptr); return (tmp); }
+
+                node_ptr        getPtr(void) const { return (this->_ptr); }
+
+            private :
+
+            //MEMBER TYPES
+
+                node_ptr    _ptr;
+
+                node_ptr    next_node (node_ptr node)
+                {
+                    if (node->right != node->right->left)
+                    {
+                        node = node->right;
+                        while (node->left != node->left->left)
+                            node = node->left;
+                    }
+                    else
+                    {
+                        while (node == node->parent->right && node != node->parent)
+                            node = node->parent;
+                        node = node->parent;
+                    }
+                    return (node);
+                }
+
+                node_ptr    previous_node (node_ptr node)
+                {
+                    if (node == node->parent)
+                    {
+                        while (node->right != node->right->left)
+                            node = node->right;
+                    }
+                    else if (node->left != node->left->left)
+                    {
+                        node = node->left;
+                        while (node->right != node->right->left)
+                            node = node->right;
+                    }
+                    else
+                    {
+                        while (node == node->parent->left && node != node->parent)
+                            node = node->parent;
+                        node = _ptr->parent;
+                    }
+                    return (node);
+                }
+    };
+    template<typename T>
+        class MapReverseIterator : public ft::iterator<std::bidirectional_iterator_tag, T> {
+
+            public :
+
+            //MEMBER TYPES
+
+                typedef typename T::value_type                                                                  value_type;
+                typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::iterator_category   iterator_category;
+                typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::difference_type     difference_type;
+                typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::pointer             pointer;
+                typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::reference           reference;
+                // typedef MapReverseIterator<value_type>  reverse_iterator;
+                typedef T*                              node_ptr;
+
+                //Constructors
+                MapReverseIterator(void) : _ptr() {}
+                MapReverseIterator(node_ptr ptr) : _ptr(ptr) {}
+                MapReverseIterator(const MapReverseIterator& src) : _ptr(src._ptr) {}
+
+                ~MapReverseIterator(void) {}
+
+                //Operators
+                reference           operator*(void) { return (this->_ptr->val); }
+                pointer             operator->(void) { return (&this->_ptr->val); }
+                MapReverseIterator& operator=(MapReverseIterator const &rhs) { this->_ptr = rhs.getPtr(); return (*this); }
+                bool                operator==(MapReverseIterator const &rhs) { return (this->_ptr == rhs.getPtr()); }
+                bool                operator!=(MapReverseIterator const &rhs) { return (this->_ptr != rhs.getPtr()); }
+                MapReverseIterator& operator++(void) { this->_ptr = this->previous_node(this->_ptr); return (*this); }
+                MapReverseIterator  operator++(int) { MapReverseIterator tmp = *this; this->_ptr = this->previous_node(this->_ptr); return (tmp); }
+                MapReverseIterator& operator--(void) { this->_ptr = this->next_node(this->_ptr); return (*this); }
+                MapReverseIterator  operator--(int) { MapReverseIterator tmp = *this; this->_ptr = this->next_node(this->_ptr); return (tmp); }
+
+                node_ptr            getPtr(void) const { return (this->_ptr); }
+
+            private :
+
+            //MEMBER TYPES
+
+                node_ptr    _ptr;
+
+                node_ptr    next_node (node_ptr node)
+                {
+                    if (node->right != node->right->left)
+                    {
+                        node = node->right;
+                        while (node->left != node->left->left)
+                            node = node->left;
+                    }
+                    else
+                    {
+                        while (node == node->parent->right && node != node->parent)
+                            node = node->parent;
+                        node = node->parent;
+                    }
+                    return (node);
+                }
+
+                node_ptr    previous_node (node_ptr node)
+                {
+                    if (node == node->parent)
+                    {
+                        while (node->right != node->right->left)
+                            node = node->right;
+                    }
+                    else if (node->left != node->left->left)
+                    {
+                        node = node->left;
+                        while (node->right != node->right->left)
+                            node = node->right;
+                    }
+                    else
+                    {
+                        while (node == node->parent->left && node != node->parent)
+                            node = node->parent;
+                        node = _ptr->parent;
+                    }
+                    return (node);
+                }
+    };
+
     //MAP
     template< class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<ft::pair<const Key, T> > >
         class map {
 
-            //NODE
             public :
-
-                typedef struct                              s_node {
-
-                    struct s_node                           *parent;
-                    struct s_node                           *left;
-                    struct s_node                           *right;
-                    ft::pair<const Key, T>                  val;
-                    typename ft::map<Key, T>::key_type      key;
-                    typename ft::map<Key, T>::mapped_type   data;
-                    int                                     color;
-
-                    s_node(void) {}
-                    s_node(ft::pair<const Key, T> value) : val(value), key(value.first), data(value.second) {}
-                }
-                                                            t_node;
-                                                                            
-            //MAP ITERATORS
-            template <typename IT>
-                class MapIterator : public ft::iterator<std::bidirectional_iterator_tag, IT> {
-
-                    public :
-
-                    //MEMBER TYPES
-
-                        typedef IT                                                                                      value_type;
-                        typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::iterator_category   iterator_category;
-                        typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::difference_type     difference_type;
-                        typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::pointer             pointer;
-                        typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::reference           reference;
-                        // typedef MapIterator<value_type>                                                                 iterator;
-                        typedef t_node*                                                                                 node_ptr;
-
-                        //Constructors
-                        MapIterator(void) : _ptr() {}
-                        MapIterator(const MapIterator& src) : _ptr(src._ptr) {}
-                        MapIterator(node_ptr ptr) : _ptr(ptr) {}
-
-                        ~MapIterator(void) {}
-
-                        //Operators
-                        reference       operator*(void) { return (this->_ptr->val); }
-                        pointer         operator->(void) { return (&this->_ptr->val); }
-                        MapIterator&    operator=(MapIterator const &rhs) { this->_ptr = rhs.getPtr(); return (*this); }
-                        bool            operator==(MapIterator const &rhs) { return (this->_ptr == rhs.getPtr()); }
-                        bool            operator!=(MapIterator const &rhs) { return (this->_ptr != rhs.getPtr()); }
-                        MapIterator&    operator++(void) { this->_ptr = this->next_node(this->_ptr); return (*this); }
-                        MapIterator     operator++(int) { MapIterator tmp = *this; this->_ptr = this->next_node(this->_ptr); return (tmp); }
-                        MapIterator&    operator--(void) { this->_ptr = this->previous_node(this->_ptr); return (*this); }
-                        MapIterator     operator--(int) { MapIterator tmp = *this; this->_ptr = this->previous_node(this->_ptr); return (tmp); }
-
-                        node_ptr    getPtr(void) const { return (this->_ptr); }
-
-                    private :
-
-                    //MEMBER TYPES
-
-                        node_ptr    _ptr;
-
-                        node_ptr    next_node (node_ptr node)
-                        {
-                            if (node->right != node->right->left)
-                            {
-                                node = node->right;
-                                while (node->left != node->left->left)
-                                    node = node->left;
-                            }
-                            else
-                            {
-                                while (node == node->parent->right && node != node->parent)
-                                    node = node->parent;
-                                node = node->parent;
-                            }
-                            return (node);
-                        }
-
-                        node_ptr    previous_node (node_ptr node)
-                        {
-                            if (node == node->parent)
-                            {
-                                while (node->right != node->right->left)
-                                    node = node->right;
-                            }
-                            else if (node->left != node->left->left)
-                            {
-                                node = node->left;
-                                while (node->right != node->right->left)
-                                    node = node->right;
-                            }
-                            else
-                            {
-                                while (node == node->parent->left && node != node->parent)
-                                    node = node->parent;
-                                node = _ptr->parent;
-                            }
-                            return (node);
-                        }
-            };
-
-            template <typename IT>
-                class MapConstIterator {
-
-                    public :
-
-                    //MEMBER TYPES
-
-                        typedef const IT                        value_type;
-                        typedef value_type&                     reference;
-                        typedef const value_type&               const_reference;
-                        typedef value_type*                     pointer;
-                        typedef const value_type*               const_pointer;
-                        typedef std::bidirectional_iterator_tag iterator_category;
-                        typedef std::ptrdiff_t                  difference_type;
-                        typedef MapConstIterator<value_type>    const_iterator;
-                        typedef t_node*                         node_ptr;
-
-                        //Constructors
-                        MapConstIterator(void) : _ptr() {}
-                        MapConstIterator(node_ptr ptr) : _ptr(ptr) {}
-                        MapConstIterator(const MapConstIterator& src) : _ptr(src._ptr) {}
-                        MapConstIterator(const MapIterator<IT>& src) : _ptr(src._ptr) {}
-
-                        ~MapConstIterator(void) {}
-
-                        //Operators
-                        const_reference operator*(void) { return (this->_ptr->val); }
-                        pointer         operator->(void) { return (&this->_ptr->val); }
-                        const_iterator& operator=(const_iterator const &rhs) { this->_ptr = rhs.getPtr(); return (*this); }
-                        bool            operator==(const_iterator const &rhs) { return (this->_ptr == rhs.getPtr()); }
-                        bool            operator!=(const_iterator const &rhs) { return (this->_ptr != rhs.getPtr()); }
-                        const_iterator& operator++(void) { this->_ptr = this->next_node(this->_ptr); return (*this); }
-                        const_iterator  operator++(int) { const_iterator tmp = *this; this->_ptr = this->next_node(this->_ptr); return (tmp); }
-                        const_iterator& operator--(void) { this->_ptr = this->previous_node(this->_ptr); return (*this); }
-                        const_iterator  operator--(int) { const_iterator tmp = *this; this->_ptr = this->previous_node(this->_ptr); return (tmp); }
-
-                        node_ptr        getPtr(void) const { return (this->_ptr); }
-
-                    private :
-
-                    //MEMBER TYPES
-
-                        node_ptr    _ptr;
-
-                        node_ptr    next_node (node_ptr node)
-                        {
-                            if (node->right != node->right->left)
-                            {
-                                node = node->right;
-                                while (node->left != node->left->left)
-                                    node = node->left;
-                            }
-                            else
-                            {
-                                while (node == node->parent->right && node != node->parent)
-                                    node = node->parent;
-                                node = node->parent;
-                            }
-                            return (node);
-                        }
-
-                        node_ptr    previous_node (node_ptr node)
-                        {
-                            if (node == node->parent)
-                            {
-                                while (node->right != node->right->left)
-                                    node = node->right;
-                            }
-                            else if (node->left != node->left->left)
-                            {
-                                node = node->left;
-                                while (node->right != node->right->left)
-                                    node = node->right;
-                            }
-                            else
-                            {
-                                while (node == node->parent->left && node != node->parent)
-                                    node = node->parent;
-                                node = _ptr->parent;
-                            }
-                            return (node);
-                        }
-            };
-
-            template <typename IT>
-                class MapReverseIterator {
-
-                    public :
-
-                    //MEMBER TYPES
-
-                        typedef IT                              value_type;
-                        typedef value_type&                     reference;
-                        typedef const value_type&               const_reference;
-                        typedef value_type*                     pointer;
-                        typedef const value_type*               const_pointer;
-                        typedef std::bidirectional_iterator_tag iterator_category;
-                        typedef std::ptrdiff_t                  difference_type;
-                        typedef MapReverseIterator<value_type>  reverse_iterator;
-                        typedef t_node*                         node_ptr;
-
-                        //Constructors
-                        MapReverseIterator(void) : _ptr() {}
-                        MapReverseIterator(node_ptr ptr) : _ptr(ptr) {}
-                        MapReverseIterator(const MapReverseIterator& src) : _ptr(src._ptr) {}
-
-                        ~MapReverseIterator(void) {}
-
-                        //Operators
-                        const_reference     operator*(void) { return (this->_ptr->val); }
-                        pointer             operator->(void) { return (&this->_ptr->val); }
-                        reverse_iterator&   operator=(reverse_iterator const &rhs) { this->_ptr = rhs.getPtr(); return (*this); }
-                        bool                operator==(reverse_iterator const &rhs) { return (this->_ptr == rhs.getPtr()); }
-                        bool                operator!=(reverse_iterator const &rhs) { return (this->_ptr != rhs.getPtr()); }
-                        reverse_iterator&   operator++(void) { this->_ptr = this->previous_node(this->_ptr); return (*this); }
-                        reverse_iterator    operator++(int) { reverse_iterator tmp = *this; this->_ptr = this->previous_node(this->_ptr); return (tmp); }
-                        reverse_iterator&   operator--(void) { this->_ptr = this->next_node(this->_ptr); return (*this); }
-                        reverse_iterator    operator--(int) { reverse_iterator tmp = *this; this->_ptr = this->next_node(this->_ptr); return (tmp); }
-
-                        node_ptr            getPtr(void) const { return (this->_ptr); }
-
-                    private :
-
-                    //MEMBER TYPES
-
-                        node_ptr    _ptr;
-
-                        node_ptr    next_node (node_ptr node)
-                        {
-                            if (node->right != node->right->left)
-                            {
-                                node = node->right;
-                                while (node->left != node->left->left)
-                                    node = node->left;
-                            }
-                            else
-                            {
-                                while (node == node->parent->right && node != node->parent)
-                                    node = node->parent;
-                                node = node->parent;
-                            }
-                            return (node);
-                        }
-
-                        node_ptr    previous_node (node_ptr node)
-                        {
-                            if (node == node->parent)
-                            {
-                                while (node->right != node->right->left)
-                                    node = node->right;
-                            }
-                            else if (node->left != node->left->left)
-                            {
-                                node = node->left;
-                                while (node->right != node->right->left)
-                                    node = node->right;
-                            }
-                            else
-                            {
-                                while (node == node->parent->left && node != node->parent)
-                                    node = node->parent;
-                                node = _ptr->parent;
-                            }
-                            return (node);
-                        }
-            };
 
             //MEMBER TYPES
 
-                typedef Key                                                 key_type;
-                typedef T                                                   mapped_type;
-                typedef ft::pair<const Key, T>                              value_type;
-                typedef std::size_t                                         size_type;
-                typedef std::ptrdiff_t                                      difference_type;
-                typedef Compare                                             key_compare;
-                typedef typename Allocator::template rebind<t_node>::other  allocator_type;
-                typedef value_type&                                         reference;
-                typedef const value_type&                                   const_reference;
-                typedef value_type*                                         pointer;
-                typedef const value_type*                                   const_pointer;
-                typedef MapIterator<value_type>                             iterator;
-                typedef MapConstIterator<const value_type>                  const_iterator;
-                typedef MapReverseIterator<iterator>                        reverse_iterator;
-                typedef MapReverseIterator<const_iterator>                  const_reverse_iterator;
+                typedef Key                                                             key_type;
+                typedef T                                                               mapped_type;
+                typedef ft::pair<const Key, T>                                          value_type;
+                typedef std::size_t                                                     size_type;
+                typedef std::ptrdiff_t                                                  difference_type;
+                typedef Compare                                                         key_compare;
+                typedef typename Allocator::template rebind<t_node<value_type> >::other allocator_type;
+                typedef value_type&                                                     reference;
+                typedef const value_type&                                               const_reference;
+                typedef value_type*                                                     pointer;
+                typedef const value_type*                                               const_pointer;
+                typedef ft::MapIterator<t_node<value_type> >                            iterator;
+                typedef ft::MapConstIterator<t_node<value_type> >                       const_iterator;
+                typedef ft::MapReverseIterator<iterator>                                reverse_iterator;
+                // typedef MapConstReverseIterator                             const_reverse_iterator;
+                typedef ft::t_node<value_type>                                          node_ptr;
 
                 class value_compare {
 
@@ -512,9 +507,9 @@ namespace ft {
                 iterator                end(void) { return (iterator(this->right_most(this->root))); }
                 const_iterator          end(void) const { return (const_iterator(this->right_most(this->TNULL))); }
                 reverse_iterator        rbegin(void) { return (reverse_iterator(this->TNULL)); }
-                const_reverse_iterator  rbegin(void) const { return (const_reverse_iterator(this->TNULL)); }
+                // const_reverse_iterator  rbegin(void) const { return (const_reverse_iterator(this->TNULL)); }
                 reverse_iterator        rend(void) { return (reverse_iterator(this->left_most(this->root))); }
-                const_reverse_iterator  rend(void) const { return (const_reverse_iterator(this->left_most(this->root))); }
+                // const_reverse_iterator  rend(void) const { return (const_reverse_iterator(this->left_most(this->root))); }
 
                 //Capacity
                 bool        empty(void) const { return (this->size() == 0 ? true : false); }
@@ -572,8 +567,8 @@ namespace ft {
                 }
                 void                    erase(iterator position) {
 
-                    t_node  *node = position.getPtr();
-                    this->deleteNode(node->key);
+                    node_ptr    *node = position.getPtr();
+                    this->deleteNode(node->val.first);
                 }
                 size_type               erase(const key_type& k) {
 
@@ -652,14 +647,14 @@ namespace ft {
                 void    ft_tmp(void) {
 
                     iterator tmp = this->begin();
-                    t_node*   node_tmp = tmp.getPtr();
-                    std::cout << "BEGIN KEY : " << node_tmp->key << "   ";
-                    std::cout << "BEGIN DATA : " << node_tmp->data << "   ";
+                    node_ptr   *node_tmp = tmp.getPtr();
+                    std::cout << "BEGIN KEY : " << node_tmp->val.first << "   ";
+                    std::cout << "BEGIN DATA : " << node_tmp->val->second << "   ";
                     tmp = this->end();
                     // tmp--;
                     node_tmp = tmp.getPtr();
-                    std::cout << "END KEY : " << node_tmp->key << "   ";
-                    std::cout << "END DATA : " << node_tmp->data << std::endl;
+                    std::cout << "END KEY : " << node_tmp->val.first << "   ";
+                    std::cout << "END DATA : " << node_tmp->val->second << std::endl;
                 }
 
                 /******************************************/
@@ -668,12 +663,12 @@ namespace ft {
 
                     allocator_type  _alloc;
                     key_compare     _comp;
-                    t_node*         root;
-                    t_node*         TNULL;
+                    node_ptr         *root;
+                    node_ptr         *TNULL;
 
                     void    init_root(const value_type& val = value_type()) {
 
-                        t_node tmp(val);
+                        node_ptr    tmp(val);
                         this->TNULL = this->_alloc.allocate(1);
                         this->root = this->_alloc.allocate(1);
                         tmp.left = this->TNULL;
@@ -683,38 +678,38 @@ namespace ft {
                         this->TNULL->color = 0;
                         this->root = this->TNULL;
                     }
-                    void    construct(t_node* ptr, const value_type& val = value_type()) {
+                    void    construct(node_ptr *ptr, const value_type& val = value_type()) {
 
-                        t_node  tmp(val);
+                        node_ptr    tmp(val);
                         tmp.left = this->TNULL;
                         tmp.right = this->TNULL;
                         tmp.parent = this->TNULL;
                         tmp.color = 1;
                         this->_alloc.construct(ptr, tmp);
                     }
-                    t_node* searchTree(t_node* node, key_type key) const {
+                    node_ptr *searchTree(node_ptr *node, key_type key) const {
 
-                        if (node == this->TNULL || key == node->key)
+                        if (node == this->TNULL || key == node->val.first)
                             return (node);
-                        if (key < node->key)
+                        if (key < node->val.first)
                             return (this->searchTree(node->left, key));
                         return (this->searchTree(node->right, key));
                     }
-                    t_node* left_most(t_node* node) const {
+                    node_ptr *left_most(node_ptr *node) const {
 
                         while (node->left != node->left->left)
                             node = node->left;
                         return (node);
                     }
-                    t_node* right_most(t_node* node) const {
+                    node_ptr *right_most(node_ptr *node) const {
 
                         while (node->right != node->right->right)
                             node = node->right;
                         return (node);
                     }
-                    void    leftRotate(t_node* x) {
+                    void    leftRotate(node_ptr *x) {
 
-                        t_node* y = x->right;
+                        node_ptr *y = x->right;
                         x->right = y->left;
                         if (y->left != this->TNULL)
                             y->left->parent = x;
@@ -728,9 +723,9 @@ namespace ft {
                         y->left = x;
                         x->parent = y;
                     }
-                    void    rightRotate(t_node* x) {
+                    void    rightRotate(node_ptr *x) {
 
-                        t_node* y = x->left;
+                        node_ptr *y = x->left;
                         x->left = y->right;
                         if (y->right != this->TNULL)
                             y->right->parent = x;
@@ -744,9 +739,9 @@ namespace ft {
                         y->right = x;
                         x->parent = y;
                     }
-                    void    balance_after_delete(t_node* x) {
+                    void    balance_after_delete(node_ptr *x) {
 
-                        t_node* s;
+                        node_ptr *s;
 
                         while (x != root && x->color == 0)
                         {
@@ -815,7 +810,7 @@ namespace ft {
                         }
                         x->color = 0;
                     }
-                    void    rbTransplant(t_node* u, t_node* v) {
+                    void    rbTransplant(node_ptr *u, node_ptr *v) {
 
                         if (u->parent == this->TNULL)
                             root = v;
@@ -825,9 +820,9 @@ namespace ft {
                             u->parent->right = v;
                         v->parent = u->parent;
                     }
-                    void    balance_after_insert(t_node* k) {
+                    void    balance_after_insert(node_ptr *k) {
 
-                        t_node* u;
+                        node_ptr *u;
 
                         while (k->parent->color == 1)
                         {
@@ -880,17 +875,17 @@ namespace ft {
                         }
                         root->color = 0;
                     }
-                    t_node* insert_node(value_type val) {
+                    node_ptr* insert_node(value_type val) {
 
-                        t_node* node = this->_alloc.allocate(1);
+                        node_ptr *node = this->_alloc.allocate(1);
                         this->construct(node, val);
-                        t_node* y = this->TNULL;
-                        t_node* x = this->root;
+                        node_ptr *y = this->TNULL;
+                        node_ptr *x = this->root;
 
                         while (x != this->TNULL) {
                             
                             y = x;
-                            if (node->key < x->key)
+                            if (node->val.first < x->val.first)
                                 x = x->left;
                             else
                                 x = x->right;
@@ -898,7 +893,7 @@ namespace ft {
                         node->parent = y;
                         if (y == this->TNULL)
                             this->root = node;
-                        else if (node->key < y->key)
+                        else if (node->val.first < y->val.first)
                             y->left = node;
                         else
                             y->right = node;
@@ -914,15 +909,15 @@ namespace ft {
                     }
                     void    deleteNode(key_type key) {
 
-                        t_node* z = this->TNULL;
-                        t_node  *x, *y;
-                        t_node* node = this->root;
+                        node_ptr    *z = this->TNULL;
+                        node_ptr    *x, *y;
+                        node_ptr    *node = this->root;
 
                         while (node != this->TNULL)
                         {
-                            if (node->key == key)
+                            if (node->val.first == key)
                                 z = node;
-                            if (node->key <= key)
+                            if (node->val.first <= key)
                                 node = node->right;
                             else
                                 node = node->left;
