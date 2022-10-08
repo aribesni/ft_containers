@@ -273,7 +273,7 @@ namespace ft {
                 MapConstIterator(void) : _ptr() {}
                 MapConstIterator(const node_ptr ptr) : _ptr(ptr) {}
                 MapConstIterator(const MapConstIterator& src) : _ptr(src._ptr) {}
-                MapConstIterator(const MapIterator<T>& src) : _ptr(src._ptr) {}
+                MapConstIterator(const MapIterator<T>& src) : _ptr(src.getPtr()) {}
 
                 ~MapConstIterator(void) {}
 
@@ -335,25 +335,25 @@ namespace ft {
                     return (node);
                 }
     };
-    template<typename T>
-        class MapReverseIterator : public ft::iterator<std::bidirectional_iterator_tag, T> {
+    template<typename IT>
+        class MapReverseIterator {
 
             public :
 
             //MEMBER TYPES
 
-                typedef typename T::value_type                                                                  value_type;
-                typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::iterator_category   iterator_category;
-                typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::difference_type     difference_type;
-                typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::pointer             pointer;
-                typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::reference           reference;
-                // typedef MapReverseIterator<value_type>  reverse_iterator;
-                typedef T*                              node_ptr;
+                typedef typename IT::value_type         value_type;
+                typedef typename IT::iterator_category  iterator_category;
+                typedef typename IT::difference_type    difference_type;
+                typedef typename IT::pointer            pointer;
+                typedef typename IT::reference          reference;
+                typedef typename IT::node_ptr           node_ptr;
 
                 //Constructors
                 MapReverseIterator(void) : _ptr() {}
                 MapReverseIterator(node_ptr ptr) : _ptr(ptr) {}
                 MapReverseIterator(const MapReverseIterator& src) : _ptr(src._ptr) {}
+                MapReverseIterator(const IT& src) : _ptr(src.getPtr()) {}
 
                 ~MapReverseIterator(void) {}
 
@@ -506,9 +506,9 @@ namespace ft {
                 const_iterator          begin(void) const { return (const_iterator(this->left_most(this->root))); }
                 iterator                end(void) { return (iterator(this->right_most(this->root))); }
                 const_iterator          end(void) const { return (const_iterator(this->right_most(this->TNULL))); }
-                reverse_iterator        rbegin(void) { return (reverse_iterator(this->TNULL)); }
+                reverse_iterator        rbegin(void) { return (reverse_iterator(this->end()--)); }
                 // const_reverse_iterator  rbegin(void) const { return (const_reverse_iterator(this->TNULL)); }
-                reverse_iterator        rend(void) { return (reverse_iterator(this->left_most(this->root))); }
+                reverse_iterator        rend(void) { return (reverse_iterator(this->begin()--)); }
                 // const_reverse_iterator  rend(void) const { return (const_reverse_iterator(this->left_most(this->root))); }
 
                 //Capacity
