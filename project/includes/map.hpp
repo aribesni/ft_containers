@@ -34,6 +34,7 @@ private:
 
 } nullptr = {};
 */
+
 namespace ft {
 
     //IS INTEGRAL
@@ -75,6 +76,15 @@ namespace ft {
 
     template<typename T>
         struct is_integral : is_integral_type<T> {};
+
+    template<class T>
+        void    swap(T& a, T& b) {
+
+            T   tmp(a);
+
+            a = b;
+            b = tmp;
+        }
 
     //EQUAL
     template<class InputIterator1, class InputIterator2>
@@ -119,7 +129,7 @@ namespace ft {
             pair(void) : first(), second() {}
             template<class U, class V>
                 pair(const pair<U, V>& pr) : first(pr.first), second(pr.second) {}
-            pair(first_type& a, second_type& b) : first(a), second(b) {}
+            pair(const first_type& a, const second_type& b) : first(a), second(b) {}
 
             pair&   operator=(const pair& pr) {
                 
@@ -199,6 +209,7 @@ namespace ft {
                 //Operators
                 reference       operator*(void) { return (this->_ptr->val); }
                 pointer         operator->(void) { return (&this->_ptr->val); }
+                pointer         operator->(void) const { return (&this->_ptr->val); }
                 MapIterator&    operator=(MapIterator const &rhs) { this->_ptr = rhs.getPtr(); return (*this); }
                 bool            operator==(MapIterator const &rhs) { return (this->_ptr == rhs.getPtr()); }
                 bool            operator!=(MapIterator const &rhs) { return (this->_ptr != rhs.getPtr()); }
@@ -278,8 +289,8 @@ namespace ft {
                 ~MapConstIterator(void) {}
 
                 //Operators
-                reference           operator*(void) { return (this->_ptr->val); }
-                pointer             operator->(void) { return (&this->_ptr->val); }
+                reference           operator*(void) const { return (this->_ptr->val); }
+                pointer             operator->(void) const { return (&this->_ptr->val); }
                 MapConstIterator&   operator=(MapConstIterator const &rhs) { this->_ptr = rhs.getPtr(); return (*this); }
                 bool                operator==(MapConstIterator const &rhs) { return (this->_ptr == rhs.getPtr()); }
                 bool                operator!=(MapConstIterator const &rhs) { return (this->_ptr != rhs.getPtr()); }
@@ -335,6 +346,7 @@ namespace ft {
                     return (node);
                 }
     };
+
     template<typename IT>
         class MapReverseIterator {
 
@@ -443,7 +455,7 @@ namespace ft {
 
                 class value_compare {
 
-                        // friend class map;
+                    friend class map;
 
                     public :
 
@@ -456,7 +468,7 @@ namespace ft {
                     //MEMBER FUNCTIONS
 
                         //Operators
-                        bool    operator()(const value_type& lhs, const value_type& rhs) const { return (comp(lhs.first, rhs.first)); }
+                        bool    operator()(const value_type& lhs, const value_type& rhs) const { return (this->_comp(lhs.first, rhs.first)); }
 
                     protected :
 
@@ -586,8 +598,8 @@ namespace ft {
                 }
                 void                    swap(map& x) {
 
-                    swap(this->_alloc, x._alloc);
-                    swap(this->_comp, x._comp);
+                    ft::swap(this->_alloc, x._alloc);
+                    ft::swap(this->_comp, x._comp);
                 }
                 void                    clear(void) { this->erase(this->begin(), this->end()); }
 
@@ -604,7 +616,7 @@ namespace ft {
                     iterator    it;
 
                     it = this->begin();
-                    while (key_compare(it.first, k) == true && it != this->end())
+                    while (this->_comp(it->first, k) == true && it != this->end())
                         it++;
                     return (it);
                 }
@@ -613,7 +625,7 @@ namespace ft {
                     const_iterator    it;
 
                     it = this->begin();
-                    while (key_compare(it.first, k) == true && it != this->end())
+                    while (this->_comp(it->first, k) == true && it != this->end())
                         it++;
                     return (it);
                 }
@@ -622,7 +634,7 @@ namespace ft {
                     iterator    it;
 
                     it = this->begin();
-                    while (key_compare(it.first, k) == false && it != this->end())
+                    while (this->_comp(it->first, k) == false && it != this->end())
                         it++;
                     return (it);
                 }
@@ -631,7 +643,7 @@ namespace ft {
                     const_iterator    it;
 
                     it = this->begin();
-                    while (key_compare(it.first, k) == false && it != this->end())
+                    while (this->_comp(it->first, k) == false && it != this->end())
                         it++;
                     return (it);
                 }
@@ -962,17 +974,6 @@ namespace ft {
                             this->balance_after_delete(x);
                     }
         };
-
-        //NON-MEMBER FUNCTION OVERLOADS
-
-            template<class T>
-                void    swap(T& a, T& b) {
-
-                    T   tmp(a);
-
-                    a = b;
-                    b = tmp;
-                }
 }
 
 #endif
