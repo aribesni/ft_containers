@@ -152,7 +152,7 @@ namespace ft {
 
                     reference   operator*(void) const { return (*this->_elem); }
                     reference   operator[](difference_type n) const { return (*this->_elem + n); }
-                
+
                     iterator    &operator=(iterator const &rhs) { *this->_elem = *rhs._elem; return (*this); }
                     iterator    &operator+(difference_type n) { this->_elem += n; return (*this); } // keep an eye on this one
                     iterator    &operator++(void) { ++this->_elem; return (*this); }
