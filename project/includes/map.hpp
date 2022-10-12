@@ -213,7 +213,7 @@ namespace ft {
     };
 
     //MAP ITERATORS
-    template<typename T>
+    template<typename T> //, class Allocator = std::allocator<T> >
         class MapIterator : public ft::iterator<std::bidirectional_iterator_tag, T> {
 
             public :
@@ -225,8 +225,9 @@ namespace ft {
                 typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::difference_type     difference_type;
                 typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::pointer             pointer;
                 typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::reference           reference;
-                // typedef MapIterator<value_type>                                                                 iterator;
+                typedef T                                                                                       node;
                 typedef T*                                                                                      node_ptr;
+                // typedef Allocator                                                                               allocator_type;
 
                 //Constructors
                 MapIterator(void) : _ptr() {}
@@ -247,16 +248,17 @@ namespace ft {
                 MapIterator&    operator--(void) { this->_ptr = this->previous_node(this->_ptr); return (*this); }
                 MapIterator     operator--(int) { MapIterator tmp = *this; this->_ptr = this->previous_node(this->_ptr); return (tmp); }
 
-                node_ptr    getPtr(void) const { return (this->_ptr); }
+                node_ptr const& base(void) const { return (this->_ptr); }
+                node_ptr        getPtr(void) const { return (this->_ptr); }
 
             private :
 
             //MEMBER TYPES
 
-                node_ptr    _ptr;
+                node_ptr        _ptr;
+                
+                node_ptr    next_node (node_ptr node) {
 
-                node_ptr    next_node (node_ptr node)
-                {
                     if (node->right != node->right->left)
                     {
                         node = node->right;
@@ -271,9 +273,8 @@ namespace ft {
                     }
                     return (node);
                 }
-
-                node_ptr    previous_node (node_ptr node)
-                {
+                node_ptr    previous_node (node_ptr node) {
+                    
                     if (node == node->parent)
                     {
                         while (node->right != node->right->left)
@@ -289,7 +290,7 @@ namespace ft {
                     {
                         while (node == node->parent->left && node != node->parent)
                             node = node->parent;
-                        node = _ptr->parent;
+                        node = node->parent;
                     }
                     return (node);
                 }
@@ -306,7 +307,7 @@ namespace ft {
                 typedef typename ft::iterator<std::bidirectional_iterator_tag, const value_type>::difference_type   difference_type;
                 typedef typename ft::iterator<std::bidirectional_iterator_tag, const value_type>::pointer           pointer;
                 typedef typename ft::iterator<std::bidirectional_iterator_tag, const value_type>::reference         reference;
-                // typedef MapConstIterator<value_type>    const_iterator;
+                typedef T                                                                                           node;
                 typedef T*                                                                                          node_ptr;
 
                 //Constructors
@@ -328,6 +329,7 @@ namespace ft {
                 MapConstIterator&   operator--(void) { this->_ptr = this->previous_node(this->_ptr); return (*this); }
                 MapConstIterator    operator--(int) { MapConstIterator tmp = *this; this->_ptr = this->previous_node(this->_ptr); return (tmp); }
 
+                node_ptr const& base(void) const { return (this->_ptr); }
                 node_ptr        getPtr(void) const { return (this->_ptr); }
 
             private :
@@ -382,6 +384,7 @@ namespace ft {
 
             //MEMBER TYPES
 
+                typedef IT                              iterator_type;
                 typedef typename IT::value_type         value_type;
                 typedef typename IT::iterator_category  iterator_category;
                 typedef typename IT::difference_type    difference_type;
@@ -400,6 +403,7 @@ namespace ft {
                 //Operators
                 reference           operator*(void) { return (this->_ptr->val); }
                 pointer             operator->(void) { return (&this->_ptr->val); }
+                pointer             operator->(void) const { return (&this->_ptr->val); }
                 MapReverseIterator& operator=(MapReverseIterator const &rhs) { this->_ptr = rhs.getPtr(); return (*this); }
                 bool                operator==(MapReverseIterator const &rhs) { return (this->_ptr == rhs.getPtr()); }
                 bool                operator!=(MapReverseIterator const &rhs) { return (this->_ptr != rhs.getPtr()); }
@@ -408,13 +412,16 @@ namespace ft {
                 MapReverseIterator& operator--(void) { this->_ptr = this->next_node(this->_ptr); return (*this); }
                 MapReverseIterator  operator--(int) { MapReverseIterator tmp = *this; this->_ptr = this->next_node(this->_ptr); return (tmp); }
 
-                node_ptr            getPtr(void) const { return (this->_ptr); }
+                iterator_type const&    base(void) const { return (this->_current); }
+                node_ptr                getPtr(void) const { return (this->_ptr); }
 
             private :
 
             //MEMBER TYPES
 
-                node_ptr    _ptr;
+
+                iterator_type   _current;
+                node_ptr        _ptr;
 
                 node_ptr    next_node (node_ptr node)
                 {
@@ -462,27 +469,28 @@ namespace ft {
 
             //MEMBER TYPES
 
-                typedef typename IT::value_type         value_type;
-                typedef typename IT::iterator_category  iterator_category;
-                typedef typename IT::difference_type    difference_type;
-                typedef typename IT::pointer            pointer;
-                typedef typename IT::reference          reference;
-                typedef typename IT::node_ptr           node_ptr;
+                typedef typename IT::value_type           value_type;
+                typedef typename IT::iterator_category    iterator_category;
+                typedef typename IT::difference_type      difference_type;
+                typedef typename IT::pointer              pointer;
+                typedef typename IT::reference            reference;
+                typedef typename IT::node                 node;
+                typedef typename IT::node_ptr             node_ptr;
 
                 //Constructors
                 MapConstReverseIterator(void) : _ptr() {}
                 MapConstReverseIterator(node_ptr ptr) : _ptr(ptr) {}
-                MapConstReverseIterator(const MapConstReverseIterator& src) : _ptr(src._ptr) {}
-                MapConstReverseIterator(const MapReverseIterator<IT>& src) : _ptr(src._ptr) {}
-                MapConstReverseIterator(const MapConstIterator<IT>& src) : _ptr(src._ptr) {}
-                MapConstReverseIterator(const MapIterator<IT>& src) : _ptr(src._ptr) {}
+                MapConstReverseIterator(const MapConstReverseIterator& src) : _ptr(src.getPtr()) {}
+                MapConstReverseIterator(const MapReverseIterator<IT>& src) : _ptr(src.getPtr()) {}
+                MapConstReverseIterator(const MapConstIterator<node>& src) : _ptr(src.getPtr()) {}
+                MapConstReverseIterator(const MapIterator<IT>& src) : _ptr(src.getPtr()) {}
                 MapConstReverseIterator(const IT& src) : _ptr(src.getPtr()) {}
 
                 ~MapConstReverseIterator(void) {}
 
                 //Operators
                 reference                   operator*(void) { return (this->_ptr->val); }
-                pointer                     operator->(void) { return (&this->_ptr->val); }
+                pointer                     operator->(void) const { return (&this->_ptr->val); }
                 MapConstReverseIterator&    operator=(MapConstReverseIterator const &rhs) { this->_ptr = rhs.getPtr(); return (*this); }
                 bool                        operator==(MapConstReverseIterator const &rhs) { return (this->_ptr == rhs.getPtr()); }
                 bool                        operator!=(MapConstReverseIterator const &rhs) { return (this->_ptr != rhs.getPtr()); }
@@ -491,7 +499,9 @@ namespace ft {
                 MapConstReverseIterator&    operator--(void) { this->_ptr = this->next_node(this->_ptr); return (*this); }
                 MapConstReverseIterator     operator--(int) { MapConstReverseIterator tmp = *this; this->_ptr = this->next_node(this->_ptr); return (tmp); }
 
-                node_ptr            getPtr(void) const { return (this->_ptr); }
+                node_ptr const& base(void) const { return (this->_ptr); }
+                node_ptr        getPtr(void) const { return (this->_ptr); }
+
 
             private :
 
@@ -560,8 +570,8 @@ namespace ft {
                 typedef ft::MapIterator<t_node<value_type> >                            iterator;
                 typedef ft::MapConstIterator<t_node<value_type> >                       const_iterator;
                 typedef ft::MapReverseIterator<iterator>                                reverse_iterator;
-                typedef ft::MapConstReverseIterator<const_iterator>                     const_reverse_iterator;
-                typedef ft::t_node<value_type>                                          node_ptr;
+                typedef ft::MapConstReverseIterator<iterator>                           const_reverse_iterator;
+                typedef ft::t_node<value_type>                                          node;
 
                 class value_compare {
 
@@ -689,7 +699,7 @@ namespace ft {
                 }
                 void                    erase(iterator position) {
 
-                    node_ptr    *node = position.getPtr();
+                    node    *node = position.getPtr();
                     this->deleteNode(node->val.first);
                 }
                 size_type               erase(const key_type& k) {
@@ -710,6 +720,8 @@ namespace ft {
 
                     ft::swap(this->_alloc, x._alloc);
                     ft::swap(this->_comp, x._comp);
+                    ft::swap(this->TNULL, x.TNULL);
+                    ft::swap(this->root, x.root);
                 }
                 void                    clear(void) { this->erase(this->begin(), this->end()); }
 
@@ -769,7 +781,7 @@ namespace ft {
                 void    ft_tmp(void) {
 
                     iterator tmp = this->begin();
-                    node_ptr   *node_tmp = tmp.getPtr();
+                    node   *node_tmp = tmp.getPtr();
                     std::cout << "BEGIN KEY : " << node_tmp->val.first << "   ";
                     std::cout << "BEGIN DATA : " << node_tmp->val->second << "   ";
                     tmp = this->end();
@@ -785,12 +797,12 @@ namespace ft {
 
                     allocator_type  _alloc;
                     key_compare     _comp;
-                    node_ptr         *root;
-                    node_ptr         *TNULL;
+                    node         *root;
+                    node         *TNULL;
 
                     void    init_root(const value_type& val = value_type()) {
 
-                        node_ptr    tmp(val);
+                        node    tmp(val);
                         this->TNULL = this->_alloc.allocate(1);
                         this->root = this->_alloc.allocate(1);
                         tmp.left = this->TNULL;
@@ -800,16 +812,16 @@ namespace ft {
                         this->TNULL->color = 0;
                         this->root = this->TNULL;
                     }
-                    void    construct(node_ptr *ptr, const value_type& val = value_type()) {
+                    void    construct(node *ptr, const value_type& val = value_type()) {
 
-                        node_ptr    tmp(val);
+                        node    tmp(val);
                         tmp.left = this->TNULL;
                         tmp.right = this->TNULL;
                         tmp.parent = this->TNULL;
                         tmp.color = 1;
                         this->_alloc.construct(ptr, tmp);
                     }
-                    node_ptr *searchTree(node_ptr *node, key_type key) const {
+                    node *searchTree(node *node, key_type key) const {
 
                         if (node == this->TNULL || key == node->val.first)
                             return (node);
@@ -817,21 +829,21 @@ namespace ft {
                             return (this->searchTree(node->left, key));
                         return (this->searchTree(node->right, key));
                     }
-                    node_ptr *left_most(node_ptr *node) const {
+                    node *left_most(node *node) const {
 
                         while (node->left != node->left->left)
                             node = node->left;
                         return (node);
                     }
-                    node_ptr *right_most(node_ptr *node) const {
+                    node *right_most(node *node) const {
 
                         while (node->right != node->right->right)
                             node = node->right;
                         return (node);
                     }
-                    void    leftRotate(node_ptr *x) {
+                    void    leftRotate(node *x) {
 
-                        node_ptr *y = x->right;
+                        node *y = x->right;
                         x->right = y->left;
                         if (y->left != this->TNULL)
                             y->left->parent = x;
@@ -845,9 +857,9 @@ namespace ft {
                         y->left = x;
                         x->parent = y;
                     }
-                    void    rightRotate(node_ptr *x) {
+                    void    rightRotate(node *x) {
 
-                        node_ptr *y = x->left;
+                        node *y = x->left;
                         x->left = y->right;
                         if (y->right != this->TNULL)
                             y->right->parent = x;
@@ -861,9 +873,9 @@ namespace ft {
                         y->right = x;
                         x->parent = y;
                     }
-                    void    balance_after_delete(node_ptr *x) {
+                    void    balance_after_delete(node *x) {
 
-                        node_ptr *s;
+                        node *s;
 
                         while (x != root && x->color == 0)
                         {
@@ -932,7 +944,7 @@ namespace ft {
                         }
                         x->color = 0;
                     }
-                    void    rbTransplant(node_ptr *u, node_ptr *v) {
+                    void    rbTransplant(node *u, node *v) {
 
                         if (u->parent == this->TNULL)
                             root = v;
@@ -942,9 +954,9 @@ namespace ft {
                             u->parent->right = v;
                         v->parent = u->parent;
                     }
-                    void    balance_after_insert(node_ptr *k) {
+                    void    balance_after_insert(node *k) {
 
-                        node_ptr *u;
+                        node *u;
 
                         while (k->parent->color == 1)
                         {
@@ -997,52 +1009,52 @@ namespace ft {
                         }
                         root->color = 0;
                     }
-                    node_ptr* insert_node(value_type val) {
+                    node* insert_node(value_type val) {
 
-                        node_ptr *node = this->_alloc.allocate(1);
-                        this->construct(node, val);
-                        node_ptr *y = this->TNULL;
-                        node_ptr *x = this->root;
+                        node *new_node = this->_alloc.allocate(1);
+                        this->construct(new_node, val);
+                        node *y = this->TNULL;
+                        node *x = this->root;
 
                         while (x != this->TNULL) {
                             
                             y = x;
-                            if (node->val.first < x->val.first)
+                            if (new_node->val.first < x->val.first)
                                 x = x->left;
                             else
                                 x = x->right;
                         }
-                        node->parent = y;
+                        new_node->parent = y;
                         if (y == this->TNULL)
-                            this->root = node;
-                        else if (node->val.first < y->val.first)
-                            y->left = node;
+                            this->root = new_node;
+                        else if (new_node->val.first < y->val.first)
+                            y->left = new_node;
                         else
-                            y->right = node;
-                        if (node->parent == this->TNULL)
+                            y->right = new_node;
+                        if (new_node->parent == this->TNULL)
                         {
-                            node->color = 0;
+                            new_node->color = 0;
                             return (NULL);
                         }
-                        if (node->parent->parent == this->TNULL)
+                        if (new_node->parent->parent == this->TNULL)
                             return (NULL);
-                        this->balance_after_insert(node);
-                        return (node);
+                        this->balance_after_insert(new_node);
+                        return (new_node);
                     }
                     void    deleteNode(key_type key) {
 
-                        node_ptr    *z = this->TNULL;
-                        node_ptr    *x, *y;
-                        node_ptr    *node = this->root;
+                        node    *z = this->TNULL;
+                        node    *x, *y;
+                        node    *new_node = this->root;
 
-                        while (node != this->TNULL)
+                        while (new_node != this->TNULL)
                         {
-                            if (node->val.first == key)
-                                z = node;
-                            if (node->val.first <= key)
-                                node = node->right;
+                            if (new_node->val.first == key)
+                                z = new_node;
+                            if (new_node->val.first <= key)
+                                new_node = new_node->right;
                             else
-                                node = node->left;
+                                new_node = new_node->left;
                         }
                         if (z == this->TNULL)
                         {
