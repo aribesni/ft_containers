@@ -229,6 +229,8 @@ namespace ft {
                 typedef T                                                                                       node;
                 typedef T*                                                                                      node_ptr;
 
+            //MEMBER FUNCTIONS
+          
                 //Constructors
                 MapIterator(void) : _current(), _end(), _root() {}
                 MapIterator(const MapIterator& src) : _current(src._current), _end(src._end), _root(src._root) {}
@@ -293,13 +295,16 @@ namespace ft {
 
             private :
 
+            //MEMBER TYPES
+
                 // T*        _ptr;
                 T*  _current;
                 T*  _end;
                 T*  _root;
 
-            //MEMBER TYPES
 
+            //MEMBER FUNCTIONS
+    
     /*            
                 node_ptr    next_node (node_ptr node) {
 
@@ -393,6 +398,8 @@ namespace ft {
                 typedef T                                                                                           node;
                 typedef T*                                                                                          node_ptr;
 
+            //MEMBER FUNCTIONS
+            
                 //Constructors
                 MapConstIterator(void) : _current(), _end(), _root() {}
                 MapConstIterator(T* ptr, T* root, T* end) : _current(ptr), _end(end), _root(root) {}
@@ -456,12 +463,15 @@ namespace ft {
         
             private :
 
+            //MEMBER TYPES
+
                 // node_ptr        _ptr;
                 T*  _current;
                 T*  _end;
                 T*  _root;
 
-            //MEMBER TYPES
+
+            //MEMBER FUNCTIONS
 
     /*            node_ptr    next_node (node_ptr node)
                 {
@@ -541,6 +551,7 @@ namespace ft {
                     return (y);
                 }
     };
+/*
     template<typename IT>
         class MapReverseIterator {
 
@@ -631,45 +642,7 @@ namespace ft {
                 node_ptr _end;
                 node_ptr _root;
 
-                    /*            node_ptr    next_node (node_ptr node)
-                {
-                    if (node->right != node->right->left)
-                    {
-                        node = node->right;
-                        while (node->left != node->left->left)
-                            node = node->left;
-                    }
-                    else
-                    {
-                        while (node == node->parent->right && node != node->parent)
-                            node = node->parent;
-                        node = node->parent;
-                    }
-                    return (node);
-                }
 
-                node_ptr    previous_node (node_ptr node)
-                {
-                    if (node == node->parent)
-                    {
-                        while (node->right != node->right->left)
-                            node = node->right;
-                    }
-                    else if (node->left != node->left->left)
-                    {
-                        node = node->left;
-                        while (node->right != node->right->left)
-                            node = node->right;
-                    }
-                    else
-                    {
-                        while (node == node->parent->left && node != node->parent)
-                            node = node->parent;
-                        node = _ptr->parent;
-                    }
-                    return (node);
-                }
-    */
                 node_ptr minimum(node_ptr node) {
 
                     while (node->left != this->_end)
@@ -709,6 +682,69 @@ namespace ft {
                     return (y);
                 }
     };
+*/    
+    template<typename IT>
+        class MapReverseIterator {
+
+            public :
+
+            //MEMBER TYPES
+
+                typedef IT                      iterator_type;
+                typedef typename IT::value_type value_type;
+                typedef typename IT::pointer    pointer;
+                typedef typename IT::reference  reference;
+                typedef typename IT::node       node;
+                typedef typename IT::node_ptr   node_ptr;
+
+                //Constructors
+                MapReverseIterator(void) : _it() {}
+                // MapReverseIterator(const iterator_type& src) : _it(src) {}
+                // MapReverseIterator(const MapReverseIterator& src) : _it(src.base()) {}
+                // MapReverseIterator(const MapConstIterator<node>& src) : _it(src) {}
+                template <class Iter>
+                    MapReverseIterator (const MapReverseIterator<Iter>& src) : _it(src.base()) {}
+                MapReverseIterator (iterator_type it) : _it(it) {}
+                ~MapReverseIterator(void) {}
+
+                //Operators
+                reference           operator*(void) const { iterator_type tmp = this->_it; return (*(--tmp)); }
+                pointer             operator->(void) { return (&operator*()); }
+                pointer             operator->(void) const { return (&operator*()); }
+                MapReverseIterator& operator=(MapReverseIterator const &rhs) {
+                
+                    if (this != &rhs)
+                    {
+                        this->_it = rhs.base();
+                        // this->_node_ptr = rhs.base();
+                        // this->_end = rhs.getEnd();
+                        // this->_root = rhs.getRoot();
+                    }
+                    return (*this);
+                }
+                bool                operator==(MapReverseIterator const &rhs) { return (this->_it == rhs.base()); }
+                bool                operator!=(MapReverseIterator const &rhs) { return (this->_it != rhs.base()); }
+                iterator_type&      operator++(void) { return (this->_it--); }
+                iterator_type       operator++(int) { return (--this->_it);}
+                MapReverseIterator& operator--(void) { this->_it++; return (*this); }
+                iterator_type       operator--(int) { return (++this->_it); }
+
+                iterator_type    base(void) const { return (this->_it); }
+                // node_ptr const&    base(void) const { return (this->_ptr); }
+                // iterator_type*  base(void) const { return (this->_current); }
+                // node_ptr        getPtr(void) const { return (this->_ptr); }
+                // node_ptr    getEnd(void) const { return (this->_end); }
+                // node_ptr    getRoot(void) const { return (this->_root); }
+            
+            private :
+
+            //MEMBER TYPES
+
+                iterator_type   _it;
+                // node_ptr        _node_ptr;
+
+    };
+/*
     template<typename IT>
         class MapConstReverseIterator {
 
@@ -725,6 +761,8 @@ namespace ft {
                 typedef typename IT::node                 node;
                 typedef typename IT::node_ptr             node_ptr;
 
+            //MEMBER FUNCTIONS
+            
                 //Constructors
                 MapConstReverseIterator(void) : _current(), _end(), _root() {}
                 MapConstReverseIterator(node_ptr ptr, node_ptr root, node_ptr end) : _current(ptr), _end(end), _root(root) {}
@@ -798,45 +836,8 @@ namespace ft {
                 node_ptr _end;
                 node_ptr _root;
 
-                    /*            node_ptr    next_node (node_ptr node)
-                {
-                    if (node->right != node->right->left)
-                    {
-                        node = node->right;
-                        while (node->left != node->left->left)
-                            node = node->left;
-                    }
-                    else
-                    {
-                        while (node == node->parent->right && node != node->parent)
-                            node = node->parent;
-                        node = node->parent;
-                    }
-                    return (node);
-                }
+            //MEMBER FUNCTIONS
 
-                node_ptr    previous_node (node_ptr node)
-                {
-                    if (node == node->parent)
-                    {
-                        while (node->right != node->right->left)
-                            node = node->right;
-                    }
-                    else if (node->left != node->left->left)
-                    {
-                        node = node->left;
-                        while (node->right != node->right->left)
-                            node = node->right;
-                    }
-                    else
-                    {
-                        while (node == node->parent->left && node != node->parent)
-                            node = node->parent;
-                        node = _ptr->parent;
-                    }
-                    return (node);
-                }
-    */
                 node_ptr minimum(node_ptr node) {
 
                     while (node->left != this->_end)
@@ -876,6 +877,69 @@ namespace ft {
                     return (y);
                 }
     };
+
+    template<typename IT>
+        class MapConstReverseIterator {
+
+            public :
+
+            //MEMBER TYPES
+
+                typedef IT                      iterator_type;
+                typedef typename IT::value_type value_type;
+                typedef typename IT::pointer    pointer;
+                typedef typename IT::reference  reference;
+                typedef typename IT::node_ptr   node_ptr;
+                typedef typename IT::node       node;
+
+                //Constructors
+                MapConstReverseIterator(void) : _it() {}
+                MapConstReverseIterator(const MapConstReverseIterator& src) : _it(src) {}
+                // MapConstReverseIterator(const MapIterator<node>& src) : _it(src.base()) {}
+                // MapConstReverseIterator(const MapConstIterator<node>& src) : _it(src) {}
+                // MapConstReverseIterator(const MapReverseIterator<IT>& src) : _it(src.base()) {}
+                MapConstReverseIterator(iterator_type src) : _it(src) {}
+
+                ~MapConstReverseIterator(void) {}
+
+                //Operators
+                reference           operator*(void) const { iterator_type tmp = this->_it; return (*(--tmp)); }
+                pointer             operator->(void) { return (&operator*()); }
+                pointer             operator->(void) const { return (&operator*()); }
+                MapConstReverseIterator& operator=(MapConstReverseIterator const &rhs) {
+                
+                    if (this != &rhs)
+                    {
+                        this->_it = rhs.base();
+                        // this->_node_ptr = rhs.base();
+                        // this->_end = rhs.getEnd();
+                        // this->_root = rhs.getRoot();
+                    }
+                    return (*this);
+                }
+                bool                        operator==(MapConstReverseIterator const &rhs) { return (this->_it == rhs.base()); }
+                bool                        operator!=(MapConstReverseIterator const &rhs) { return (this->_it != rhs.base()); }
+                iterator_type&              operator++(void) { return (this->_it--); }
+                iterator_type               operator++(int) { return (--this->_it);}
+                MapConstReverseIterator&    operator--(void) { this->_it++; return (*this); }
+                iterator_type               operator--(int) { return (++this->_it); }
+
+                iterator_type    base(void) const { return (this->_it); }
+                // node_ptr const&    base(void) const { return (this->_ptr); }
+                // iterator_type*  base(void) const { return (this->_current); }
+                // node_ptr        getPtr(void) const { return (this->_ptr); }
+                // node_ptr    getEnd(void) const { return (this->_end); }
+                // node_ptr    getRoot(void) const { return (this->_root); }
+            
+            private :
+
+            //MEMBER TYPES
+
+                iterator_type   _it;
+                node_ptr        _node_ptr;
+
+    };
+*/
     //MAP
     template< class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<ft::pair<const Key, T> > >
         class map {
@@ -898,7 +962,7 @@ namespace ft {
                 typedef ft::MapIterator<t_node<value_type> >                            iterator;
                 typedef ft::MapConstIterator<t_node<value_type> >                       const_iterator;
                 typedef ft::MapReverseIterator<iterator>                                reverse_iterator;
-                typedef ft::MapConstReverseIterator<iterator>                           const_reverse_iterator;
+                typedef ft::MapReverseIterator<const_iterator>                          const_reverse_iterator;
                 typedef ft::t_node<value_type>                                          node;
 
                 class value_compare {
@@ -1123,11 +1187,15 @@ namespace ft {
 
                 private :
 
+                //MEMBER TYPES
+
                     allocator_type  _alloc;
                     key_compare     _comp;
                     node         *root;
                     node         *TNULL;
 
+                //MEMBER FUNCTIONS
+            
                     void    init_root(const value_type& val = value_type()) {
 
                         node    tmp(val);
