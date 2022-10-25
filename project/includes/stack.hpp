@@ -14,6 +14,7 @@
 # define STACK_H
 
 # include "vector.hpp"
+# include "utils.hpp"
 
 namespace ft {
 

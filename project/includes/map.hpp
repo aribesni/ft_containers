@@ -13,11 +13,14 @@
 #ifndef MAP_H
 # define MAP_H
 
+# include "iterator.hpp"
+# include "utils.hpp"
+
 # include <iostream>
 # include <cstddef>
-# include "iterator.hpp"
 
 namespace ft {
+
 
     template <class T>
         void swap (T & a, T & b)
@@ -25,148 +28,7 @@ namespace ft {
             T	tmp(a);
             a = b;
             b = tmp;
-    }
-
-    //IS INTEGRAL
-    template <bool is_integral, typename T>
-        struct is_integral_res {
-
-        //MEMBER TYPES
-
-            typedef T           type;
-            static const bool   value = is_integral;
-    };
-
-    template<typename>
-        struct is_integral_type : is_integral_res<false, bool> {};
-    template<>
-        struct is_integral_type<bool> : is_integral_res<true, bool> {};
-    template<>
-        struct is_integral_type<char> : is_integral_res<true, char> {};
-    template<>
-        struct is_integral_type<signed char> : is_integral_res<true, signed char> {};
-    template<>
-        struct is_integral_type<short int> : is_integral_res<true, short int> {};
-    template<>
-        struct is_integral_type<int> : is_integral_res<true, int> {};
-    template<>
-        struct is_integral_type<long int> : is_integral_res<true, long int> {};
-    template<>
-        struct is_integral_type<long long int> : is_integral_res<true, long long int> {};
-    template<>
-        struct is_integral_type<unsigned char> : is_integral_res<true, unsigned char> {};
-    template<>
-        struct is_integral_type<unsigned short int> : is_integral_res<true, unsigned short int> {};
-    template<>
-        struct is_integral_type<unsigned int> : is_integral_res<true, unsigned int> {};
-    template<>
-        struct is_integral_type<unsigned long int> : is_integral_res<true, unsigned long int> {};
-    template<>
-        struct is_integral_type<unsigned long long int> : is_integral_res<true, unsigned long long int> {};
-
-    template<typename T>
-        struct is_integral : is_integral_type<T> {};
-
-    //EQUAL
-    template<class InputIterator1, class InputIterator2>
-        bool equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2) {
-            
-            while (first1 != last1)
-            {
-                if (first2 == last2 || *first1 != *first2)
-                    return (false);
-                ++first1;
-                ++first2;
-            }
-            return (first2 == last2);
-    }
-
-    //LEXICOGRAPHICAL COMPARE
-    template <class InputIterator1, class InputIterator2>
-        bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2) {
-            while (first1 != last1)
-            {
-                if (first2 == last2 || *first2 < *first1)
-                    return (false);
-                else if (*first1 < *first2)
-                    return (true);
-                ++first1;
-                ++first2;
-            }
-            return (first2 != last2);
-    }
-
-    //PAIR
-    template<class T1, class T2>
-        struct pair {
-
-        //MEMBER TYPES
-
-            typedef T1  first_type;
-            typedef T2  second_type;
-
-            first_type  first;
-            second_type second;
-
-        //MEMBER FUNCTIONS
-
-            //Constructors
-            pair(void) : first(), second() {}
-            template<class U, class V>
-                pair(const pair<U, V>& pr) : first(pr.first), second(pr.second) {}
-            pair(const first_type& a, const second_type& b) : first(a), second(b) {}
-
-            pair&   operator=(const pair& pr) {
-                
-                this->first = pr.first;
-                this->second = pr.second;
-                return (*this);
-            }
-    };
-
-    template< bool Cond, class T = void >
-        struct enable_if {};
-    template<class T>
-        struct enable_if<true, T> {
-
-            //MEMBER TYPES
-
-                typedef T   type;
-    };
-
-    //PAIR OPERATORS
-    template<class T1, class T2>
-        bool operator==(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) { return (lhs.first == rhs.first && lhs.second == rhs.second); }
-    template<class T1, class T2>
-        bool operator!=(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) { return (!(lhs == rhs)); }
-    template<class T1, class T2>
-        bool operator<(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) { return (lhs.first < rhs.first || (lhs.first == rhs.first && lhs.second < rhs.second)); }
-    template<class T1, class T2>
-        bool operator<=(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) { return (!(rhs < lhs)); }
-    template<class T1, class T2>
-        bool operator>(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) { return (rhs < lhs); }
-    template<class T1, class T2>
-        bool operator>=(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) { return (!(lhs < rhs)); }
-
-    //MAKE PAIR
-    template<class T1, class T2>
-        pair<T1, T2>    make_pair(T1 x, T2 y) { return (pair<T1, T2>(x, y)); }
-
-    //NODE
-    template<typename PAIR>
-        struct                                      t_node {
-
-            typedef PAIR                            value_type;
-            
-            value_type                              val;
-            t_node                                  *parent;
-            t_node                                  *left;
-            t_node                                  *right;
-            int                                     color;
-
-            t_node(void) {}
-            t_node(value_type value) : val(value) {};
-    };
+        }
 
     //MAP ITERATORS
     template<typename T>
@@ -587,7 +449,8 @@ namespace ft {
                     }
                     else
                     {
-                        it = iterator(this->insert_node(val), this->root, this->TNULL);
+                        node* node = this->insert_node(val);
+                        it = iterator(node, this->root, this->TNULL);
                         return (ft::make_pair(it, true));
                     }
                 }
@@ -604,11 +467,21 @@ namespace ft {
                 }
                 void                    erase(iterator position) {
 
+                    if (this->root == this->TNULL || position == this->end())
+                    {
+                        (void)position;
+                        return ;
+                    }
                     node    *node = position.base();
                     this->deleteNode(node->val.first);
                 }
                 size_type               erase(const key_type& k) {
 
+                    if (this->root == this->TNULL)
+                    {
+                        (void)k;
+                        return (0);
+                    }
                     if (this->count(k))
                     {
                         this->erase(this->find(k));
@@ -618,11 +491,14 @@ namespace ft {
                 }
                 void                    erase(iterator first, iterator last) {
 
-                    for (iterator it = first; it != last; it++)
+                    if (this->root == this->TNULL || first == last)
                     {
-                        std::cout << "KEY FIRST : " << it->first << " VALUE FIRST : " << it->second << std::endl;
-                        this->erase(it);
+                        (void)first;
+                        (void)last;
+                        return ;
                     }
+                    while (first != last)
+                        erase(first++);
                 }
                 void                    swap(map& x) {
 
@@ -631,7 +507,11 @@ namespace ft {
                     ft::swap(this->TNULL, x.TNULL);
                     ft::swap(this->root, x.root);
                 }
-                void                    clear(void) { this->erase(this->begin(), this->end()); }
+                void                    clear(void) {
+                    
+                    this->_clear(this->root);
+                    this->root = this->TNULL;
+                }
 
                 //Observers
                 key_compare     key_comp(void) const { return (key_compare()); }
@@ -643,63 +523,77 @@ namespace ft {
                 size_type                               count(const key_type& k) const { return (this->find(k) != this->end() ? 1 : 0); }
                 iterator                                lower_bound(const key_type& k) {
 
-                    iterator    it;
+                    node* x = this->root;
+                    node* y = this->TNULL;
 
-                    it = this->begin();
-                    while (this->_comp(it->first, k) == true && it != this->end())
-                        it++;
-                    return (it);
+                    while (x != this->TNULL)
+                    {
+                        if (!_comp(x->val.first, k))
+                        {
+                            y = x;
+                            x = x->left;
+                        }
+                        else
+                            x = x->right;
+                    }
+                    return (iterator(y, this->TNULL, this->root));
                 }
                 const_iterator                          lower_bound(const key_type& k) const {
             
-                    const_iterator    it;
+                    node* x = this->root;
+                    node* y = this->TNULL;
 
-                    it = this->begin();
-                    while (this->_comp(it->first, k) == true && it != this->end())
-                        it++;
-                    return (it);
+                    while (x != this->TNULL)
+                    {
+                        if (!_comp(x->val.first, k))
+                        {
+                            y = x;
+                            x = x->left;
+                        }
+                        else
+                            x = x->right;
+                    }
+                    return (const_iterator(y, this->TNULL, this->root));
                 }
                 iterator                                upper_bound(const key_type& k) {
 
-                    iterator    it;
+                    node* x = this->root;
+                    node* y = this->TNULL;
 
-                    it = this->begin();
-                    while (this->_comp(it->first, k) == false && it != this->end())
-                        it++;
-                    return (it);
+                    while (x != this->TNULL)
+                    {
+                        if (_comp(k, x->val.first))
+                        {
+                            y = x;
+                            x = x->left;
+                        }
+                        else
+                            x = x->right;
+                    }
+                    return (iterator(y, this->TNULL, this->root));
                 }
                 const_iterator                          upper_bound(const key_type& k) const {
 
-                    const_iterator    it;
+                    node* x = this->root;
+                    node* y = this->TNULL;
 
-                    it = this->begin();
-                    while (this->_comp(it->first, k) == false && it != this->end())
-                        it++;
-                    return (it);
+                    while (x != this->TNULL)
+                    {
+                        if (_comp(k, x->val.first))
+                        {
+                            y = x;
+                            x = x->left;
+                        }
+                        else
+                            x = x->right;
+                    }
+                    return (const_iterator(y, this->TNULL, this->root));
                 }
                 pair<iterator, iterator>                equal_range(const key_type& k) { return (ft::make_pair(this->lower_bound(k), this->upper_bound(k))); }
                 pair<const_iterator, const_iterator>    equal_range(const key_type& k) const { return (ft::make_pair(this->lower_bound(k), this->upper_bound(k))); }
 
                 //Allocator
                 allocator_type  get_allocator(void) const {return (allocator_type()); }
-
-                /*******************************************/
-                //tmp functions
-
-                void    ft_tmp(void) {
-
-                    iterator tmp = this->begin();
-                    node   *node_tmp = tmp.getPtr();
-                    std::cout << "BEGIN KEY : " << node_tmp->val->first << "   ";
-                    std::cout << "BEGIN DATA : " << node_tmp->val->second << "   ";
-                    tmp = this->end();
-                    // tmp--;
-                    node_tmp = tmp.getPtr();
-                    std::cout << "END KEY : " << node_tmp->val->first << "   ";
-                    std::cout << "END DATA : " << node_tmp->val->second << std::endl;
-                }
-
-                /******************************************/
 
                 private :
 
@@ -712,6 +606,16 @@ namespace ft {
 
                 //MEMBER FUNCTIONS
             
+                    void    _clear(node* node) {
+
+                        if (node == TNULL)
+                            return;
+                        this->_clear(node->left);
+			            this->_clear(node->right);
+			            this->_alloc.destroy(node);
+			            this->_alloc.deallocate(node, 1);
+                    }
+
                     void    init_root(const value_type& val = value_type()) {
 
                         node    tmp(val);
@@ -940,13 +844,9 @@ namespace ft {
                             y->left = new_node;
                         else
                             y->right = new_node;
-                        if (new_node->parent == this->TNULL)
-                        {
-                            new_node->color = 0;
-                            return (NULL);
-                        }
-                        if (new_node->parent->parent == this->TNULL)
-                            return (NULL);
+                        new_node->left = this->TNULL;
+                        new_node->right = this->TNULL;
+                        new_node->color = 1;
                         this->balance_after_insert(new_node);
                         return (new_node);
                     }
@@ -966,10 +866,7 @@ namespace ft {
                                 new_node = new_node->left;
                         }
                         if (z == this->TNULL)
-                        {
-                            std::cout << "Key not found in the tree" << std::endl;
                             return ;
-                        }
                         y = z;
                         int y_original_color = y->color;
                         if (z->left == this->TNULL)
@@ -1000,7 +897,8 @@ namespace ft {
                             y->left->parent = y;
                             y->color = z->color;
                         }
-                        delete z;
+                        this->_alloc.destroy(z);
+			            this->_alloc.deallocate(z, 1);
                         if (y_original_color == 0)
                             this->balance_after_delete(x);
                     }
@@ -1023,6 +921,7 @@ namespace ft {
 
     template <class Key, class T, class Compare, class Alloc>
         void swap(map<Key, T, Compare, Alloc> &lhs, map<Key, T, Compare, Alloc> &rhs) { lhs.swap(rhs); }
+    
 }
 
 #endif

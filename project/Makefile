@@ -12,7 +12,7 @@
 
 NAME = 		container
 
-SRC = 		main_vector.cpp main_map.cpp
+SRC = 		main_map.cpp main_vector.cpp
 
 SRCS = 		${addprefix ./srcs/, ${SRC}}
 
@@ -20,11 +20,11 @@ OBJ = 		${SRCS:.cpp=.o}
 
 CC = 		c++
 
-FLAGS = 	-Wall -Wextra -Werror -std=c++98
+FLAGS = 	-Wall -Wextra -Werror -std=c++98 -g3
 
 HEADER = 	./includes/
 
-%.o	: 		%.cpp ./includes/map.hpp ./includes/stack.hpp ./includes/vector.hpp ./includes/iterator.hpp
+%.o	: 		%.cpp ./includes/map.hpp ./includes/iterator.hpp ./includes/stack.hpp ./includes/vector.hpp ./includes/utils.hpp
 			${CC} ${FLAGS} -I ${HEADER} -c $< -o $@
 
 all : 		${NAME}
@@ -39,7 +39,7 @@ map :		${OBJ}
 #			${CC} ${FLAGS} ./srcs/main_stack.o -o ${NAME}
 
 ${NAME} :	${OBJ}
-			${CC} ${FLAGS} ${OBJ} -o ${NAME}
+			${CC}  ${OBJ} ${FLAGS} -o ${NAME}
 
 clean :
 			rm -f ${OBJ}

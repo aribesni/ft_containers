@@ -14,6 +14,7 @@
 # define VECTOR_H
 
 # include "iterator.hpp"
+# include "utils.hpp"
 
 # include <vector>
 # include <iostream>
@@ -37,8 +38,8 @@ namespace ft {
                 typedef const value_type&                                   const_reference;
                 typedef value_type*                                         pointer;
                 typedef const value_type*                                   const_pointer;
-                typedef ft::regular_iterator<value_type>                    iterator;
-                typedef ft::regular_iterator<const value_type>              const_iterator;
+                typedef ft::random_access_iterator<value_type>              iterator;
+                typedef ft::random_access_iterator<const value_type>        const_iterator;
                 typedef ft::reverse_iterator<iterator>                      reverse_iterator;
                 typedef ft::reverse_iterator<const_iterator>                const_reverse_iterator;
                 typedef typename iterator_traits<iterator>::difference_type difference_type;
@@ -54,11 +55,11 @@ namespace ft {
                         this->_array[i] = val;
                 }
                 template <class InputIterator>
-                    vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) {
+                    vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL) {
                         
                     size_type       i = 0;
                     InputIterator   tmp = first;
-                    while (tmp < last)
+                    while (tmp != last)
                     {
                         tmp++;
                         i++;
@@ -69,7 +70,7 @@ namespace ft {
                     this->_size = i;
                     this->_alloc = alloc;
                     i = 0;
-                    while (first < last)
+                    while (first != last)
                     {
                         this->push_back(*first); // this doesn't seem to work
                         first++;
@@ -172,17 +173,14 @@ namespace ft {
 
                 //Modifiers
                 template <class InputIterator>
-                    void    assign(InputIterator first, InputIterator last) {
+                    void    assign(InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL) {
 
-                        while (first != last)
-                        {
-                            this->_array[first] = *first;
-                            *first++;
-                            this->_size++;
-                        }
+                        this->clear();
+                        for (InputIterator it = first; it != last; it++)
+                            this->push_back(*it);
                     }
                 void        assign(size_type n, const value_type& val) {
-                    
+  
                     if (n > this->_capacity)
                     {
                         size_type i = 0;
@@ -202,7 +200,7 @@ namespace ft {
                         this->_array = new_array;
                         this->_capacity = this->_size;
                     }
-                    else 
+                    else
                     {
                         for (size_type i = 0; i < n; i++)
                             this->_array[i] = val;
@@ -266,34 +264,57 @@ namespace ft {
                 }
                 void        insert(iterator position, size_type n, const value_type& val) {
 
-                    T*  new_array = new T[this->_size + n];
+                    T*          new_array = new T[this->_size + n];
+                    size_type   i = 0;
+                    size_type   j = 0;
+                    iterator    it = this->begin();
+
                     this->_size += n;
-                    for (int i = 0; i < position; i++)
+                    while (it != position)
+                    {
                         new_array[i] = this->_array[i];
-                    for (size_type j = 0; j < n; j++)
-                        new_array[j] = val;
-                    for (iterator i = position + n + 1; i < this->_size; i++)
+                        it++;
+                        i++;
+                    }
+                    while (j < n)
+                    {
+                        new_array[i++] = val;
+                        it++;
+                        j++;
+                    }
+                    it++;
+                    while (it != this->end())
+                    {
                         new_array[i] = this->_array[i - 1];
+                        it++;
+                        i++;
+                    }
                     this->_capacity += n + 2;
                     delete[] this->_array;
                     this->_array = new_array;
                 }
                 template <class InputIterator>
-                    void    insert(iterator position, InputIterator first, InputIterator last) {
+                    void    insert(iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL) {
 
-                        InputIterator   n;
+                        InputIterator   tmp;
+                        int             i = 0;
+                        int             n = 0;
 
-                        n = first - last;
+                        for (tmp = first; tmp != last; tmp++)
+                            n++;
                         T*  new_array = new T[this->_size + n];
                         this->_size += n;
-                        for (int i = 0; i < position; i++)
-                            new_array[i] = this->_array[i];
-                        while (first < last)
-                            new_array[first] = *first++;
-                        if (last < this->_size)
+                        for (iterator it = this->begin(); it != position; it++)
                         {
-                            for (size_type i = last; i < this->_size; i++)
-                                new_array[i] = this->_array[position++];
+                            new_array[i] = this->_array[i];
+                            i++;
+                        }
+                        while (first != last)
+                            new_array[i] = *first++;
+                        if (*last != *this->end())
+                        {
+                            for (size_type i = *last; i < this->_size; i++)
+                                new_array[i] = *position++;
                         }
                         this->_capacity += n + 2;
                         delete[] this->_array;
@@ -306,7 +327,7 @@ namespace ft {
                     iterator    tmp = this->begin();
                     size_type   i = 0;
                     T*  new_array = new T[this->_size];
-                    while (tmp < position)
+                    while (tmp != position)
                     {
                         new_array[i] = this->_array[i];
                         i++;
@@ -324,15 +345,26 @@ namespace ft {
                 }
                 iterator    erase(iterator first, iterator last) {
 
-                    iterator    n = last - first;
-                    T           *new_array = new T[this->_size + n];
+                    difference_type n = last - first;
+                    iterator        it = this->begin();
+                    T               *new_array = new T[this->_size + n];
+                    int             i = 0;
+
                     this->_size += n;
-                    for (int i = 0; i < first; i++)
+                    while (it != first)
+                    {
                         new_array[i] = this->_array[i];
-                    for (int i = last; i < this->_size; i++)
+                        it++;
+                        i++;
+                    }
+                    for (iterator tmp = last; tmp != this->end(); tmp++)
+                    {
                         new_array[i] = this->_array[i];
+                        i++;
+                    }
                     delete[] this->_array;
                     this->_array = new_array;
+                    return (it);
                 }
                 void        swap(vector& x) {
 
@@ -363,10 +395,7 @@ namespace ft {
                 }
 
                 //Allocator
-                allocator_type  get_allocator(void) const {
-
-                    return (this->allocator_type());
-                }
+                allocator_type  get_allocator(void) const { return (allocator_type()); }
 
             private :
 
