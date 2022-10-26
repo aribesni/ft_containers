@@ -21,14 +21,21 @@
 
 namespace ft {
 
+    //NODE
+    template<typename PAIR>
+        struct              t_node {
 
-    template <class T>
-        void swap (T & a, T & b)
-        {
-            T	tmp(a);
-            a = b;
-            b = tmp;
-        }
+            typedef PAIR    value_type;
+            
+            value_type      val;
+            t_node          *parent;
+            t_node          *left;
+            t_node          *right;
+            int             color;
+
+            t_node(void) {}
+            t_node(value_type value) : val(value) {};
+    };
 
     //MAP ITERATORS
     template<typename T>

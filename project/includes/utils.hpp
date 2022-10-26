@@ -140,21 +140,13 @@ namespace ft {
     template<class T1, class T2>
         pair<T1, T2>    make_pair(T1 x, T2 y) { return (pair<T1, T2>(x, y)); }
 
-    //NODE
-    template<typename PAIR>
-        struct                                      t_node {
-
-            typedef PAIR                            value_type;
-            
-            value_type                              val;
-            t_node                                  *parent;
-            t_node                                  *left;
-            t_node                                  *right;
-            int                                     color;
-
-            t_node(void) {}
-            t_node(value_type value) : val(value) {};
-    };
+    template <class T>
+        void swap (T & a, T & b)
+        {
+            T	tmp(a);
+            a = b;
+            b = tmp;
+        }
 }
 
 #endif
