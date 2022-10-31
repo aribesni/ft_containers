@@ -186,7 +186,7 @@ int main(void)
     std::cout << std::endl << std::endl;
     
     std::cout << "begin : " << *og_vector_2.begin() << "   ";
-    std::cout << "end : " << *og_vector_2.end() << "   ";
+    std::cout << "end : " << *(--og_vector_2.end()) << "   ";
     std::cout << "front : " << og_vector_2.front() << "   ";
     std::cout << "back : " << og_vector_2.back() << "   ";
     std::cout << "size : " << og_vector_2.size() << "   ";
@@ -204,7 +204,7 @@ int main(void)
     std::cout << std::endl << std::endl;
     
     std::cout << "begin : " << *my_vector_2.begin() << "   ";
-    std::cout << "end : " << *my_vector_2.end() << "   ";
+    std::cout << "end : " << *(--my_vector_2.end()) << "   ";
     std::cout << "front : " << my_vector_2.front() << "   ";
     std::cout << "back : " << my_vector_2.back() << "   ";
     std::cout << "size : " << my_vector_2.size() << "   ";

@@ -94,15 +94,16 @@ namespace ft {
                     this->_capacity = x._capacity;
                     this->_ptr = this->_alloc.allocate(this->_capacity);
 
-                    for (size_type i = 0 ; i < this->_size ; i++)
+                    for (size_type i = 0; i < this->_size; i++)
                         this->_alloc.construct(this->_ptr + i, x[i]);
                 }
 
                 //Destructor
                 ~vector(void) {
 
-                    this->clear();
-                    // this->_alloc.deallocate(this->_ptr, this->_capacity);
+                    for (size_type i = 0; i < this->_size; i++)
+                        this->_alloc.destroy(this->_ptr + i);
+                    this->_alloc.deallocate(this->_ptr, this->_capacity);
                 }
 
                 //Assign
@@ -110,7 +111,7 @@ namespace ft {
 
                     if (this == &x)
                         return (*this);
-                    for (size_type i = 0 ; i < this->_size ; i++)
+                    for (size_type i = 0; i < this->_size; i++)
                         this->_alloc.destroy(this->_ptr + i);
                     if (x._size > this->_capacity)
                     {
@@ -119,7 +120,7 @@ namespace ft {
                         this->_ptr = this->_alloc.allocate(this->_capacity);
                     }
                     this->_size = x._size;
-                    for (size_type i = 0 ; i < this->_size ; i++)
+                    for (size_type i = 0; i < this->_size; i++)
                         this->_alloc.construct(this->_ptr + i, x[i]);
                     return (*this);
                 }
@@ -141,7 +142,7 @@ namespace ft {
 
                     if (n < this->_size)
                     {
-                        for (size_type i = n ; i < this->_size ; i++)
+                        for (size_type i = n; i < this->_size; i++)
                             this->_alloc.destroy(this->_ptr + i);
                     }
                     else if (n > this->_size && n <= this->_capacity)
@@ -155,7 +156,7 @@ namespace ft {
                     else if (n > this->_capacity)
                     {
                         this->reserve(n);
-                        for (size_type i = _size ; i < n ; i++)
+                        for (size_type i = _size; i < n; i++)
                             this->_alloc.construct(this->_ptr + i, val);
                     }
                     this->_size = n;
@@ -170,7 +171,7 @@ namespace ft {
                     {
                         pointer new_vector = this->_alloc.allocate(n);
 
-                        for (size_type i = 0 ; i < this->_size && i < n ; i++)
+                        for (size_type i = 0; i < this->_size && i < n; i++)
                         {
                             this->_alloc.construct(new_vector + i, this->_ptr[i]);
                             this->_alloc.destroy(this->_ptr + i);
@@ -186,13 +187,13 @@ namespace ft {
                 const_reference operator[](size_type n) const { return (*(this->_ptr + n)); }
                 reference       at(size_type n) {
 
-                    if (n > this->_size)
+                    if (n >= this->_size)
                         throw std::out_of_range("Out of range");
                     return (this->_ptr[n]);
                 }
                 const_reference at(size_type n) const {
 
-                    if (n > this->_size)
+                    if (n >= this->_size)
                         throw std::out_of_range("Out of range");
                     return (this->_ptr[n]);
                 }
@@ -306,14 +307,14 @@ namespace ft {
                     ft::swap(this->_alloc, x._alloc);
                 }
                 void        clear(void) {
-                    
-                    for (size_type i = 0 ; i < this->_size ; i++)
+
+                    for (size_type i = 0; i < this->_size; i++)
                         this->_alloc.destroy(this->_ptr + i);
                     this->_size = 0;
                 }
 
                 //Allocator
-                allocator_type  get_allocator(void) const { return (allocator_type()); }
+                allocator_type  get_allocator(void) const { return (this->_alloc); }
 
             private :
 
