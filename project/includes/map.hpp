@@ -37,6 +37,9 @@ namespace ft {
             t_node(value_type value) : val(value) {};
     };
 
+    template <typename T>
+        class MapConstIterator;
+
     //MAP ITERATORS
     template<typename T>
         class MapIterator : public ft::iterator<std::bidirectional_iterator_tag, T> {
@@ -75,7 +78,9 @@ namespace ft {
                     return (*this);
                 }
                 bool            operator==(MapIterator const &rhs) { return (this->_current == rhs.base()); }
+                bool            operator==(MapConstIterator<T> const &rhs) { return (this->_current == rhs.base()); }
                 bool            operator!=(MapIterator const &rhs) { return (this->_current != rhs.base()); }
+                bool            operator!=(MapConstIterator<T> const &rhs) { return (this->_current != rhs.base()); }
                 MapIterator&    operator++(void) {
 
                     if (this->_current != this->_end)
@@ -306,7 +311,11 @@ namespace ft {
                     return (*this);
                 }
                 bool                operator==(MapReverseIterator const &rhs) { return (this->_it == rhs.base()); }
+                template <class BITE>
+                    bool                operator==(MapReverseIterator<BITE> const &rhs) { return (this->_it == rhs.base()); }
                 bool                operator!=(MapReverseIterator const &rhs) { return (this->_it != rhs.base()); }
+                template <class BITE>
+                    bool                operator!=(MapReverseIterator<BITE> const &rhs) { return (this->_it != rhs.base()); }
                 MapReverseIterator& operator++(void) { --this->_it; return (*this); }
                 MapReverseIterator  operator++(int) { MapReverseIterator tmp = *this; ++(*this); return (tmp); }
                 MapReverseIterator& operator--(void) { ++this->_it; return (*this); }
@@ -393,7 +402,12 @@ namespace ft {
                 }
 
                 //Destructor
-                ~map(void) {}
+                ~map(void) {
+                    
+                    this->clear();
+                    this->_alloc.destroy(this->root);
+                    this->_alloc.deallocate(this->root, 1);
+                }
 
                 //Operator
                 map&    operator=(const map& x) {
@@ -436,13 +450,19 @@ namespace ft {
                 }
                 mapped_type&    at(const key_type& k) {
 
-                    return (this->find(k)->second);
-                    throw (std::out_of_range("Out of range"));
+                    iterator it = this->find(k);
+
+                    if (it == this->end())
+                        throw (std::out_of_range("Out of range"));
+                    return (it.base()->val.second);
                 }
                 const mapped_type&  at(const key_type& k) const {
 
-                    return (this->find(k)->second);
-                    throw (std::out_of_range("Out of range"));
+                    const_iterator it = this->find(k);
+
+                    if (it == this->end())
+                        throw (std::out_of_range("Out of range"));
+                    return (it.base()->val.second);
                 }
 
                 //Modifiers

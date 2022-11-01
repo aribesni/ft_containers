@@ -74,11 +74,9 @@ namespace ft {
             //MEMBER TYPES
 
                 typedef Iterator                                           iterator_type;
-                // typedef iterator_traits<iterator>::value_type           value_type;
                 typedef typename iterator_traits<Iterator>::difference_type      difference_type;
                 typedef typename iterator_traits<Iterator>::pointer              pointer;
                 typedef typename iterator_traits<Iterator>::reference            reference;
-                // typedef iterator_traits<iterator>::iterator_category    iterator_category;
 
             //MEMBER FUNCTIONS
 
@@ -127,9 +125,142 @@ namespace ft {
 
         };
         template <class T>
+            class input_iterator : public ft::iterator<std::input_iterator_tag, T> {
+
+            public :
+
+                typedef typename ft::iterator< std::input_iterator_tag, T >::iterator_category iterator_category;
+                typedef typename ft::iterator< std::input_iterator_tag, T >::value_type value_type;
+                typedef typename ft::iterator< std::input_iterator_tag, T >::difference_type difference_type;
+                typedef typename ft::iterator< std::input_iterator_tag, T >::pointer pointer;
+                typedef typename ft::iterator< std::input_iterator_tag, T >::reference reference;
+
+                input_iterator(pointer ptr = 0) : _elem(ptr) {}
+                input_iterator(const input_iterator& other) : _elem(other.ptr) {}
+                template <class diff>
+                    input_iterator(const input_iterator< diff >& it) : _elem(it.base()) {}
+
+                input_iterator& operator++()
+                {
+                    ++_elem;
+                    return (*this);
+                }
+                input_iterator operator++(int)
+                {
+                    input_iterator tmp = *this;
+                    ++(*this);
+                    return (tmp);
+                }
+                bool operator==(const input_iterator< T >& other) {return ( _elem == other._elem); }
+                bool operator!=(const input_iterator< T >& other) {return ( _elem != other._elem); }
+                reference operator*() const { return (*_elem); }
+                pointer operator->() const { return &(operator*()); }
+                pointer const& base() const { return (_elem); }
+            
+            private :
+
+                pointer _elem;
+        };
+        template <class T>
+            class forward_iterator : public ft::iterator<std::forward_iterator_tag, T> {
+            
+            public :
+
+                typedef typename ft::iterator< std::forward_iterator_tag, T >::iterator_category iterator_category;
+                typedef typename ft::iterator< std::forward_iterator_tag, T >::value_type value_type;
+                typedef typename ft::iterator< std::forward_iterator_tag, T >::difference_type difference_type;
+                typedef typename ft::iterator< std::forward_iterator_tag, T >::pointer pointer;
+                typedef typename ft::iterator< std::forward_iterator_tag, T >::reference reference;
+
+                forward_iterator(pointer ptr = 0) : _elem(ptr) {}
+                forward_iterator(const forward_iterator& other) : _elem(other.ptr) {}
+                template <class diff>
+                    forward_iterator(const forward_iterator< diff >& it) : _elem(it.base()) {}
+
+                forward_iterator& operator++()
+                {
+                    ++_elem;
+                    return (*this);
+                }
+                forward_iterator operator++(int)
+                {
+                    forward_iterator tmp = *this;
+                    ++(*this);
+                    return (tmp);
+                }
+                bool operator==(const forward_iterator< T >& other) { return (_elem == other._elem); }
+                bool operator!=(const forward_iterator< T >& other) { return (_elem != other._elem); }
+                reference operator*() const { return (*_elem); }
+                pointer operator->() const { return &(operator*()); }
+                forward_iterator& operator--()
+                {
+                    --_elem;
+                    return (*this);
+                }
+                forward_iterator operator--(int)
+                {
+                    forward_iterator tmp = *this;
+                    --(*this);
+                    return (tmp);
+                }
+                pointer const& base() const { return _elem; }
+
+                private :
+                    
+                    pointer _elem;
+        };
+        template <class T>
+            class bidirectional_iterator : public ft::iterator<std::bidirectional_iterator_tag, T> {
+            
+            public :
+
+                typedef typename ft::iterator< std::bidirectional_iterator_tag, T >::iterator_category iterator_category;
+                typedef typename ft::iterator< std::bidirectional_iterator_tag, T >::value_type value_type;
+                typedef typename ft::iterator< std::bidirectional_iterator_tag, T >::difference_type difference_type;
+                typedef typename ft::iterator< std::bidirectional_iterator_tag, T >::pointer pointer;
+                typedef typename ft::iterator< std::bidirectional_iterator_tag, T >::reference reference;
+
+                bidirectional_iterator(pointer ptr = 0) : _elem(ptr) {}
+                bidirectional_iterator(const bidirectional_iterator& other) : _elem(other._elem) {}
+                template <class diff>
+                bidirectional_iterator(const bidirectional_iterator< diff >& it) : _elem(it.base()) {}
+
+                bidirectional_iterator& operator++()
+                {
+                    ++_elem;
+                    return (*this);
+                }
+                bidirectional_iterator operator++(int)
+                {
+                    bidirectional_iterator tmp = *this;
+                    ++(*this);
+                    return (tmp);
+                }
+                bool operator==(const bidirectional_iterator< T >& other) { return (_elem == other._elem); }
+                bool operator!=(const bidirectional_iterator< T >& other) { return (_elem != other._elem); }
+                reference operator*() const { return (*_elem); }
+                pointer operator->() const { return &(operator*()); }
+                bidirectional_iterator& operator--()
+                {
+                    --_elem;
+                    return (*this);
+                }
+                bidirectional_iterator operator--(int)
+                {
+                    bidirectional_iterator tmp = *this;
+                    --(*this);
+                    return (tmp);
+                }
+                pointer const& base() const { return (_elem); }
+                
+                private :
+                
+                    pointer _elem;
+        };
+        template <class T>
             class random_access_iterator: public ft::iterator< std::random_access_iterator_tag, T > {
 
-                public:
+                public :
 
                     typedef typename ft::iterator< std::random_access_iterator_tag, T >::iterator_category  iterator_category;
                     typedef typename ft::iterator< std::random_access_iterator_tag, T >::value_type         value_type;
@@ -137,8 +268,6 @@ namespace ft {
                     typedef typename ft::iterator< std::random_access_iterator_tag, T >::pointer            pointer;
                     typedef typename ft::iterator< std::random_access_iterator_tag, T >::reference          reference;
                 
-                public:
-
                     random_access_iterator(pointer ptr = 0) : _elem(ptr){};
                     random_access_iterator(const random_access_iterator< T >& it) : _elem(it._elem){};
 
@@ -146,43 +275,43 @@ namespace ft {
                     random_access_iterator& operator++()
                     {
                         ++_elem;
-                        return *this;
+                        return (*this);
                     };
                     random_access_iterator operator++(int)
                     {
                         random_access_iterator tmp = *this;
                         ++(*this);
-                        return tmp;
+                        return (tmp);
                     };
                     reference operator*() const { return *_elem; };
                     pointer operator->() const { return &(operator*()); };
                     random_access_iterator& operator--()
                     {
                         --_elem;
-                        return *this;
+                        return (*this);
                     };
                     random_access_iterator operator--(int)
                     {
                         random_access_iterator tmp = *this;
                         --(*this);
-                        return tmp;
+                        return (tmp);
                     };
                     random_access_iterator operator+(difference_type i) const { return random_access_iterator(_elem + i);};
                     random_access_iterator operator-(difference_type i) const { return random_access_iterator(_elem - i);};
                     random_access_iterator& operator+=(difference_type i)
                     {
                         _elem += i;
-                        return *this;
+                        return (*this);
                     };
                     random_access_iterator& operator-=(difference_type i)
                     {
                         _elem -= i;
-                        return *this;
+                        return (*this);
                     };
                     reference operator[](difference_type i) const { return (_elem[i]); };
                     pointer const& base() const { return _elem; };
                 
-                private:
+                private :
 
                     pointer _elem;
             };
