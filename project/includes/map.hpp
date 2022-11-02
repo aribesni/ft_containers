@@ -311,11 +311,11 @@ namespace ft {
                     return (*this);
                 }
                 bool                operator==(MapReverseIterator const &rhs) { return (this->_it == rhs.base()); }
-                template <class BITE>
-                    bool                operator==(MapReverseIterator<BITE> const &rhs) { return (this->_it == rhs.base()); }
+                template <class Iter>
+                    bool            operator==(MapReverseIterator<Iter> const &rhs) { return (this->_it == rhs.base()); }
                 bool                operator!=(MapReverseIterator const &rhs) { return (this->_it != rhs.base()); }
-                template <class BITE>
-                    bool                operator!=(MapReverseIterator<BITE> const &rhs) { return (this->_it != rhs.base()); }
+                template <class Iter>
+                    bool            operator!=(MapReverseIterator<Iter> const &rhs) { return (this->_it != rhs.base()); }
                 MapReverseIterator& operator++(void) { --this->_it; return (*this); }
                 MapReverseIterator  operator++(int) { MapReverseIterator tmp = *this; ++(*this); return (tmp); }
                 MapReverseIterator& operator--(void) { ++this->_it; return (*this); }

@@ -75,10 +75,6 @@ void test_vector(void)
 
     my_vector.erase(my_iterator_2);
     
-    std::cout << std::endl;
-    std::cout << std::endl;
-    
-    
     for (unsigned long i = 0; i < my_vector.size(); i++)
         std::cout << my_vector[i] << " ";
 
@@ -182,15 +178,13 @@ void test_vector(void)
     for (unsigned long i = 0; i < my_vector.size(); i++)
         std::cout << my_vector[i] << " ";
 
-    // std::cout << std::endl << std::endl << "-----     ORIGINAL VECTOR     -----" << std::endl << std::endl;
+    std::cout << "contructor with iterator : ";
 
-    // std::cout << "contructor with iterator : ";
+    NAMESPACE::vector<int>    my_vector_4(3, 8);
+    NAMESPACE::vector<int>::iterator  it;
 
-    // std::vector<int>    og_vector_4(3, 8);
-    // std::vector<int>::iterator  it;
-
-    // for (unsigned long i = 0; i < og_vector_4.size(); i++)
-    //     std::cout << og_vector_4[i] << " ";
+    for (unsigned long i = 0; i < my_vector_4.size(); i++)
+        std::cout << my_vector_4[i] << " ";
 
     std::cout << std::endl;
     std::cout << std::endl;

@@ -40,7 +40,6 @@ void test_map(void) {
     }
 
     std::cout << std::endl;
-
     std::cout << std::endl;
 
     std::cout << "size : " << my_map.size() << std::endl;
@@ -57,7 +56,6 @@ void test_map(void) {
         std::cout << my_map[i] << " ";
 
     std::cout << std::endl;
-   
     std::cout << std::endl;
 
     std::cout << "copy constructor : ";
@@ -68,7 +66,36 @@ void test_map(void) {
         std::cout << my_copy[i] << " ";
 
     std::cout << std::endl;
+    std::cout << std::endl;
+
+    my_iterator = my_map.begin();
+
+    std::cout << "begin : " << my_iterator->second << "   ";
+    
+    my_iterator = --my_map.end();
+
+    std::cout << "end : " << my_iterator->second << "   ";
+    
+    std::cout << std::endl;
+    std::cout << std::endl;
+
+    std::cout << "find key 3 : " << my_map.count(3) << std::endl;
 
     std::cout << std::endl;
 
+    std::cout << "find key 15 : " << my_map.count(15) << std::endl;
+   
+    std::cout << std::endl;
+   
+    std::cout << "is_empty : " << my_map.empty() << std::endl;
+
+    std::cout << std::endl;
+ 
+    std::cout << "* clear *" << std::endl;
+    
+    my_map.clear();
+ 
+    std::cout << std::endl;
+ 
+    std::cout << "is_empty : " << my_map.empty() << std::endl;
 }

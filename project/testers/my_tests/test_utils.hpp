@@ -14,12 +14,14 @@
 # define TEST_UTILS_H
 
 # include "map.hpp"
+# include "stack.hpp"
 # include "vector.hpp"
 # include <map>
+# include <stack>
 # include <vector>
 # include <iostream>
 
-# define NAMESPACE  ft
+# define NAMESPACE ft
 
 void    test_map(void);
 void    test_stack(void);
